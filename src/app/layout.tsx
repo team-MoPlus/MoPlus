@@ -9,9 +9,9 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="ko">
-			<body className="w-screen">
+			<body className="w-screen h-screen">
 				<Providers>
-					<div className="flex">
+					<div className="flex h-full w-full">
 						<SideTab />
 						{children}
 					</div>

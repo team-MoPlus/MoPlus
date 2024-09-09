@@ -6,9 +6,7 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
-		"lint": "next lint",
-		"predeploy": "npm run build",
-		"deploy": "gh-pages -d build"
+		"lint": "next lint"
 	},
 	"dependencies": {
 		"@chakra-ui/next-js": "^2.2.0",
@@ -33,6 +31,5 @@
 		"postcss": "^8.4.45",
 		"tailwindcss": "^3.4.10",
 		"typescript": "^5"
-	},
-	"homepage": "https:/seojmm.github.io/pages/"
+	}
 }

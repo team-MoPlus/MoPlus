@@ -18,11 +18,11 @@ const SideTab = () => {
 	};
 
 	return (
-		<div className="h-screen w-48 bg-[#fc6202] text-white flex-none top-0 left-0">
+		<div className="h-full w-60 bg-[#fc6202] text-white flex-col top-0 left-0">
 			<div className="p-4">
 				<h2 className="text-4xl font-medium">모플</h2>
 			</div>
-			<nav className="flex flex-col mt-10 h-screen">
+			<div className="flex-none mt-10">
 				<Link
 					href="/ranking"
 					onClick={() => handleTabClick(0)}
@@ -95,25 +95,25 @@ const SideTab = () => {
 					/>
 					오답노트
 				</Link>
-				<Link
-					href="/settings"
-					onClick={() => handleTabClick(4)}
-					className={`px-4 py-2 h-12 absolute bottom-6 flex items-center text-sm ${
-						activeTab === 4
-							? "border-l-2 border-white text-white"
-							: "border-l-2 border-transparent opacity-45"
-					}`}
-				>
-					<Image
-						src="/icons/settings.png"
-						alt="설정"
-						width={30}
-						height={20}
-						className="mr-4"
-					/>
-					설정
-				</Link>
-			</nav>
+			</div>
+			<Link
+				href="/settings"
+				onClick={() => handleTabClick(4)}
+				className={`w-full px-4 py-2 h-12 absolute bottom-8 flex items-center text-sm ${
+					activeTab === 4
+						? "border-l-2 border-white text-white"
+						: "border-l-2 border-transparent opacity-45"
+				}`}
+			>
+				<Image
+					src="/icons/settings.png"
+					alt="설정"
+					width={30}
+					height={20}
+					className="mr-4"
+				/>
+				설정
+			</Link>
 		</div>
 	);
 };
