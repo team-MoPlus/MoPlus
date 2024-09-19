@@ -5,9 +5,10 @@ import React, { useState, useRef, useEffect } from "react";
 interface DropdownProps {
 	defaultText: string;
 	ItemObj: { [key: string]: string[] }; // ItemObj는 문자열 배열을 가지는 객체 타입
+	buttonWidth: string;
 }
 
-const DropdownMenu = ({ defaultText, ItemObj }: DropdownProps) => {
+const DropdownMenu = ({ defaultText, ItemObj, buttonWidth }: DropdownProps) => {
 	const [width, setWidth] = useState(0);
 	const [isOpen, setIsOpen] = useState(false);
 	const [text, setText] = useState(defaultText);
@@ -44,11 +45,14 @@ const DropdownMenu = ({ defaultText, ItemObj }: DropdownProps) => {
 	}, [isOpen]);
 
 	return (
-		<div className="relative inline-block" ref={dropdownRef}>
+		<div
+			className="relative inline-block cursor-pointer mr-2"
+			ref={dropdownRef}
+		>
 			<button
 				ref={referenceDivRef}
 				onClick={() => setIsOpen(!isOpen)}
-				className={` text-white px-4 py-2 flex items-center justify-center text-base ${
+				className={`text-white px-4 py-2 flex items-center justify-between ${buttonWidth} ${
 					isOpen ? "rounded-t-2xl" : "rounded-3xl"
 				} ${text === defaultText ? "bg-black" : "bg-orange-500"}`}
 			>
@@ -92,45 +96,47 @@ const DropdownMenu = ({ defaultText, ItemObj }: DropdownProps) => {
 
 			{isOpen && (
 				<div
-					className="absolute left-0 bg-black text-white z-10 rounded-b-2xl"
+					className={`absolute left-0 bg-black text-white z-10 rounded-b-2xl`}
 					style={{ width: `${width}px` }}
 				>
-					<ul className="flex flex-col">
-						{Object.keys(ItemObj).map((subject, index) => (
-							<li key={subject} className="relative group">
-								<div
-									onClick={clickMenu}
-									className={`px-4 py-2 hover:bg-orange-400 ${
-										index === Object.keys(ItemObj).length - 1
-											? "rounded-b-2xl"
-											: ""
-									}`}
-								>
-									{subject}
-								</div>
-								{ItemObj[subject].length > 0 && (
-									<div className="absolute left-full w-48 top-0 bg-black text-white rounded-b-2xl rounded-tr-2xl hidden group-hover:block">
-										<ul>
-											{ItemObj[subject].map((sub, index) => (
-												<li
-													key={sub}
-													onClick={clickMenu}
-													className={`px-4 py-2 hover:bg-orange-400 ${
-														index === ItemObj[subject].length - 1
-															? "rounded-b-2xl"
-															: index === 0
-															? "rounded-tr-2xl"
-															: ""
-													}`}
-												>
-													{sub}
-												</li>
-											))}
-										</ul>
+					<ul className="flex flex-col text-sm">
+						{Object.keys(ItemObj).map((subject, index) => {
+							const listSize = Object.keys(ItemObj).length;
+
+							return (
+								<li key={subject} className="relative group">
+									<div
+										onClick={clickMenu}
+										className={`px-3 py-2 hover:bg-orange-400 ${
+											index === listSize - 1 ? "rounded-b-2xl" : ""
+										}`}
+									>
+										{subject}
 									</div>
-								)}
-							</li>
-						))}
+									{ItemObj[subject].length > 0 && (
+										<div className="absolute left-full w-48 top-0 bg-black text-white rounded-b-2xl rounded-tr-2xl hidden group-hover:block">
+											<ul>
+												{ItemObj[subject].map((sub, index) => (
+													<li
+														key={sub}
+														onClick={clickMenu}
+														className={`px-4 py-2 hover:bg-orange-400 ${
+															index === ItemObj[subject].length - 1
+																? "rounded-b-2xl"
+																: index === 0
+																	? "rounded-tr-2xl"
+																	: ""
+														}`}
+													>
+														{sub}
+													</li>
+												))}
+											</ul>
+										</div>
+									)}
+								</li>
+							);
+						})}
 					</ul>
 				</div>
 			)}

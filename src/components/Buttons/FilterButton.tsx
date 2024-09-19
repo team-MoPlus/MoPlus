@@ -20,7 +20,7 @@ const FilterButton = ({
 			type="button"
 			value={`${text}`}
 			onClick={onClick}
-			className={`w-${width} h-${height} text-white py-2 px-4 rounded-3xl ${
+			className={`w-${width} h-${height} text-white py-2 px-4 rounded-3xl cursor-pointer ${
 				isSelected ? "bg-orange-500" : "bg-black hover:bg-orange-400"
 			}`}
 		/>

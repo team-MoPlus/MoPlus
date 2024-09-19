@@ -11,10 +11,10 @@ const FilterButtonGroup = () => {
 	};
 
 	return (
-		<div className="flex gap-2">
+		<div className="flex gap-2 h-fit">
 			<FilterButton
 				text="Top 5"
-				height="10"
+				height=""
 				width="null"
 				isSelected={selectedButton === 0}
 				onClick={() => handleButtonClick(0)}
