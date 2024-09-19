@@ -1,7 +1,10 @@
 import React from "react";
 import Image from "next/image";
+import StarRating from "../Rating/StarRating";
+import DifficultyRating from "../Rating/DifficultyRating";
 
 interface ExamItemProps {
+	order: number;
 	thumbnail: string;
 	title: string;
 	year: number;
@@ -12,6 +15,7 @@ interface ExamItemProps {
 }
 
 const ExamItem: React.FC<ExamItemProps> = ({
+	order,
 	thumbnail,
 	title,
 	year,
@@ -21,9 +25,14 @@ const ExamItem: React.FC<ExamItemProps> = ({
 	difficulty,
 }) => {
 	return (
-		<div className="flex border-b pb-4 mb-4">
+		<div className="relative flex w-full py-2 border-b border-b-gray-300">
+			{/* 순서 */}
+			<div className={`text-5xl ${order === 0 ? "text-orange-600" : ""}`}>
+				{order + 1}
+			</div>
+
 			{/* 썸네일 */}
-			<div className="relative w-24 h-32">
+			<div className="relative w-40 h-36">
 				<Image src={thumbnail} alt={title} layout="fill" objectFit="cover" />
 			</div>
 
@@ -32,23 +41,15 @@ const ExamItem: React.FC<ExamItemProps> = ({
 				<h2 className="font-bold text-lg">
 					{title} ({year})
 				</h2>
-				<p className="text-gray-500">{author}</p>
-				<p className="text-sm text-gray-700 mt-2">{description}</p>
+				<p className="text-gray-500 text-xs">{author}</p>
+				<div className="h-4"></div>
+				<p className="text-sm text-gray-700 mt-4 w-3/5">{description}</p>
 			</div>
 
 			{/* 평점과 난이도 */}
-			<div className="flex flex-col items-end justify-between">
-				{/* 평점 */}
-				<div className="text-right">
-					<span className="text-2xl font-bold">{rating.toFixed(1)}/10</span>
-				</div>
-
-				{/* 난이도 */}
-				<div className="flex items-center mt-2">
-					<span className="text-orange-400 text-lg">⭐⭐⭐⭐</span>
-					<span className="ml-2 bg-gray-100 text-gray-600 px-2 py-1 rounded">
-						{difficulty}
-					</span>
+			<div className="flex flex-col items-center justify-center w-64">
+				<div className="flex-col justify-center">
+					<DifficultyRating rating={rating} />
 				</div>
 			</div>
 		</div>

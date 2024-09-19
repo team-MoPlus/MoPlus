@@ -46,7 +46,7 @@ const page = () => {
 			author: "현우진",
 			description:
 				"최근 평가원 모의고사와 수능 시험의 출제 기준을 까다로운 흐름과 완벽 해설로 만반 학생들의 문항에 대한 대응 능력을 배양하고, 선택과목 간 유불리를 최소화하기 위해...",
-			rating: 7.7,
+			rating: 6.0,
 			difficulty: "어려움",
 		},
 		{
@@ -66,7 +66,7 @@ const page = () => {
 			author: "현우진",
 			description:
 				"최근 평가원 모의고사와 수능 시험의 출제 기준을 까다로운 흐름과 완벽 해설로 만반 학생들의 문항에 대한 대응 능력을 배양하고, 선택과목 간 유불리를 최소화하기 위해...",
-			rating: 7.9,
+			rating: 1.0,
 			difficulty: "어려움",
 		},
 		{
@@ -76,7 +76,7 @@ const page = () => {
 			author: "현우진",
 			description:
 				"최근 평가원 모의고사와 수능 시험의 출제 기준을 까다로운 흐름과 완벽 해설로 만반 학생들의 문항에 대한 대응 능력을 배양하고, 선택과목 간 유불리를 최소화하기 위해...",
-			rating: 7.9,
+			rating: 9.9,
 			difficulty: "어려움",
 		},
 		{
@@ -86,7 +86,7 @@ const page = () => {
 			author: "현우진",
 			description:
 				"최근 평가원 모의고사와 수능 시험의 출제 기준을 까다로운 흐름과 완벽 해설로 만반 학생들의 문항에 대한 대응 능력을 배양하고, 선택과목 간 유불리를 최소화하기 위해...",
-			rating: 7.9,
+			rating: 7.5,
 			difficulty: "어려움",
 		},
 		{
@@ -96,13 +96,13 @@ const page = () => {
 			author: "현우진",
 			description:
 				"최근 평가원 모의고사와 수능 시험의 출제 기준을 까다로운 흐름과 완벽 해설로 만반 학생들의 문항에 대한 대응 능력을 배양하고, 선택과목 간 유불리를 최소화하기 위해...",
-			rating: 7.9,
+			rating: 7.1,
 			difficulty: "어려움",
 		},
 	];
 
 	return (
-		<div className="flex-col w-full h-full px-20 pt-12 overflow-hidden">
+		<div className="flex-col w-full h-full px-20 pt-12 overflow-scroll">
 			<div className="flex h-20 w-full justify-between items-center">
 				<div className="text-3xl font-medium">주간 HOT 모의고사</div>
 				<div className="flex items-center border border-black rounded-full px-4 py-2 w-96 focus-within:border-orange-600 focus-within:border-2">
@@ -157,10 +157,11 @@ const page = () => {
 					/>
 				</div>
 			</div>
-			<div className="max-h-full overflow-y-scroll pr-4">
+			<div className="w-full max-h-full pr-4">
 				{examList.map((exam, index) => (
 					<ExamItem
 						key={index}
+						order={index}
 						thumbnail={exam.thumbnail}
 						title={exam.title}
 						year={exam.year}
