@@ -1,5 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+	extend: {
+		fontFamily: {
+			sans: ["Pretendard", "Arial", "sans-serif"], // Pretendard를 기본 sans-serif 폰트로 설정
+		},
+	},
 	content: [
 		"./app/**/*.{js,ts,jsx,tsx,mdx}",
 		"./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,21 +14,11 @@ module.exports = {
 		"./src/**/*.{js,ts,jsx,tsx,mdx}",
 	],
 	theme: {
-		extend: {
-			fontFamily: {
-				sans: [
-					"IBM Plex Sans KR",
-					"ui-sans-serif",
-					"system-ui",
-					"-apple-system",
-					"BlinkMacSystemFont",
-					"Segoe UI",
-					"Roboto",
-					"Helvetica Neue",
-					"Arial",
-					"sans-serif",
-				],
-			},
+		screens: {
+			mobile: "360px",
+			// => @media (min-width: 375px) { ... }
+			tablet: "600px",
+			// => @media (min-width: 600px) { ... }
 		},
 	},
 	plugins: [],
