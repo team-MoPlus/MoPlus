@@ -1,6 +1,6 @@
 import FilterButtonGroup from "@/components/ButtonGroups/FilterButtonGroup";
 import DropdownMenu from "@/components/Dropdowns/DropdownMenu";
-import ExamItem from "@/components/ExamItem/ExamItem";
+import ExamItem from "@/components/Items/ExamItem";
 import React from "react";
 
 const page = () => {
