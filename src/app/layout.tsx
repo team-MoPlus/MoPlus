@@ -1,5 +1,6 @@
 import { Providers } from "./providers";
 import "/styles/globals.css";
+
 import { pretendard } from "../../styles/font";
 import SideTab from "@/components/SideTab/SideTab";
 import SideTabTest from "../../__tests__/SideTab.test";
@@ -20,7 +21,7 @@ export default function RootLayout({
 				<Providers>
 					<div className="flex h-full w-full">
 						{/* <SideTab /> */}
-						<div className="w-full">{children}</div>
+						<div className="w-full pt-4">{children}</div>
 					</div>
 				</Providers>
 			</body>

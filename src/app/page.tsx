@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Page() {
 	return (
@@ -12,7 +13,7 @@ export default function Page() {
 			/>
 
 			<button className="fixed w-64 bottom-5 left-1/2 transform -translate-x-1/2 bg-[#FC6C02] active:bg-gray-100 text-white active:text-[#FC6C02] font-bold border-b py-3 px-6 rounded-full shadow-xl text-xl">
-				모플 써보러 가기
+				<Link href="/searchmo">모플 써보러 가기</Link>
 			</button>
 		</div>
 	);
