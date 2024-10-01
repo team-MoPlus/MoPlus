@@ -4,6 +4,12 @@ module.exports = {
 		fontFamily: {
 			sans: ["Pretendard", "Arial", "sans-serif"], // Pretendard를 기본 sans-serif 폰트로 설정
 		},
+		colors: {
+			orange: {
+				500: "#FC6C02", // 기본 orange 색상 설정
+				600: "#e35d01", // 어두운 변형 추가
+			},
+		},
 	},
 	content: [
 		"./app/**/*.{js,ts,jsx,tsx,mdx}",
