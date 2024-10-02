@@ -9,7 +9,7 @@ interface AnswerContainerProps {
 
 const AnswerContainer = ({ moId }: AnswerContainerProps) => {
 	return (
-		<div>
+		<div className="p-4">
 			<Link href="/">
 				<Banner />
 			</Link>

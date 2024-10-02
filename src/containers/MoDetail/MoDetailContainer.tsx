@@ -23,13 +23,13 @@ const MoDetailContainer = ({ moId }: MoDetailContainerProps) => {
 	}, []);
 
 	return (
-		<div className="w-full h-full border items-center flex-col p-4">
+		<div className="w-full h-full items-center flex-col p-4">
 			<Link href="/">
 				<Banner />
 			</Link>
 			{item && (
 				<>
-					<div className="h-16 text-white px-6 text-xl font-bold bg-orange-300 rounded-lg flex items-center my-2">
+					<div className="h-16 text-white px-6 text-xl font-bold bg-orange-400 rounded-lg flex items-center my-2">
 						선택하신 모의고사가 맞나요?
 					</div>
 					<div className="mt-8">
@@ -69,8 +69,11 @@ const MoDetailContainer = ({ moId }: MoDetailContainerProps) => {
 							</div>
 						</>
 					)}
-					<Link href={`/answer/${item.id}`}>
-						<button className="w-64 h-12 left-1/2 transform -translate-x-1/2 fixed bottom-24 bg-orange-200 text-orange-500 rounded-lg">
+					<Link
+						href={`/answer/${item.id}`}
+						className="flex w-64 h-12 justify-center mt-20 pb-4 mx-auto"
+					>
+						<button className="w-full h-12 bg-orange-200 text-orange-500 rounded-lg">
 							선택 완료
 						</button>
 					</Link>
