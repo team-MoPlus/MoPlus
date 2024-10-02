@@ -1,28 +1,16 @@
 import Image from "next/image";
 import React from "react";
+import { MoInfo } from "../../../types/Item";
 
 interface ItemCardProps {
+	mo: MoInfo;
 	order: number;
-	subject: string;
-	title: string;
-	author: string;
-	year: number;
-	visited: number;
-	solved: number;
 }
 
-const ItemCard: React.FC<ItemCardProps> = ({
-	order,
-	subject,
-	title,
-	author,
-	year,
-	visited,
-	solved,
-}) => {
+const ItemCard = ({ mo, order }: ItemCardProps) => {
 	return (
 		<div className="flex gap-4 items-center w-full h-24 px-4 mb-2 rounded-lg border-2">
-			<div className="text-2xl">{order + 1}</div>
+			<div className="text-2xl">{order}</div>
 			<div>
 				<Image
 					src="/example_images/emptyMO.png"
@@ -33,17 +21,17 @@ const ItemCard: React.FC<ItemCardProps> = ({
 			</div>
 			<div className="grid grid-rows-3">
 				<div className="text-md overflow-hidden whitespace-nowrap text-ellipsis max-w-[420px]">
-					[{subject}] {title}
+					[{mo.subject}] {mo.title}
 				</div>
 				<div className=" text-gray-300 text-xs">
-					{author} | {year}학년도
+					{mo.author} | {mo.year}학년도
 				</div>
 				<div className="flex gap-2 items-center text-gray-300 text-xs">
 					<div className="border rounded-sm w-fit px-2 py-1">
-						<span className="text-orange-500">조회수</span> {visited}
+						<span className="text-orange-500">조회수</span> {mo.visited}
 					</div>
 					<div className="border rounded-sm w-fit px-2 py-1">
-						<span className="text-orange-500">풀이수</span> {solved}
+						<span className="text-orange-500">풀이수</span> {mo.solved}
 					</div>
 				</div>
 			</div>
