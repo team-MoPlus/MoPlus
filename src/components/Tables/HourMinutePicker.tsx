@@ -45,8 +45,8 @@ const HourMinutePicker: React.FC = () => {
 					{hours.map((hour) => (
 						<div
 							key={hour}
-							className={`text-3xl h-12 flex items-center justify-center snap-center ${
-								selectedHour === hour ? "text-black font-bold" : "text-gray-400"
+							className={`text-xl h-12 flex items-center justify-center snap-center ${
+								selectedHour === hour ? "text-black" : "text-gray-400"
 							}`}
 						>
 							{hour}시

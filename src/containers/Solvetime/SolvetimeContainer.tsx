@@ -16,8 +16,7 @@ const SolvetimeContainer = ({ moId }: SolvetimeContainerProps) => {
 	// 시간 입력 핸들러
 	const handleHourChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const stringValue = e.target.value;
-		const value = parseInt(stringValue, 10);
-		if (!isNaN(value) && value >= 0 && value < 60) {
+		if (/^\d{0,1}$/.test(stringValue)) {
 			setHour(stringValue);
 		}
 	};
@@ -40,18 +39,20 @@ const SolvetimeContainer = ({ moId }: SolvetimeContainerProps) => {
 			</div>
 			<div className="w-full h-96 flex gap-2 justify-center items-center">
 				<input
+					type="number"
 					value={hour}
 					onChange={handleHourChange}
-					className="rounded-lg w-12 h-12 border border-orange-500 text-orange-500 text-2xl flex items-center justify-center focus:outline-none"
+					className="rounded-lg w-12 h-12 border border-orange-500 text-orange-500 text-2xl text-center focus:outline-none"
 				/>
 				<div className="text-xl mr-4">시간</div>
 				<input
+					type="number"
 					value={minute}
 					onChange={handleMinuteChange}
-					className="rounded-lg w-12 h-12 border border-orange-500 text-orange-500 text-2xl flex items-center justify-center focus:outline-none"
+					className="rounded-lg w-12 h-12 border border-orange-500 text-orange-500 text-2xl text-center focus:outline-none"
 				/>
 				<div className="text-xl">분</div>
-				<HourMinutePicker />
+				{/* <HourMinutePicker /> */}
 			</div>
 			<Link
 				href={`/solvetime/${moId}`}
