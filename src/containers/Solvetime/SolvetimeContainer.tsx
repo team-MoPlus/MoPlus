@@ -40,6 +40,7 @@ const SolvetimeContainer = ({ moId }: SolvetimeContainerProps) => {
 			<div className="w-full h-96 flex gap-2 justify-center items-center">
 				<input
 					type="number"
+					pattern="\d*"
 					value={hour}
 					onChange={handleHourChange}
 					className="rounded-lg w-12 h-12 border border-orange-500 text-orange-500 text-2xl text-center focus:outline-none"
@@ -47,6 +48,7 @@ const SolvetimeContainer = ({ moId }: SolvetimeContainerProps) => {
 				<div className="text-xl mr-4">시간</div>
 				<input
 					type="number"
+					pattern="\d*"
 					value={minute}
 					onChange={handleMinuteChange}
 					className="rounded-lg w-12 h-12 border border-orange-500 text-orange-500 text-2xl text-center focus:outline-none"
