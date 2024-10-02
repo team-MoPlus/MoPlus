@@ -93,7 +93,7 @@ const CheckAnswer = ({ problemNumber, moId }: CheckAnswerProps) => {
 									className={`mx-auto ${checkedProblems.includes(value) ? "text-orange-500" : "text-gray-300"}`}
 								/>
 							</td>
-							<td className="border-2 border-orange-400 pl-4 space-x-2">
+							<td className="border-2 border-orange-400 pl-4">
 								{Array(5)
 									.fill(null)
 									.map((v, i) => (
