@@ -107,7 +107,7 @@ const SearchMoContainer = () => {
 
 	return (
 		<div className="w-full h-full flex-col p-4">
-			<Link href="/">
+			<Link href="/" className="inline-block">
 				<Banner />
 			</Link>
 			<div className="flex my-2 gap-4">
@@ -119,7 +119,7 @@ const SearchMoContainer = () => {
 
 			{/* 검색바에 onSearchTermChange 핸들러 전달 */}
 			<SearchBar onSearchTermChange={setSearchTerm} />
-			<div className="w-full mt-2">
+			<div className="w-full pt-2 pb-4">
 				<ItemList itemList={filteredItems} />
 			</div>
 		</div>
