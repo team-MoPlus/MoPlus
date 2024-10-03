@@ -3,16 +3,12 @@
 import { Banner } from "@/components/Banner";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { MoInfo } from "../../../types/Item";
+import { TestInfo } from "../../../types/Item";
 import { useRouter } from "next/navigation";
 
-interface ResultContainerProps {
-	moId: number;
-}
-
-const ResultContainer = ({ moId }: ResultContainerProps) => {
+const ResultContainer = ({ testId }: { testId: number }) => {
 	const router = useRouter();
-	const [item, setItem] = useState<MoInfo | null>(null);
+	const [item, setItem] = useState<TestInfo | null>(null);
 
 	// 페이지가 로드될 때 sessionStorage에서 선택한 아이템 데이터 가져오기
 	useEffect(() => {
@@ -34,7 +30,7 @@ const ResultContainer = ({ moId }: ResultContainerProps) => {
 					</div>
 					<div className="p-4 w-full border border-dashed border-orange-300 rounded-md">
 						<h1 className="text-xl">
-							[{item.subject}] {item.title}({item.author})
+							[{item.subject}] {item.name}({item.provider})
 						</h1>
 						<div className="py-8 flex w-full justify-around items-center">
 							<div className="text-5xl">92점</div>

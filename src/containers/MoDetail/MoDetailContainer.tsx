@@ -1,17 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { MoInfo } from "../../../types/Item";
+import { TestInfo } from "../../../types/Item";
 import { getSubjectDict } from "../../../utils/getSubjectDict";
 import Link from "next/link";
 import { Banner } from "@/components/Banner";
 
-interface MoDetailContainerProps {
-	moId: number; // moId를 number 타입으로 지정
-}
-
-const MoDetailContainer = ({ moId }: MoDetailContainerProps) => {
-	const [item, setItem] = useState<MoInfo | null>(null);
+const MoDetailContainer = () => {
+	const [item, setItem] = useState<TestInfo | null>(null);
 	const subjectDict = getSubjectDict();
 
 	// 페이지가 로드될 때 sessionStorage에서 선택한 아이템 데이터 가져오기
@@ -34,7 +30,7 @@ const MoDetailContainer = ({ moId }: MoDetailContainerProps) => {
 					</div>
 					<div className="mt-8">
 						<p className="text-xl text-orange-500">선택한 모의고사</p>
-						<p className="text-xl">{item.title}</p>
+						<p className="text-xl">{item.name}</p>
 					</div>
 
 					{Object.keys(subjectDict).includes(item.subject) ? (

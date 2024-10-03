@@ -6,11 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-interface SolvetimeContainerProps {
-	moId: number;
-}
-
-const SolvetimeContainer = ({ moId }: SolvetimeContainerProps) => {
+const SolvetimeContainer = ({ testId }: { testId: number }) => {
 	const [hour, setHour] = useState<string>("");
 	const [minute, setMinute] = useState<string>("");
 	const router = useRouter();
@@ -63,7 +59,7 @@ const SolvetimeContainer = ({ moId }: SolvetimeContainerProps) => {
 					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg disabled:bg-gray-200 disabled:text-gray-400"
 					disabled={hour.length === 0 && minute.length === 0}
 					onClick={() => {
-						router.push(`/result/${moId}`);
+						router.push(`/result/${testId}`);
 					}}
 				>
 					입력 완료
