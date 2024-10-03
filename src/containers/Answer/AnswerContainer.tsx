@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 import { TestInfo } from "../../../types/Item";
 import { ProblemCount } from "../../../utils/problemCount";
 
-const AnswerContainer = ({ testId }: { testId: number }) => {
+const AnswerContainer = () => {
 	const [test, setTest] = useState<TestInfo | null>();
 
 	// 페이지가 로드될 때 sessionStorage에서 선택한 아이템 데이터 가져오기
