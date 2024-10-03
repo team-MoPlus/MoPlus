@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 
+//2
+
 const ApplicationContainer = () => {
 	const router = useRouter();
 
