@@ -7,6 +7,7 @@ interface AnswerContainerProps {
 	moId: number;
 }
 
+
 const AnswerContainer = ({ moId }: AnswerContainerProps) => {
 	return (
 		<div className="p-4">
