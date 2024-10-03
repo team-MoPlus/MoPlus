@@ -20,11 +20,6 @@ import {
 } from "react-icons/tb";
 import { useRouter } from "next/navigation";
 
-interface CheckAnswerProps {
-	problemNumber: number;
-	moId: number;
-}
-
 const CircleNumber = [
 	<TbCircleNumber1 key={1} size={30} color="orange" />,
 	<TbCircleNumber2 key={2} size={30} color="orange" />,
@@ -45,7 +40,13 @@ const notify = (missingFromSelected: number[]) => {
 	toast.error(`${missingFromSelected}번 문제의 선지를 선택하세요.`);
 };
 
-const CheckAnswer = ({ problemNumber, moId }: CheckAnswerProps) => {
+const CheckAnswer = ({
+	problemNumber,
+	testId,
+}: {
+	problemNumber: number;
+	testId: number;
+}) => {
 	const router = useRouter();
 	const [checkedProblems, setCheckedProblems] = useState<number[]>([]); // 오답 체크된 행을 관리하는 상태
 	const [selectedChoices, setSelectedChoices] = useState<{
@@ -134,7 +135,7 @@ const CheckAnswer = ({ problemNumber, moId }: CheckAnswerProps) => {
 					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg"
 					onClick={() => {
 						hasAllCheckedInSelected
-							? router.push(`/solvetime/${moId}`)
+							? router.push(`/solvetime/${testId}`)
 							: notify(missingFromSelected);
 					}}
 				>

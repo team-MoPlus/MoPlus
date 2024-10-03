@@ -1,9 +1,9 @@
-export interface MoInfo {
+export interface TestInfo {
 	id: number;
 	subject: string;
-	title: string;
-	author: string;
-	year: number;
-	visited: number;
-	solved: number;
+	name: string;
+	provider: string;
+	round: number;
+	viewCount: number;
+	totalSolvesCount: number;
 }

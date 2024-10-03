@@ -3,10 +3,45 @@
 import { Banner } from "@/components/Banner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
+
+// 한글 완성 여부를 확인하는 함수
+const isKoreanComplete = (input: string): boolean => {
+	const completeKoreanRegex = /^[가-힣]*$/; // 완성된 한글
+	const incompleteKoreanRegex = /[ㄱ-ㅎㅏ-ㅣ]/; // 미완성 자모
+
+	if (completeKoreanRegex.test(input)) {
+		return true; // 모두 완성된 한글일 경우
+	}
+	if (incompleteKoreanRegex.test(input)) {
+		return false; // 미완성 자모가 포함된 경우
+	}
+
+	return true; // 한글 이외의 문자는 검사 제외
+};
+
+const notify = () => toast.error("유효하지 않은 이름입니다.");
 
 const ApplicationContainer = () => {
 	const router = useRouter();
+
+	const [name, setName] = useState("");
+	const [phoneNumber, setPhoneNumber] = useState("");
+
+	// 입력 시 숫자만 허용
+	const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
+		const inputValue = e.currentTarget.value;
+		// 숫자만 남기고 나머지 문자 제거
+		e.currentTarget.value = inputValue.replace(/[^0-9]/g, "");
+		setPhoneNumber(e.currentTarget.value); // 상태 업데이트
+	};
+
+	// 유효한 이름 입력
+	const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+		setName(value);
+	};
 
 	return (
 		<div className="p-4">
@@ -25,6 +60,7 @@ const ApplicationContainer = () => {
 			<input
 				type="text"
 				placeholder=""
+				onChange={handleNameChange}
 				className="w-full mb-4 p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
 			/>
 
@@ -33,8 +69,12 @@ const ApplicationContainer = () => {
 				전화번호
 			</label>
 			<input
-				type="tel"
-				placeholder="숫자만"
+				type="text"
+				inputMode="numeric"
+				pattern="\d*"
+				maxLength={11}
+				onInput={handleInput}
+				placeholder=""
 				className="w-full mb-6 p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
 			/>
 
@@ -42,11 +82,14 @@ const ApplicationContainer = () => {
 			<div className="flex justify-center">
 				<button
 					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg"
-					onClick={() => router.replace("/searchmo")}
+					onClick={() => {
+						isKoreanComplete(name) ? router.replace("/searchmo") : notify();
+					}}
 				>
 					신청
 				</button>
 			</div>
+			<Toaster />
 		</div>
 	);
 };
