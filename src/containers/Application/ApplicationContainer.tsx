@@ -42,7 +42,7 @@ const ApplicationContainer = () => {
 			<div className="flex justify-center">
 				<button
 					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg"
-					onClick={() => router.push("/application")}
+					onClick={() => router.replace("/searchmo")}
 				>
 					신청
 				</button>
