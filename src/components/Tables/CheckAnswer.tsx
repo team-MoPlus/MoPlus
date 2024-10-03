@@ -3,6 +3,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { FaCheck } from "react-icons/fa6";
+import toast, { Toaster } from "react-hot-toast";
 import {
 	TbCircleNumber1,
 	TbCircleNumber2,
@@ -17,6 +18,7 @@ import {
 	TbCircleNumber4Filled,
 	TbCircleNumber5Filled,
 } from "react-icons/tb";
+import { useRouter } from "next/navigation";
 
 interface CheckAnswerProps {
 	problemNumber: number;
@@ -39,7 +41,12 @@ const CircleNumberFilled = [
 	<TbCircleNumber5Filled key={5} size={30} color="orange" />,
 ];
 
+const notify = (missingFromSelected: number[]) => {
+	toast.error(`${missingFromSelected}번 문제의 선지를 선택하세요.`);
+};
+
 const CheckAnswer = ({ problemNumber, moId }: CheckAnswerProps) => {
+	const router = useRouter();
 	const [checkedProblems, setCheckedProblems] = useState<number[]>([]); // 오답 체크된 행을 관리하는 상태
 	const [selectedChoices, setSelectedChoices] = useState<{
 		[key: number]: number | null;
@@ -65,6 +72,16 @@ const CheckAnswer = ({ problemNumber, moId }: CheckAnswerProps) => {
 			}));
 		}
 	};
+
+	// checkedProblems 배열의 값이 selectedChoices 배열에 포함되어 있는지 판별
+	const hasAllCheckedInSelected = checkedProblems.every((problem) =>
+		Object.keys(selectedChoices).map(Number).includes(problem)
+	);
+
+	// checkedProblems 배열의 값 중 selectedChoices에 없는 숫자 추출
+	const missingFromSelected = checkedProblems.filter(
+		(problem) => !Object.keys(selectedChoices).map(Number).includes(problem)
+	);
 
 	return (
 		<div>
@@ -112,14 +129,19 @@ const CheckAnswer = ({ problemNumber, moId }: CheckAnswerProps) => {
 					))}
 				</tbody>
 			</table>
-			<Link
-				href={`/solvetime/${moId}`}
-				className="flex justify-center my-4 pb-4"
-			>
-				<button className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg">
+			<div className="flex justify-center my-4">
+				<button
+					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg"
+					onClick={() => {
+						hasAllCheckedInSelected
+							? router.push(`/solvetime/${moId}`)
+							: notify(missingFromSelected);
+					}}
+				>
 					오답 체크 완료
 				</button>
-			</Link>
+				<Toaster />
+			</div>
 		</div>
 	);
 };

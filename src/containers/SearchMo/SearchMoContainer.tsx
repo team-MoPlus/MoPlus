@@ -111,7 +111,7 @@ const SearchMoContainer = () => {
 				<Banner />
 			</Link>
 			<div className="flex my-2 gap-4">
-				<div className="flex-1 text-xl bg-orange-300 rounded-xl text-white p-4 font-bold">
+				<div className="h-20 flex items-center flex-1 text-xl bg-orange-300 rounded-xl text-white p-4 font-bold">
 					내가 풀고 싶은 모의고사를 검색해보세요
 				</div>
 				<RequestMo />
