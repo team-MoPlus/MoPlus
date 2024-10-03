@@ -3,6 +3,7 @@
 import { Banner } from "@/components/Banner";
 import { HourMinutePicker } from "@/components/Tables";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 interface SolvetimeContainerProps {
@@ -12,6 +13,7 @@ interface SolvetimeContainerProps {
 const SolvetimeContainer = ({ moId }: SolvetimeContainerProps) => {
 	const [hour, setHour] = useState<string>("");
 	const [minute, setMinute] = useState<string>("");
+	const router = useRouter();
 
 	// 시간 입력 핸들러
 	const handleHourChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,10 +33,10 @@ const SolvetimeContainer = ({ moId }: SolvetimeContainerProps) => {
 
 	return (
 		<div className="p-4">
-			<Link href="/">
+			<Link href="/" className="inline-block">
 				<Banner />
 			</Link>
-			<div className="h-16 text-white px-6 my-2 text-xl font-bold bg-orange-600 rounded-lg flex items-center">
+			<div className="h-16 text-white px-6 my-2 text-xl font-bold bg-orange-500 rounded-lg flex items-center">
 				풀이 시간을 입력해주세요!
 			</div>
 			<div className="w-full h-96 flex gap-2 justify-center items-center">
@@ -56,14 +58,17 @@ const SolvetimeContainer = ({ moId }: SolvetimeContainerProps) => {
 				<div className="text-xl">분</div>
 				{/* <HourMinutePicker /> */}
 			</div>
-			<Link
-				href={`/solvetime/${moId}`}
-				className="flex justify-center my-4 pb-4"
-			>
-				<button className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg">
+			<div className="flex justify-center">
+				<button
+					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg disabled:bg-gray-200 disabled:text-gray-400"
+					disabled={hour.length === 0 && minute.length === 0}
+					onClick={() => {
+						router.push(`/result/${moId}`);
+					}}
+				>
 					입력 완료
 				</button>
-			</Link>
+			</div>
 		</div>
 	);
 };
