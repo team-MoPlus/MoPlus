@@ -6,7 +6,7 @@ import { getSubjectDict } from "../../../utils/getSubjectDict";
 import Link from "next/link";
 import { Banner } from "@/components/Banner";
 
-const MoDetailContainer = () => {
+const MoDetailContainer = ({ testId }: { testId: number }) => {
 	const [item, setItem] = useState<TestInfo | null>(null);
 	const subjectDict = getSubjectDict();
 
