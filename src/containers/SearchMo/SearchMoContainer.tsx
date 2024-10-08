@@ -4,106 +4,55 @@ import { Banner } from "@/components/Banner";
 import { RequestMo } from "@/components/Buttons";
 import { ItemList } from "@/components/Items";
 import SearchBar from "@/components/SearchBar/SearchBar";
-import { MoState } from "@/recoil/atoms";
+import { testListState } from "@/recoil/atoms";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-
-const dummyMO = [
-	{
-		id: 1,
-		subject: "기하",
-		title: "2024 고3 9월 모의고사",
-		author: "평가원",
-		year: 2024,
-		visited: 212,
-		solved: 50,
-	},
-	{
-		id: 2,
-		subject: "화법과작문",
-		title: "2024 고3 9월 모의고사",
-		author: "평가원",
-		year: 2024,
-		visited: 1004,
-		solved: 520,
-	},
-	{
-		id: 3,
-		subject: "언어와매체",
-		title: "2024 고3 7월 모의고사",
-		author: "교육청",
-		year: 2024,
-		visited: 901,
-		solved: 560,
-	},
-	{
-		id: 4,
-		subject: "영어",
-		title: "2024 고3 3월 모의고사",
-		author: "교육청",
-		year: 2024,
-		visited: 1201,
-		solved: 1004,
-	},
-	{
-		id: 5,
-		subject: "세계지리",
-		title: "2024 고3 10월 모의고사",
-		author: "교육청",
-		year: 2024,
-		visited: 102,
-		solved: 89,
-	},
-	{
-		id: 6,
-		subject: "지구과학I",
-		title: "2024 고3 9월 모의고사",
-		author: "평가원",
-		year: 2024,
-		visited: 831,
-		solved: 713,
-	},
-	{
-		id: 7,
-		subject: "화학II",
-		title: "2024 고3 6월 모의고사",
-		author: "평가원",
-		year: 2024,
-		visited: 395,
-		solved: 391,
-	},
-	{
-		id: 8,
-		subject: "생활과윤리",
-		title: "2024 고3 7월 모의고사",
-		author: "교육청",
-		year: 2024,
-		visited: 284,
-		solved: 193,
-	},
-];
+import { TestInfo } from "../../../types/Item";
+import { getAllTests } from "../../../apis/tests";
 
 const SearchMoContainer = () => {
 	// 검색어 상태 관리
 	const [searchTerm, setSearchTerm] = useState<string>("");
-	const [items, setItems] = useRecoilState(MoState);
+	const [testList, setTestList] = useRecoilState<TestInfo[]>(testListState); // 가져온 데이터를 저장할 상태
+	const [loading, setLoading] = useState<boolean>(true); // 로딩 상태를 관리
+	const [error, setError] = useState<string | null>(null); // 에러 상태 관리
 
 	// 검색어로 필터링된 데이터
-	const filteredItems = dummyMO.filter(
+	const filteredItems = testList.filter(
 		(item) =>
-			item.title.includes(searchTerm) ||
-			item.author.includes(searchTerm) ||
+			item.name.includes(searchTerm) ||
+			item.provider.includes(searchTerm) ||
 			item.subject.includes(searchTerm) // 검색어와 일치하는 title 필터링
 	);
 
-	// 컴포넌트가 로드될 때 dummyMO 데이터를 Recoil 상태에 저장
 	useEffect(() => {
-		// 만약 items가 비어 있다면 dummyMO를 상태에 설정
-		if (items.length === 0) {
-			setItems(dummyMO); // `dummyMO` 데이터를 Recoil Atom에 저장
-		}
-	}, [items, setItems]);
+		// 페이지 로드 시 데이터를 가져오는 함수
+		const fetchTestList = async () => {
+			try {
+				setLoading(true); // 로딩 상태 활성화
+				const data = await getAllTests(); // getTestList 함수 호출
+				setTestList(data); // 가져온 데이터를 상태에 저장
+				// console.log(data);
+			} catch (err) {
+				setError("데이터를 가져오는 중 오류가 발생했습니다.");
+			} finally {
+				setLoading(false); // 로딩 상태 비활성화
+			}
+		};
+
+		fetchTestList(); // 데이터 가져오기 함수 호출
+	}, []);
+
+	// 로딩 중일 때 표시할 UI
+	if (loading) {
+		return <p>Loading...</p>;
+	}
+
+	// 에러가 발생했을 때 표시할 UI
+	if (error) {
+		return <p>Error: {error}</p>;
+	}
 
 	return (
 		<div className="w-full h-full flex-col p-4">

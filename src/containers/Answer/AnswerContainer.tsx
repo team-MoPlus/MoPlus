@@ -6,21 +6,11 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { TestInfo } from "../../../types/Item";
 import { ProblemCount } from "../../../utils/problemCount";
+import { useRecoilValue } from "recoil";
+import { testInfoState } from "@/recoil/atoms";
 
-const AnswerContainer = ({ testId }: { testId: number }) => {
-	const [test, setTest] = useState<TestInfo | null>();
-
-	// 페이지가 로드될 때 sessionStorage에서 선택한 아이템 데이터 가져오기
-	useEffect(() => {
-		const savedItem = sessionStorage.getItem("selectedItem");
-		if (savedItem) {
-			setTest(JSON.parse(savedItem)); // JSON 문자열을 객체로 변환하여 상태에 저장
-		}
-	}, []);
-
-	if (test == null) {
-		return <p>error</p>;
-	}
+const AnswerContainer = ({ id }: { id: number }) => {
+	const testInfo = useRecoilValue<TestInfo>(testInfoState);
 
 	return (
 		<div className="p-4">
@@ -31,8 +21,8 @@ const AnswerContainer = ({ testId }: { testId: number }) => {
 				오답을 체크하고 답을 입력하세요!
 			</div>
 			<CheckAnswer
-				problemNumber={ProblemCount[test.subject]}
-				testId={test.id}
+				problemNumber={ProblemCount[testInfo.subject]}
+				id={id}
 			/>
 		</div>
 	);

@@ -1,8 +1,8 @@
 import AnswerContainer from "@/containers/Answer/AnswerContainer";
 import React from "react";
 
-const page = ({ params }: { params: { moId: number } }) => {
-	return <AnswerContainer moId={params.moId} />;
+const page = ({ params }: { params: { id: number } }) => {
+	return <AnswerContainer id={params.id} />;
 };
 
 export default page;

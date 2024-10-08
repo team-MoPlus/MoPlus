@@ -4,16 +4,17 @@ import { Banner } from "@/components/Banner";
 import { HourMinutePicker } from "@/components/Tables";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { postSolveTime } from "../../../apis/testResult";
+import { useSetRecoilState } from "recoil";
+import { testResultState } from "@/recoil/atoms";
 
-interface SolvetimeContainerProps {
-	moId: number;
-}
-
-const SolvetimeContainer = ({ moId }: SolvetimeContainerProps) => {
+const SolvetimeContainer = ({ testResultId }: { testResultId: number }) => {
 	const [hour, setHour] = useState<string>("");
 	const [minute, setMinute] = useState<string>("");
 	const router = useRouter();
+	const setTestResultInfo = useSetRecoilState(testResultState);
 
 	// 시간 입력 핸들러
 	const handleHourChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,6 +31,32 @@ const SolvetimeContainer = ({ moId }: SolvetimeContainerProps) => {
 			setMinute(stringValue);
 		}
 	};
+
+	const handleSubmit = (testResultId: number, timeString: string) => {
+		mutation.mutate({
+			testResultId,
+			timeString,
+		});
+	};
+
+	const mutation = useMutation({
+		mutationFn: (params: { testResultId: number; timeString: string }) =>
+			postSolveTime(params.testResultId, params.timeString),
+		onSuccess: (data, variables) => {
+			setTestResultInfo(data);
+			router.push(`/result/${testResultId}`);
+		},
+		// 에러 핸들링 (optional)
+		onError: (error) => {
+			console.error("Error posting data:", error);
+			alert("There was an error submitting your answers.");
+		},
+
+		// 요청이 완료되면 실행 (성공 또는 실패와 무관)
+		onSettled: () => {
+			console.log("Request has been processed.");
+		},
+	});
 
 	return (
 		<div className="p-4">
@@ -62,9 +89,7 @@ const SolvetimeContainer = ({ moId }: SolvetimeContainerProps) => {
 				<button
 					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg disabled:bg-gray-200 disabled:text-gray-400"
 					disabled={hour.length === 0 && minute.length === 0}
-					onClick={() => {
-						router.push(`/result/${moId}`);
-					}}
+					onClick={() => handleSubmit(testResultId, `PT${hour}H${minute}M`)}
 				>
 					입력 완료
 				</button>
