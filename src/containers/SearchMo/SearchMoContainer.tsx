@@ -10,13 +10,13 @@ import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { TestInfo } from "../../../types/Item";
 import { getAllTests } from "../../../apis/tests";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 const SearchMoContainer = () => {
 	// 검색어 상태 관리
 	const [searchTerm, setSearchTerm] = useState<string>("");
 	const [testList, setTestList] = useRecoilState<TestInfo[]>(testListState); // 가져온 데이터를 저장할 상태
-	const [loading, setLoading] = useState<boolean>(true); // 로딩 상태를 관리
-	const [error, setError] = useState<string | null>(null); // 에러 상태 관리
 
 	// 검색어로 필터링된 데이터
 	const filteredItems = testList.filter(
@@ -26,32 +26,19 @@ const SearchMoContainer = () => {
 			item.subject.includes(searchTerm) // 검색어와 일치하는 title 필터링
 	);
 
-	useEffect(() => {
-		// 페이지 로드 시 데이터를 가져오는 함수
-		const fetchTestList = async () => {
-			try {
-				setLoading(true); // 로딩 상태 활성화
-				const data = await getAllTests(); // getTestList 함수 호출
-				setTestList(data); // 가져온 데이터를 상태에 저장
-				// console.log(data);
-			} catch (err) {
-				setError("데이터를 가져오는 중 오류가 발생했습니다.");
-			} finally {
-				setLoading(false); // 로딩 상태 비활성화
-			}
-		};
+	const { data, isPending, isError, error } = useQuery({
+		queryKey: ["tests"],
+		queryFn: getAllTests,
+		select: (data) => setTestList(data),
+	});
 
-		fetchTestList(); // 데이터 가져오기 함수 호출
-	}, []);
-
-	// 로딩 중일 때 표시할 UI
-	if (loading) {
-		return <p>Loading...</p>;
+	if (isPending) {
+		return <LoadingSpinner />;
 	}
 
 	// 에러가 발생했을 때 표시할 UI
-	if (error) {
-		return <p>Error: {error}</p>;
+	if (isError) {
+		return <p>Error: {error.message}</p>;
 	}
 
 	return (

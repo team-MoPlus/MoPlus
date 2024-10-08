@@ -7,6 +7,7 @@ import { getTestById } from "../../../apis/tests";
 import { useQuery } from "@tanstack/react-query";
 import { useRecoilState } from "recoil";
 import { testInfoState } from "@/recoil/atoms";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 const MoDetailContainer = ({ id }: { id: number }) => {
 	const [testInfo, setTestInfo] = useRecoilState(testInfoState);
@@ -19,7 +20,7 @@ const MoDetailContainer = ({ id }: { id: number }) => {
 	});
 
 	if (isPending) {
-		return <p>Loading...</p>;
+		return <LoadingSpinner />;
 	}
 
 	// 에러가 발생했을 때 표시할 UI
