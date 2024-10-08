@@ -23,13 +23,14 @@ const SearchMoContainer = () => {
 		queryFn: getAllTests,
 	});
 
-	// 검색어로 필터링된 데이터
-	const filteredItems = data.filter(
-		(item: TestInfo) =>
-			item.name.includes(searchTerm) ||
-			item.provider.includes(searchTerm) ||
-			item.subject.includes(searchTerm) // 검색어와 일치하는 title 필터링
-	);
+	const filterItems = (testList: TestInfo[]) => {
+		return testList.filter(
+			(item: TestInfo) =>
+				item.name.includes(searchTerm) ||
+				item.provider.includes(searchTerm) ||
+				item.subject.includes(searchTerm) // 검색어와 일치하는 title 필터링
+		);
+	};
 
 	if (isPending) {
 		return <LoadingSpinner />;
@@ -55,7 +56,7 @@ const SearchMoContainer = () => {
 			{/* 검색바에 onSearchTermChange 핸들러 전달 */}
 			<SearchBar onSearchTermChange={setSearchTerm} />
 			<div className="w-full pt-2 pb-4">
-				<ItemList itemList={filteredItems} />
+				<ItemList itemList={filterItems(data)} />
 			</div>
 		</div>
 	);
