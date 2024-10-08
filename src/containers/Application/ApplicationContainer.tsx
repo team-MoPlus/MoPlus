@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { postApplication } from "../../../apis/application";
+import { ApplicationForm } from "../../../types/result";
 
 // 한글 완성 여부를 확인하는 함수
 const isKoreanComplete = (input: string): boolean => {
@@ -21,9 +23,11 @@ const isKoreanComplete = (input: string): boolean => {
 	return true; // 한글 이외의 문자는 검사 제외
 };
 
-const notify = () => toast.error("유효하지 않은 이름입니다.");
+const notifyNameError = () => toast.error("유효하지 않은 이름입니다.");
+const notifyPhoneNumberError = () =>
+	toast.error("유효하지 않은 전화번호입니다.");
 
-const ApplicationContainer = () => {
+const ApplicationContainer = ({ testId }: { testId: number }) => {
 	const router = useRouter();
 
 	const [name, setName] = useState("");
@@ -41,6 +45,11 @@ const ApplicationContainer = () => {
 	const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value;
 		setName(value);
+	};
+
+	const sendApplication = ({ testId, name, phoneNumber }: ApplicationForm) => {
+		postApplication({ testId, name, phoneNumber });
+		router.replace("/searchmo");
 	};
 
 	return (
@@ -83,7 +92,11 @@ const ApplicationContainer = () => {
 				<button
 					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg"
 					onClick={() => {
-						isKoreanComplete(name) ? router.replace("/searchmo") : notify();
+						isKoreanComplete(name)
+							? phoneNumber.length < 10
+								? notifyPhoneNumberError()
+								: sendApplication({ testId, name, phoneNumber })
+							: notifyNameError();
 					}}
 				>
 					신청
