@@ -20,7 +20,9 @@ const SearchMoContainer = () => {
 
 	const { data, isPending, isError, error } = useQuery({
 		queryKey: ["tests"],
-		queryFn: getAllTests,
+		queryFn: () => {
+			return getAllTests();
+		},
 	});
 
 	const filterItems = (testList: TestInfo[]) => {
