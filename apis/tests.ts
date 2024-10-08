@@ -17,3 +17,12 @@ export const getTestById = async (id: number) => {
 		})
 		.catch((err) => console.error(err));
 };
+
+export const countViewCount = async (id: number) => {
+	return await api
+		.put(`practiceTests/${id}/viewCount`)
+		.then((res) => {
+			return res.data;
+		})
+		.catch((err) => console.error(err));
+};
