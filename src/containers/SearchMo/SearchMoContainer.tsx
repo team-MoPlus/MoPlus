@@ -18,19 +18,18 @@ const SearchMoContainer = () => {
 	const [searchTerm, setSearchTerm] = useState<string>("");
 	const [testList, setTestList] = useRecoilState<TestInfo[]>(testListState); // 가져온 데이터를 저장할 상태
 
+	const { data, isPending, isError, error } = useQuery({
+		queryKey: ["tests"],
+		queryFn: getAllTests,
+	});
+
 	// 검색어로 필터링된 데이터
-	const filteredItems = testList.filter(
-		(item) =>
+	const filteredItems = data.filter(
+		(item: TestInfo) =>
 			item.name.includes(searchTerm) ||
 			item.provider.includes(searchTerm) ||
 			item.subject.includes(searchTerm) // 검색어와 일치하는 title 필터링
 	);
-
-	const { data, isPending, isError, error } = useQuery({
-		queryKey: ["tests"],
-		queryFn: getAllTests,
-		select: (data) => setTestList(data),
-	});
 
 	if (isPending) {
 		return <LoadingSpinner />;
