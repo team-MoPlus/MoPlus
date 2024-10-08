@@ -2,13 +2,13 @@ import { ApplicationForm } from "../types/result";
 import { api } from "./axios";
 
 export const postApplication = async ({
-	testId,
+	testResultId,
 	name,
 	phoneNumber,
 }: ApplicationForm) => {
 	return await api
 		.post(`/detailResultApplication`, {
-			testResultId: testId,
+			testResultId: testResultId,
 			name: name,
 			phoneNumber: phoneNumber,
 		})
