@@ -5,11 +5,15 @@ import { TestInfo } from "../../../types/Item";
 interface ItemCardProps {
 	mo: TestInfo;
 	order: number;
+	onClick: () => void;
 }
 
-const ItemCard = ({ mo, order }: ItemCardProps) => {
+const ItemCard = ({ mo, order, onClick }: ItemCardProps) => {
 	return (
-		<div className="flex gap-4 items-center w-full h-24 px-4 mb-2 rounded-lg border-2">
+		<div
+			onClick={onClick}
+			className="flex gap-4 items-center w-full h-24 px-4 mb-2 rounded-lg border-2 cursor-pointer"
+		>
 			<div className="text-2xl">{order}</div>
 			<div>
 				<Image

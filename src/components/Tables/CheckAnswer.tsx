@@ -19,6 +19,8 @@ import {
 	TbCircleNumber5Filled,
 } from "react-icons/tb";
 import { useRouter } from "next/navigation";
+import { postAnswer } from "../../../apis/testResult";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const CircleNumber = [
 	<TbCircleNumber1 key={1} size={30} color="orange" />,
@@ -42,15 +44,15 @@ const notify = (missingFromSelected: number[]) => {
 
 const CheckAnswer = ({
 	problemNumber,
-	testId,
+	id,
 }: {
 	problemNumber: number;
-	testId: number;
+	id: number;
 }) => {
 	const router = useRouter();
 	const [checkedProblems, setCheckedProblems] = useState<number[]>([]); // 오답 체크된 행을 관리하는 상태
 	const [selectedChoices, setSelectedChoices] = useState<{
-		[key: number]: number | null;
+		[key: number]: number;
 	}>({}); // 선택된 선지를 관리하는 상태
 
 	const questions = Array.from({ length: problemNumber }, (_, i) => i + 1);
@@ -64,6 +66,27 @@ const CheckAnswer = ({
 		);
 	};
 
+	const mutation = useMutation({
+		mutationFn: (params: {
+			id: number;
+			wrongProblemArray: { problemNumber: string; incorrectAnswer: string }[];
+		}) => postAnswer(params.id, params.wrongProblemArray),
+		onSuccess: (data, variables) => {
+			console.log(data);
+			router.push(`/solvetime/${data}`);
+		},
+		// 에러 핸들링 (optional)
+		onError: (error) => {
+			console.error("Error posting data:", error);
+			alert("There was an error submitting your answers.");
+		},
+
+		// 요청이 완료되면 실행 (성공 또는 실패와 무관)
+		onSettled: () => {
+			console.log("Request has been processed.");
+		},
+	});
+
 	// 선지 선택 상태 설정
 	const handleChoiceSelect = (index: number, choice: number) => {
 		if (checkedProblems.includes(index)) {
@@ -72,6 +95,21 @@ const CheckAnswer = ({
 				[index]: choice,
 			}));
 		}
+	};
+
+	const handleSubmit = (
+		id: number,
+		selectedChoices: {
+			[key: number]: number;
+		}
+	) => {
+		const wrongProblemArray = Object.entries(selectedChoices).map(
+			([key, value]) => ({
+				problemNumber: `${key}`,
+				incorrectAnswer: `${value + 1}`,
+			})
+		);
+		mutation.mutate({ id, wrongProblemArray });
 	};
 
 	// checkedProblems 배열의 값이 selectedChoices 배열에 포함되어 있는지 판별
@@ -135,7 +173,7 @@ const CheckAnswer = ({
 					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg"
 					onClick={() => {
 						hasAllCheckedInSelected
-							? router.push(`/solvetime/${testId}`)
+							? handleSubmit(id, selectedChoices)
 							: notify(missingFromSelected);
 					}}
 				>

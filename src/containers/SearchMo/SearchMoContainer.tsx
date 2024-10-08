@@ -4,7 +4,7 @@ import { Banner } from "@/components/Banner";
 import { RequestMo } from "@/components/Buttons";
 import { ItemList } from "@/components/Items";
 import SearchBar from "@/components/SearchBar/SearchBar";
-import { MoState } from "@/recoil/atoms";
+import { testListState } from "@/recoil/atoms";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
@@ -14,7 +14,7 @@ import { getAllTests } from "../../../apis/tests";
 const SearchMoContainer = () => {
 	// 검색어 상태 관리
 	const [searchTerm, setSearchTerm] = useState<string>("");
-	const [testList, setTestList] = useState<TestInfo[]>([]); // 가져온 데이터를 저장할 상태
+	const [testList, setTestList] = useRecoilState<TestInfo[]>(testListState); // 가져온 데이터를 저장할 상태
 	const [loading, setLoading] = useState<boolean>(true); // 로딩 상태를 관리
 	const [error, setError] = useState<string | null>(null); // 에러 상태 관리
 

@@ -10,8 +10,8 @@ const { persistAtom } = recoilPersist({
 });
 
 // 모의고사
-export const MoState = atom({
-	key: "MoState",
+export const testListState = atom({
+	key: "testListState",
 	default: [],
 	effects_UNSTABLE: [persistAtom],
 });
@@ -43,6 +43,35 @@ export const subjectDictState = atom({
 		지구과학I: "과학",
 		지구과학II: "과학",
 	},
+	effects_UNSTABLE: [persistAtom],
+});
+
+// test 정보
+export const testInfoState = atom({
+	key: "testInfoState",
+	default: {
+		testId: 0,
+		subject: "",
+		name: "",
+		provider: "",
+		round: 0,
+		viewCount: 0,
+		totalSolvesCount: 0,
+	},
+	effects_UNSTABLE: [persistAtom],
+});
+
+// test 결과 정보
+export const testResultState = atom({
+	key: "testResultState",
+	default: {
+		testId: 0,
+		solveTime: "",
+		score: 0,
+		name: "",
+		phoneNumber: "",
+	},
+	effects_UNSTABLE: [persistAtom],
 });
 
 // // 선택과목 -> 과목 변환
