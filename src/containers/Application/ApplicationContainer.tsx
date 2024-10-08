@@ -6,7 +6,9 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { postApplication } from "../../../apis/application";
-import { ApplicationForm } from "../../../types/result";
+import { ApplicationForm, TestResult } from "../../../types/result";
+import { testResultState } from "@/recoil/atoms";
+import { useRecoilValue } from "recoil";
 
 // 한글 완성 여부를 확인하는 함수
 const isKoreanComplete = (input: string): boolean => {
@@ -27,11 +29,12 @@ const notifyNameError = () => toast.error("유효하지 않은 이름입니다."
 const notifyPhoneNumberError = () =>
 	toast.error("유효하지 않은 전화번호입니다.");
 
-const ApplicationContainer = ({ testId }: { testId: number }) => {
+const ApplicationContainer = () => {
 	const router = useRouter();
 
 	const [name, setName] = useState("");
 	const [phoneNumber, setPhoneNumber] = useState("");
+	const testResult = useRecoilValue<TestResult>(testResultState);
 
 	// 입력 시 숫자만 허용
 	const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
@@ -47,8 +50,12 @@ const ApplicationContainer = ({ testId }: { testId: number }) => {
 		setName(value);
 	};
 
-	const sendApplication = ({ testId, name, phoneNumber }: ApplicationForm) => {
-		postApplication({ testId, name, phoneNumber });
+	const sendApplication = ({
+		testResultId,
+		name,
+		phoneNumber,
+	}: ApplicationForm) => {
+		postApplication({ testResultId, name, phoneNumber });
 		router.replace("/searchmo");
 	};
 
@@ -95,7 +102,11 @@ const ApplicationContainer = ({ testId }: { testId: number }) => {
 						isKoreanComplete(name)
 							? phoneNumber.length < 10
 								? notifyPhoneNumberError()
-								: sendApplication({ testId, name, phoneNumber })
+								: sendApplication({
+										testResultId: testResult.id,
+										name,
+										phoneNumber,
+									})
 							: notifyNameError();
 					}}
 				>
