@@ -6,15 +6,17 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { postSolveTime } from "../../../apis/testResult";
-import { useSetRecoilState } from "recoil";
-import { testResultState } from "@/recoil/atoms";
+import { countSolveCount, postSolveTime } from "../../../apis/testResult";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { testInfoState, testResultState } from "@/recoil/atoms";
+import { TestInfo } from "../../../types/Item";
 
 const SolvetimeContainer = ({ testResultId }: { testResultId: number }) => {
 	const [hour, setHour] = useState<string>("");
 	const [minute, setMinute] = useState<string>("");
 	const router = useRouter();
 	const setTestResultInfo = useSetRecoilState(testResultState);
+	const testInfo = useRecoilValue<TestInfo>(testInfoState);
 
 	// 시간 입력 핸들러
 	const handleHourChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,6 +35,7 @@ const SolvetimeContainer = ({ testResultId }: { testResultId: number }) => {
 	};
 
 	const handleSubmit = (testResultId: number, timeString: string) => {
+		countSolveCount(testInfo.id);
 		mutation.mutate({
 			testResultId,
 			timeString,

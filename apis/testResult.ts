@@ -22,3 +22,12 @@ export const postSolveTime = async (
 		})
 		.catch((err) => console.error(err));
 };
+
+export const countSolveCount = async (id: number) => {
+	return await api
+		.put(`practiceTests/${id}/solveCount`)
+		.then((res) => {
+			return res.data;
+		})
+		.catch((err) => console.error(err));
+};

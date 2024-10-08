@@ -5,6 +5,7 @@ import { TestInfo } from "../../../types/Item";
 import { useRouter } from "next/navigation";
 import { useSetRecoilState } from "recoil";
 import { testInfoState } from "@/recoil/atoms";
+import { countViewCount } from "../../../apis/tests";
 
 interface ItemListProps {
 	itemList: TestInfo[];
@@ -25,7 +26,7 @@ const ItemList = ({ itemList }: ItemListProps) => {
 			...prevTestInfo, // 기존의 다른 속성 유지
 			id: item.id,
 		}));
-		// sessionStorage.setItem("selectedItem", JSON.stringify(item)); // 선택된 아이템 객체를 sessionStorage에 저장
+		countViewCount(item.id);
 		router.push(`/detail/${item.id}`); // item id를 사용하여 Detail 페이지로 이동
 	};
 
