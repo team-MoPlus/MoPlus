@@ -1,5 +1,5 @@
 export interface ApplicationForm {
-	testId: number;
+	testResultId: number;
 	name: string | null;
 	phoneNumber: string | null;
 }
