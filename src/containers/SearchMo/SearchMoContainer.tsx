@@ -6,7 +6,7 @@ import { ItemList } from "@/components/Items";
 import SearchBar from "@/components/SearchBar/SearchBar";
 import { testListState } from "@/recoil/atoms";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { TestInfo } from "../../../types/Item";
 import { getAllTests } from "../../../apis/tests";
@@ -20,9 +20,7 @@ const SearchMoContainer = () => {
 
 	const { data, isPending, isError, error } = useQuery({
 		queryKey: ["tests"],
-		queryFn: () => {
-			return getAllTests();
-		},
+		queryFn: getAllTests,
 	});
 
 	const filterItems = (testList: TestInfo[]) => {
