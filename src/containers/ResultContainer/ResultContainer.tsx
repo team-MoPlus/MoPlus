@@ -112,7 +112,7 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 					<div className="flex justify-start px-8 items-center border border-gray-400 rounded-xl h-16">
 						내 아래로&nbsp;
 						<span className="text-orange-500 text-lg">
-							{testResultInfo.rank - 1}명
+							{testResultInfo.solvingCount - testResultInfo.rank}명
 						</span>
 						이 있어요
 					</div>
