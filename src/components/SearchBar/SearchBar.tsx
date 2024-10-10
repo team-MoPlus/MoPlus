@@ -22,7 +22,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearchTermChange }) => {
 
 			<input
 				type="text"
-				className="w-full h-12 p-4 pl-10 pr-4 text-md bg-gray-200 rounded-lg focus:outline-none border focus:border-2 focus:border-orange-500"
+				className="w-full h-12 p-4 pl-10 pr-4 text-md bg-gray-100 rounded-lg focus:outline-none border focus:border-2 focus:border-orange-500"
 				placeholder="선택과목/제목/저자명으로 검색"
 				value={searchTerm}
 				onChange={(e) => handleSearchTermChange(e.target.value)}

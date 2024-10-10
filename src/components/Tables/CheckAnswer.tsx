@@ -21,8 +21,12 @@ import {
 import { useRouter } from "next/navigation";
 import { postAnswer } from "../../../apis/testResult";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRecoilValue } from "recoil";
-import { testInfoState } from "@/recoil/atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+	checkedProblemsState,
+	selectedChoicesState,
+	testInfoState,
+} from "@/recoil/atoms";
 import { TestInfo } from "../../../types/Item";
 import { getSubjectDict } from "../../../utils/getSubjectDict";
 
@@ -54,10 +58,10 @@ const CheckAnswer = ({
 	id: number;
 }) => {
 	const router = useRouter();
-	const [checkedProblems, setCheckedProblems] = useState<number[]>([]); // 오답 체크된 행을 관리하는 상태
-	const [selectedChoices, setSelectedChoices] = useState<{
-		[key: number]: number;
-	}>({}); // 선택된 선지를 관리하는 상태
+	const [checkedProblems, setCheckedProblems] =
+		useRecoilState(checkedProblemsState);
+	const [selectedChoices, setSelectedChoices] =
+		useRecoilState(selectedChoicesState);
 	const testInfo = useRecoilValue<TestInfo>(testInfoState);
 	const subjectDict = getSubjectDict();
 
@@ -78,7 +82,6 @@ const CheckAnswer = ({
 			wrongProblemArray: { problemNumber: string; incorrectAnswer: string }[];
 		}) => postAnswer(params.id, params.wrongProblemArray),
 		onSuccess: (data, variables) => {
-			console.log(data);
 			router.push(`/solvetime/${data}`);
 		},
 		// 에러 핸들링 (optional)

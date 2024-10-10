@@ -14,7 +14,6 @@ const LandingContainer = () => {
 				width={550}
 				height={550}
 				alt="랜딩 페이지"
-				// layout="responsive"
 			/>
 
 			<button
