@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useRecoilValue } from "recoil";
 import { testInfoState, testResultState } from "@/recoil/atoms";
 import { TestResult } from "../../../types/result";
+import { calculateTimeDifference } from "../../../utils/parseTime";
 
 const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 	const router = useRouter();
@@ -17,6 +18,11 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 	// 정규식을 사용하여 H와 M 사이의 숫자 추출
 	const matchTest = testResultInfo.solvingTime.match(/PT(\d+)H(\d+)M/);
 	const matchAvg = testResultInfo.averageSolvingTime.match(/PT(\d+)H(\d+)M/);
+
+	const timeArr = calculateTimeDifference(
+		testResultInfo.averageSolvingTime,
+		testResultInfo.solvingTime
+	);
 
 	return (
 		<div className="p-4">
@@ -43,7 +49,7 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 					</div>
 				</div>
 			</div>
-			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md">
+			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md my-2">
 				<h1 className="text-xl mb-4">틀린 문제</h1>
 				<div className="flex items-center text-lg gap-5 text-gray-500">
 					{testResultInfo.incorrectProblems.map((problem, idx) => (
@@ -57,7 +63,7 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 				</div>
 			</div>
 			<div className="w-full border border-dashed border-orange-200 rounded-md p-4">
-				<h1 className="text-xl">내 위치</h1>
+				<h1 className="text-xl mb-4">내 위치</h1>
 				<div className="w-full flex justify-between">
 					<div className="text-4xl text-orange-500">
 						{testResultInfo.rank}
@@ -70,10 +76,46 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 						<div className="text-sm flex justify-end">평균 풀이 시간</div>
 					</div>
 				</div>
-				<div className="mt-4 mx-4">
-					<div className="border border-gray-400 rounded-xl h-16"></div>
-					<div className="border border-gray-400 rounded-xl h-16"></div>
-					<div className="border border-gray-400 rounded-xl h-16"></div>
+				<div className="mt-4 mx-4 text-gray-700">
+					<div className="flex justify-start px-8 items-center border border-gray-400 rounded-xl h-16">
+						내 위로&nbsp;
+						<span className="text-orange-500 text-lg">
+							{testResultInfo.rank - 1}명
+						</span>
+						이 있어요
+					</div>
+					<div className="w-full flex flex-col items-center gap-1 my-2">
+						<div className="rounded-full bg-orange-500 w-1 h-1"></div>
+						<div className="rounded-full bg-orange-500 w-1 h-1"></div>
+						<div className="rounded-full bg-orange-500 w-1 h-1"></div>
+					</div>
+					<div className="flex flex-col justify-center px-8 border border-gray-400 rounded-xl h-16">
+						<p>
+							<span className="text-orange-500 text-lg">
+								{testResultInfo.rank}등
+							</span>
+							이예요!
+						</p>
+						<p>
+							평균 풀이 시간보다&nbsp;
+							<span className="text-orange-500 text-lg">
+								{timeArr[1]}시간 {timeArr[2]}분
+							</span>
+							&nbsp;{timeArr[0] ? "빨리 풀었어요! 😍" : "늦게 풀었어요 😅"}
+						</p>
+					</div>
+					<div className="w-full flex flex-col items-center gap-1 my-2">
+						<div className="rounded-full bg-orange-500 w-1 h-1"></div>
+						<div className="rounded-full bg-orange-500 w-1 h-1"></div>
+						<div className="rounded-full bg-orange-500 w-1 h-1"></div>
+					</div>
+					<div className="flex justify-start px-8 items-center border border-gray-400 rounded-xl h-16">
+						내 아래로&nbsp;
+						<span className="text-orange-500 text-lg">
+							{testResultInfo.rank - 1}명
+						</span>
+						이 있어요
+					</div>
 				</div>
 			</div>
 
@@ -82,7 +124,7 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg"
 					onClick={() => router.push("/application")}
 				>
-					상세 분석표 신청하기
+					상세 분석 성적표 신청하기
 				</button>
 			</div>
 		</div>

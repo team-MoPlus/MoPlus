@@ -21,6 +21,10 @@ import {
 import { useRouter } from "next/navigation";
 import { postAnswer } from "../../../apis/testResult";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRecoilValue } from "recoil";
+import { testInfoState } from "@/recoil/atoms";
+import { TestInfo } from "../../../types/Item";
+import { getSubjectDict } from "../../../utils/getSubjectDict";
 
 const CircleNumber = [
 	<TbCircleNumber1 key={1} size={30} color="orange" />,
@@ -54,6 +58,8 @@ const CheckAnswer = ({
 	const [selectedChoices, setSelectedChoices] = useState<{
 		[key: number]: number;
 	}>({}); // 선택된 선지를 관리하는 상태
+	const testInfo = useRecoilValue<TestInfo>(testInfoState);
+	const subjectDict = getSubjectDict();
 
 	const questions = Array.from({ length: problemNumber }, (_, i) => i + 1);
 
@@ -150,19 +156,26 @@ const CheckAnswer = ({
 								/>
 							</td>
 							<td className="border-2 border-orange-400 pl-4">
-								{Array(5)
-									.fill(null)
-									.map((v, i) => (
-										<button
-											key={i}
-											onClick={() => handleChoiceSelect(value, i)}
-											hidden={!checkedProblems.includes(value)}
-										>
-											{selectedChoices[value] === i
-												? CircleNumberFilled[i]
-												: CircleNumber[i]}
-										</button>
-									))}
+								{subjectDict[testInfo.subject] !== "수학" ||
+								index < 15 ||
+								22 <= index ||
+								index <= 27 ? (
+									Array(5)
+										.fill(null)
+										.map((v, i) => (
+											<button
+												key={i}
+												onClick={() => handleChoiceSelect(value, i)}
+												hidden={!checkedProblems.includes(value)}
+											>
+												{selectedChoices[value] === i
+													? CircleNumberFilled[i]
+													: CircleNumber[i]}
+											</button>
+										))
+								) : (
+									<input type="text" />
+								)}
 							</td>
 						</tr>
 					))}
