@@ -16,7 +16,6 @@ import { LoadingSpinner } from "@/components/LoadingSpinner";
 const SearchMoContainer = () => {
 	// 검색어 상태 관리
 	const [searchTerm, setSearchTerm] = useState<string>("");
-	const [testList, setTestList] = useRecoilState<TestInfo[]>(testListState); // 가져온 데이터를 저장할 상태
 
 	const { data, isPending, isError, error } = useQuery({
 		queryKey: ["tests"],
