@@ -89,7 +89,7 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 						<div className="rounded-full bg-orange-500 w-1 h-1"></div>
 						<div className="rounded-full bg-orange-500 w-1 h-1"></div>
 					</div>
-					<div className="flex flex-col justify-center px-8 border border-gray-400 rounded-xl h-16">
+					<div className="flex flex-col justify-center px-8 py-4 border border-gray-400 rounded-xl h-fit">
 						<p>
 							<span className="text-orange-500 text-lg">
 								{testResultInfo.rank}등
@@ -121,7 +121,7 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 
 			<div className="flex justify-center">
 				<button
-					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg"
+					className="w-64 h-12 mt-4 bg-orange-200 text-orange-500 rounded-lg"
 					onClick={() => router.push("/application")}
 				>
 					상세 분석 성적표 신청하기
