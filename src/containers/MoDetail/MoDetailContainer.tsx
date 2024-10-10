@@ -38,18 +38,18 @@ const MoDetailContainer = ({ id }: { id: number }) => {
 			</div>
 			<div className="mt-8">
 				<p className="text-xl text-orange-500">선택한 모의고사</p>
-				<p className="text-xl">{testInfo.name}</p>
+				<p className="text-md">{testInfo.name}</p>
 			</div>
 
 			{Object.keys(subjectDict).includes(testInfo.subject) ? (
 				<>
 					<div>
 						<p className="text-xl text-orange-500 mt-8">과목</p>
-						<p className="text-xl">{subjectDict[testInfo.subject]}</p>
+						<p className="text-lg">{subjectDict[testInfo.subject]}</p>
 					</div>
 					<div>
 						<p className="text-xl text-orange-500 mt-8">선택 과목</p>
-						<div className="grid grid-cols-3 gap-x-10 gap-y-4 mt-2 px-4">
+						<div className="grid grid-cols-3 gap-x-6 gap-y-4 mt-2 px-4">
 							{Object.entries(subjectDict)
 								.filter(
 									([key, value]) => value === subjectDict[testInfo.subject]
