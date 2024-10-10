@@ -91,7 +91,7 @@ const SolvetimeContainer = ({ testResultId }: { testResultId: number }) => {
 			<div className="flex justify-center">
 				<button
 					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg disabled:bg-gray-200 disabled:text-gray-400"
-					disabled={hour.length === 0 && minute.length === 0}
+					disabled={hour.length === 0 || minute.length === 0}
 					onClick={() => handleSubmit(testResultId, `PT${hour}H${minute}M`)}
 				>
 					입력 완료
