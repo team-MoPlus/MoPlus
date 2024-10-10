@@ -15,5 +15,6 @@ export interface TestResult {
 	solvingTime: string;
 	rank: number;
 	averageSolvingTime: string;
+	solvingCount: number;
 	incorrectProblems: IncorrectProblem[];
 }
