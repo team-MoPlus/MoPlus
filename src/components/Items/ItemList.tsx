@@ -16,10 +16,6 @@ const ItemList = ({ itemList }: ItemListProps) => {
 
 	const setTestInfo = useSetRecoilState<TestInfo>(testInfoState);
 
-	useEffect(() => {
-		sessionStorage.removeItem("recoilpersist");
-	}, []);
-
 	// 아이템을 클릭하면 sessionStorage에 저장하고 Detail 페이지로 이동
 	const handleItemClick = (item: TestInfo) => {
 		setTestInfo((prevTestInfo) => ({
