@@ -3,8 +3,12 @@ import React, { useEffect } from "react";
 import ItemCard from "./ItemCard";
 import { TestInfo } from "../../../types/Item";
 import { useRouter } from "next/navigation";
-import { useSetRecoilState } from "recoil";
-import { testInfoState } from "@/recoil/atoms";
+import { useResetRecoilState, useSetRecoilState } from "recoil";
+import {
+	selectedChoicesState,
+	testInfoState,
+	testResultState,
+} from "@/recoil/atoms";
 import { countViewCount } from "../../../apis/tests";
 
 interface ItemListProps {
@@ -15,10 +19,9 @@ const ItemList = ({ itemList }: ItemListProps) => {
 	const router = useRouter();
 
 	const setTestInfo = useSetRecoilState<TestInfo>(testInfoState);
-
-	useEffect(() => {
-		sessionStorage.removeItem("recoilpersist");
-	}, []);
+	const resetTestInfo = useResetRecoilState(testInfoState);
+	const resetTestResult = useResetRecoilState(testResultState);
+	const resetSelectedChoicesState = useResetRecoilState(selectedChoicesState);
 
 	// 아이템을 클릭하면 sessionStorage에 저장하고 Detail 페이지로 이동
 	const handleItemClick = (item: TestInfo) => {
@@ -27,6 +30,9 @@ const ItemList = ({ itemList }: ItemListProps) => {
 			id: item.id,
 		}));
 		countViewCount(item.id);
+		resetTestInfo();
+		resetTestResult();
+		resetSelectedChoicesState();
 		router.push(`/detail/${item.id}`); // item id를 사용하여 Detail 페이지로 이동
 	};
 

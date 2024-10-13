@@ -4,18 +4,25 @@ import { Banner } from "@/components/Banner";
 import { RequestMo } from "@/components/Buttons";
 import { ItemList } from "@/components/Items";
 import SearchBar from "@/components/SearchBar/SearchBar";
-import { testListState } from "@/recoil/atoms";
+import {
+	selectedChoicesState,
+	testInfoState,
+	testListState,
+	testResultState,
+} from "@/recoil/atoms";
 import Link from "next/link";
 import React, { useCallback, useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useResetRecoilState } from "recoil";
 import { TestInfo } from "../../../types/Item";
 import { getAllTests } from "../../../apis/tests";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { usePathname } from "next/navigation";
 
 const SearchMoContainer = () => {
 	// 검색어 상태 관리
 	const [searchTerm, setSearchTerm] = useState<string>("");
+
 
 	const { data, isPending, isError, error } = useQuery({
 		queryKey: ["tests"],

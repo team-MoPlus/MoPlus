@@ -29,6 +29,7 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 			<Link href="/" className="inline-block">
 				<Banner />
 			</Link>
+			{/* 결과 */}
 			<div className="h-16 text-white px-6 my-2 text-xl font-bold bg-orange-600 rounded-lg flex items-center">
 				결과
 			</div>
@@ -49,11 +50,12 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 					</div>
 				</div>
 			</div>
+			{/* 틀린 문제 */}
 			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md my-2">
 				<h1 className="text-xl mb-4">틀린 문제</h1>
-				<div className="flex items-center text-lg gap-5 text-gray-500">
+				<div className="grid grid-cols-5 items-center text-lg gap-4 text-gray-500">
 					{testResultInfo.incorrectProblems.map((problem, idx) => (
-						<div key={idx} className="flex items-center">
+						<div key={idx} className="flex items-center text-sm">
 							{problem.problemNumber}번{" "}
 							<span className="inline-block ml-1 text-xs text-orange-500 border border-orange-500 rounded-md p-[2px]">
 								{problem.point}점
@@ -62,6 +64,7 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 					))}
 				</div>
 			</div>
+			{/* 내 위치 */}
 			<div className="w-full border border-dashed border-orange-200 rounded-md p-4">
 				<h1 className="text-xl mb-4">내 위치</h1>
 				<div className="w-full flex justify-between">
