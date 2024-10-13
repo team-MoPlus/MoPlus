@@ -78,15 +78,8 @@ export const testResultState = atom({
 export const selectedChoicesState = atom<{ [key: number]: number }>({
 	key: "selectedChoicesState",
 	default: {},
-	effects_UNSTABLE: [persistAtom], // persistAtom 적용
 });
 
-// 오답 체크된 문제를 관리하는 atom
-export const checkedProblemsState = atom<number[]>({
-	key: "checkedProblemsState",
-	default: [],
-	effects_UNSTABLE: [persistAtom], // persistAtom 적용
-});
 
 // // 선택과목 -> 과목 변환
 // export const Subject2Select = atom({

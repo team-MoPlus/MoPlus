@@ -22,11 +22,7 @@ import { useRouter } from "next/navigation";
 import { postAnswer } from "../../../apis/testResult";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRecoilState, useRecoilValue } from "recoil";
-import {
-	checkedProblemsState,
-	selectedChoicesState,
-	testInfoState,
-} from "@/recoil/atoms";
+import { selectedChoicesState, testInfoState } from "@/recoil/atoms";
 import { TestInfo } from "../../../types/Item";
 import { getSubjectDict } from "../../../utils/getSubjectDict";
 
@@ -46,7 +42,7 @@ const CircleNumberFilled = [
 	<TbCircleNumber5Filled key={5} size={30} color="orange" />,
 ];
 
-const notify = (missingFromSelected: number[]) => {
+const notify = (missingFromSelected: string[]) => {
 	toast.error(`${missingFromSelected}번 문제의 선지를 선택하세요.`);
 };
 
@@ -58,23 +54,13 @@ const CheckAnswer = ({
 	id: number;
 }) => {
 	const router = useRouter();
-	const [checkedProblems, setCheckedProblems] =
-		useRecoilState(checkedProblemsState);
-	const [selectedChoices, setSelectedChoices] =
-		useRecoilState(selectedChoicesState);
+	const [selectedChoices, setSelectedChoices] = useRecoilState<{
+		[key: number]: number;
+	}>(selectedChoicesState);
 	const testInfo = useRecoilValue<TestInfo>(testInfoState);
 	const subjectDict = getSubjectDict();
 
 	const questions = Array.from({ length: problemNumber }, (_, i) => i + 1);
-
-	// 오답 체크 상태 토글
-	const handleCheckToggle = (index: number) => {
-		setCheckedProblems((prev) =>
-			prev.includes(index)
-				? prev.filter((item) => item !== index)
-				: [...prev, index]
-		);
-	};
 
 	const mutation = useMutation({
 		mutationFn: (params: {
@@ -96,9 +82,21 @@ const CheckAnswer = ({
 		},
 	});
 
+	// 오답 체크 상태 토글
+	const handleCheckToggle = (index: number) => {
+		setSelectedChoices((prev) =>
+			prev.hasOwnProperty(index)
+				? (() => {
+						const { [index]: _, ...rest } = prev;
+						return rest;
+					})()
+				: { ...prev, [index]: -1 }
+		);
+	};
+
 	// 선지 선택 상태 설정
 	const handleChoiceSelect = (index: number, choice: number) => {
-		if (checkedProblems.includes(index)) {
+		if (selectedChoices.hasOwnProperty(index)) {
 			setSelectedChoices((prev) => ({
 				...prev,
 				[index]: choice,
@@ -121,14 +119,8 @@ const CheckAnswer = ({
 		mutation.mutate({ id, wrongProblemArray });
 	};
 
-	// checkedProblems 배열의 값이 selectedChoices 배열에 포함되어 있는지 판별
-	const hasAllCheckedInSelected = checkedProblems.every((problem) =>
-		Object.keys(selectedChoices).map(Number).includes(problem)
-	);
-
-	// checkedProblems 배열의 값 중 selectedChoices에 없는 숫자 추출
-	const missingFromSelected = checkedProblems.filter(
-		(problem) => !Object.keys(selectedChoices).map(Number).includes(problem)
+	const hasAnswerInput = Object.keys(selectedChoices).filter(
+		(key) => selectedChoices[parseInt(key)] === -1
 	);
 
 	return (
@@ -155,7 +147,7 @@ const CheckAnswer = ({
 							>
 								<FaCheck
 									size={30}
-									className={`mx-auto ${checkedProblems.includes(value) ? "text-orange-500" : "text-gray-300"}`}
+									className={`mx-auto ${selectedChoices.hasOwnProperty(value) ? "text-orange-500" : "text-gray-300"}`}
 								/>
 							</td>
 							<td className="border-2 border-orange-400 pl-4">
@@ -169,7 +161,7 @@ const CheckAnswer = ({
 											<button
 												key={i}
 												onClick={() => handleChoiceSelect(value, i)}
-												hidden={!checkedProblems.includes(value)}
+												hidden={!selectedChoices.hasOwnProperty(value)}
 											>
 												{selectedChoices[value] === i
 													? CircleNumberFilled[i]
@@ -188,9 +180,10 @@ const CheckAnswer = ({
 				<button
 					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg"
 					onClick={() => {
-						hasAllCheckedInSelected
-							? handleSubmit(id, selectedChoices)
-							: notify(missingFromSelected);
+						console.log(selectedChoices);
+						Object.values(selectedChoices).includes(-1)
+							? notify(hasAnswerInput)
+							: handleSubmit(id, selectedChoices);
 					}}
 				>
 					오답 체크 완료

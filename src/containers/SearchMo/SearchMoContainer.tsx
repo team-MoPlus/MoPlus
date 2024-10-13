@@ -5,7 +5,6 @@ import { RequestMo } from "@/components/Buttons";
 import { ItemList } from "@/components/Items";
 import SearchBar from "@/components/SearchBar/SearchBar";
 import {
-	checkedProblemsState,
 	selectedChoicesState,
 	testInfoState,
 	testListState,
@@ -23,6 +22,7 @@ import { usePathname } from "next/navigation";
 const SearchMoContainer = () => {
 	// 검색어 상태 관리
 	const [searchTerm, setSearchTerm] = useState<string>("");
+
 
 	const { data, isPending, isError, error } = useQuery({
 		queryKey: ["tests"],
