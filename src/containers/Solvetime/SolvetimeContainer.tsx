@@ -21,6 +21,7 @@ import { TestInfo } from "../../../types/Item";
 import ModalPortal from "../../../utils/Portal";
 import { Modal } from "@/components/Modal";
 import SubmitModal from "@/components/Modal/SubmitModal";
+import { IoChevronBackOutline } from "react-icons/io5";
 
 const SolvetimeContainer = ({ testId }: { testId: number }) => {
 	const [hour, setHour] = useState<string>("");
@@ -98,9 +99,16 @@ const SolvetimeContainer = ({ testId }: { testId: number }) => {
 
 	return (
 		<div className="p-4">
-			<Link href="/" className="inline-block">
-				<Banner />
-			</Link>
+			<div className="flex gap-2">
+				<IoChevronBackOutline
+					size={36}
+					className="cursor-pointer"
+					onClick={() => router.back()}
+				/>
+				<Link href="/" className="inline-block">
+					<Banner />
+				</Link>
+			</div>
 			<div className="h-16 text-white px-6 my-2 text-xl font-bold bg-orange-500 rounded-lg flex items-center">
 				풀이 시간을 입력해주세요!
 			</div>
