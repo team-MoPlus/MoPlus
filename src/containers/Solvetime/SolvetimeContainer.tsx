@@ -6,17 +6,30 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { countSolveCount, postSolveTime } from "../../../apis/testResult";
+import {
+	countSolveCount,
+	postAnswer,
+	postSolveTime,
+} from "../../../apis/testResult";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { testInfoState, testResultState } from "@/recoil/atoms";
+import {
+	incorrectProblemState,
+	testInfoState,
+	testResultState,
+} from "@/recoil/atoms";
 import { TestInfo } from "../../../types/Item";
+import ModalPortal from "../../../utils/Portal";
+import { Modal } from "@/components/Modal";
+import SubmitModal from "@/components/Modal/SubmitModal";
 
-const SolvetimeContainer = ({ testResultId }: { testResultId: number }) => {
+const SolvetimeContainer = ({ testId }: { testId: number }) => {
 	const [hour, setHour] = useState<string>("");
 	const [minute, setMinute] = useState<string>("");
 	const router = useRouter();
 	const setTestResultInfo = useSetRecoilState(testResultState);
 	const testInfo = useRecoilValue<TestInfo>(testInfoState);
+	const incorrectProblem = useRecoilValue(incorrectProblemState);
+	const [modalOpen, setModalOpen] = useState<boolean>(false);
 
 	// 시간 입력 핸들러
 	const handleHourChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,25 +47,47 @@ const SolvetimeContainer = ({ testResultId }: { testResultId: number }) => {
 		}
 	};
 
-	const handleSubmit = (testResultId: number, timeString: string) => {
+	const handleSubmit = () => {
+		AnswerMutation.mutate({ incorrectProblem });
 		countSolveCount(testInfo.id);
-		mutation.mutate({
-			testResultId,
-			timeString,
-		});
+		setModalOpen(false);
 	};
 
-	const mutation = useMutation({
-		mutationFn: (params: { testResultId: number; timeString: string }) =>
-			postSolveTime(params.testResultId, params.timeString),
+	const AnswerMutation = useMutation({
+		mutationFn: (params: {
+			incorrectProblem: { problemNumber: string; incorrectAnswer: string }[];
+		}) => postAnswer(testId, params.incorrectProblem),
 		onSuccess: (data, variables) => {
-			setTestResultInfo(data);
-			router.push(`/result/${testResultId}`);
+			SolveTimeMutation.mutate({
+				testResultId: data,
+				timeString: `PT${hour}H${minute}M`,
+			});
 		},
 		// 에러 핸들링 (optional)
 		onError: (error) => {
 			console.error("Error posting data:", error);
 			alert("There was an error submitting your answers.");
+		},
+
+		// 요청이 완료되면 실행 (성공 또는 실패와 무관)
+		onSettled: () => {
+			console.log("Request has been processed.");
+		},
+	});
+
+	const SolveTimeMutation = useMutation({
+		mutationFn: (params: { testResultId: number; timeString: string }) =>
+			postSolveTime(params.testResultId, params.timeString),
+		onSuccess: (data, variables) => {
+			console.log(variables.testResultId, variables.timeString);
+			console.log(data);
+			setTestResultInfo(data);
+			router.push(`/result/${data.id}`);
+		},
+		// 에러 핸들링 (optional)
+		onError: (error) => {
+			console.error("Error posting data:", error);
+			alert("There was an error submitting your solved time.");
 		},
 
 		// 요청이 완료되면 실행 (성공 또는 실패와 무관)
@@ -92,11 +127,19 @@ const SolvetimeContainer = ({ testResultId }: { testResultId: number }) => {
 				<button
 					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg disabled:bg-gray-200 disabled:text-gray-400"
 					disabled={hour.length === 0 || minute.length === 0}
-					onClick={() => handleSubmit(testResultId, `PT${hour}H${minute}M`)}
+					onClick={() => setModalOpen(true)}
 				>
 					입력 완료
 				</button>
 			</div>
+			{modalOpen && (
+				<ModalPortal>
+					<SubmitModal
+						onClose={() => setModalOpen(false)}
+						onClick={handleSubmit}
+					/>
+				</ModalPortal>
+			)}
 		</div>
 	);
 };

@@ -21,7 +21,7 @@ const AnswerContainer = ({ id }: { id: number }) => {
 				오답을 체크하고 답을 입력하세요!
 			</div>
 			<CheckAnswer
-				problemNumber={ProblemCount[testInfo.subject]}
+				problemCount={ProblemCount[testInfo.subject]}
 				id={id}
 			/>
 		</div>
