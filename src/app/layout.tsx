@@ -8,8 +8,7 @@ import AnimatedComponent from "../../__tests__/AnimatedComponent.test";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-	title: "모두의 음식점 | 모-음",
-	description: "팀원1, 팀원2, 팀원3, 팀원4",
+	title: "모플, 쉽고 빠른 모의고사 분석",
 	icons: {
 		icon: "/favi.png",
 	},
