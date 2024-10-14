@@ -8,10 +8,13 @@ import { useQuery } from "@tanstack/react-query";
 import { useRecoilState } from "recoil";
 import { testInfoState } from "@/recoil/atoms";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { IoChevronBackOutline } from "react-icons/io5";
+import { useRouter } from "next/navigation";
 
 const MoDetailContainer = ({ id }: { id: number }) => {
 	const [testInfo, setTestInfo] = useRecoilState(testInfoState);
 	const subjectDict = getSubjectDict();
+	const router = useRouter();
 
 	const { data, isPending, isError, error } = useQuery({
 		queryKey: ["tests", id],
@@ -30,9 +33,17 @@ const MoDetailContainer = ({ id }: { id: number }) => {
 
 	return (
 		<div className="w-full h-full items-center flex-col p-4">
-			<Link href="/" className="inline-block">
-				<Banner />
-			</Link>
+			<div className="flex gap-2">
+				<IoChevronBackOutline
+					size={36}
+					className="cursor-pointer"
+					onClick={() => router.back()}
+				/>
+				<Link href="/" className="inline-block">
+					<Banner />
+				</Link>
+			</div>
+
 			<div className="h-16 text-white px-6 text-xl font-bold bg-orange-300 rounded-lg flex items-center my-2">
 				선택하신 모의고사가 맞나요?
 			</div>

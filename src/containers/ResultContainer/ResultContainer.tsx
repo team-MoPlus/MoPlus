@@ -4,14 +4,18 @@ import { Banner } from "@/components/Banner";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { TestInfo } from "../../../types/Item";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useRecoilValue } from "recoil";
 import { testInfoState, testResultState } from "@/recoil/atoms";
 import { TestResult } from "../../../types/result";
 import { calculateTimeDifference } from "../../../utils/parseTime";
+import toast, { Toaster } from "react-hot-toast";
+
+const notify = () => toast.error("브라우저 뒤로가기는 지원하지 않습니다.");
 
 const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 	const router = useRouter();
+	const pathname = usePathname();
 	const testResultInfo = useRecoilValue<TestResult>(testResultState);
 	const testInfo = useRecoilValue<TestInfo>(testInfoState);
 
@@ -24,11 +28,17 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 		testResultInfo.solvingTime
 	);
 
+	useEffect(() => {
+		history.pushState(null, "", "");
+		window.addEventListener("popstate", notify);
+
+		return () => {
+			window.removeEventListener("popstate", notify);
+		};
+	}, []);
+
 	return (
 		<div className="p-4">
-			<Link href="/" className="inline-block">
-				<Banner />
-			</Link>
 			{/* 결과 */}
 			<div className="h-16 text-white px-6 my-2 text-xl font-bold bg-orange-600 rounded-lg flex items-center">
 				결과
@@ -122,10 +132,18 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 				</div>
 			</div>
 
-			<div className="flex justify-center">
+			<div className="flex justify-between">
 				<button
 					className="w-64 h-12 mt-4 bg-orange-200 text-orange-500 rounded-lg"
-					onClick={() => router.push("/application")}
+					onClick={() => router.replace("/searchmo")}
+				>
+					홈으로 돌아가기
+				</button>
+				<button
+					className="w-64 h-12 mt-4 bg-orange-500 text-white rounded-lg"
+					onClick={() => {
+						router.push("/application");
+					}}
 				>
 					상세 분석 성적표 신청하기
 				</button>

@@ -22,7 +22,11 @@ import { useRouter } from "next/navigation";
 import { postAnswer } from "../../../apis/testResult";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { selectedChoicesState, testInfoState } from "@/recoil/atoms";
+import {
+	incorrectProblemState,
+	selectedChoicesState,
+	testInfoState,
+} from "@/recoil/atoms";
 import { TestInfo } from "../../../types/Item";
 import { getSubjectDict } from "../../../utils/getSubjectDict";
 
@@ -47,40 +51,23 @@ const notify = (missingFromSelected: string[]) => {
 };
 
 const CheckAnswer = ({
-	problemNumber,
+	problemCount,
 	id,
 }: {
-	problemNumber: number;
+	problemCount: number;
 	id: number;
 }) => {
 	const router = useRouter();
 	const [selectedChoices, setSelectedChoices] = useRecoilState<{
 		[key: number]: number;
 	}>(selectedChoicesState);
+	const [incorrectProblem, setIncorrectProblem] = useRecoilState(
+		incorrectProblemState
+	);
 	const testInfo = useRecoilValue<TestInfo>(testInfoState);
 	const subjectDict = getSubjectDict();
 
-	const questions = Array.from({ length: problemNumber }, (_, i) => i + 1);
-
-	const mutation = useMutation({
-		mutationFn: (params: {
-			id: number;
-			wrongProblemArray: { problemNumber: string; incorrectAnswer: string }[];
-		}) => postAnswer(params.id, params.wrongProblemArray),
-		onSuccess: (data, variables) => {
-			router.push(`/solvetime/${data}`);
-		},
-		// 에러 핸들링 (optional)
-		onError: (error) => {
-			console.error("Error posting data:", error);
-			alert("There was an error submitting your answers.");
-		},
-
-		// 요청이 완료되면 실행 (성공 또는 실패와 무관)
-		onSettled: () => {
-			console.log("Request has been processed.");
-		},
-	});
+	const questions = Array.from({ length: problemCount }, (_, i) => i + 1);
 
 	// 오답 체크 상태 토글
 	const handleCheckToggle = (index: number) => {
@@ -113,10 +100,12 @@ const CheckAnswer = ({
 		const wrongProblemArray = Object.entries(selectedChoices).map(
 			([key, value]) => ({
 				problemNumber: `${key}`,
-				incorrectAnswer: `${value + 1}`,
+				incorrectAnswer: `${value}`,
 			})
 		);
-		mutation.mutate({ id, wrongProblemArray });
+		setIncorrectProblem(wrongProblemArray);
+
+		router.push(`/solvetime/${id}`);
 	};
 
 	const hasAnswerInput = Object.keys(selectedChoices).filter(
@@ -136,40 +125,50 @@ const CheckAnswer = ({
 					</tr>
 				</thead>
 				<tbody>
-					{questions.map((value, index) => (
+					{questions.map((qNum, index) => (
 						<tr key={index}>
 							<td className="w-16 text-center border-2 border-orange-400 px-4 py-2">
-								{value}
+								{qNum}
 							</td>
 							<td
 								className="border-2 border-orange-400 py-2 cursor-pointer"
-								onClick={() => handleCheckToggle(value)}
+								onClick={() => handleCheckToggle(qNum)}
 							>
 								<FaCheck
 									size={30}
-									className={`mx-auto ${selectedChoices.hasOwnProperty(value) ? "text-orange-500" : "text-gray-300"}`}
+									className={`mx-auto ${selectedChoices.hasOwnProperty(qNum) ? "text-orange-500" : "text-gray-300"}`}
 								/>
 							</td>
 							<td className="border-2 border-orange-400 pl-4">
 								{subjectDict[testInfo.subject] !== "수학" ||
-								index < 15 ||
-								22 <= index ||
-								index <= 27 ? (
+								qNum < 16 ||
+								(22 < qNum && qNum < 29) ? (
 									Array(5)
 										.fill(null)
 										.map((v, i) => (
 											<button
 												key={i}
-												onClick={() => handleChoiceSelect(value, i)}
-												hidden={!selectedChoices.hasOwnProperty(value)}
+												onClick={() => handleChoiceSelect(qNum, i + 1)}
+												hidden={!selectedChoices.hasOwnProperty(qNum)}
 											>
-												{selectedChoices[value] === i
+												{selectedChoices[qNum] === i + 1
 													? CircleNumberFilled[i]
 													: CircleNumber[i]}
 											</button>
 										))
 								) : (
-									<input type="text" />
+									<div hidden={!selectedChoices.hasOwnProperty(qNum)}>
+										<input
+											className="border text-lg rounded-md focus:outline-none focus:ring-2 focus:ring-orange-200"
+											type="text"
+											placeholder="단답형"
+											size={8}
+											onChange={(e) =>
+												handleChoiceSelect(qNum, parseInt(e.target.value))
+											}
+											maxLength={10}
+										/>
+									</div>
 								)}
 							</td>
 						</tr>

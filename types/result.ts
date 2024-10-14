@@ -4,7 +4,7 @@ export interface ApplicationForm {
 	phoneNumber: string | null;
 }
 
-interface IncorrectProblem {
+export interface IncorrectProblem {
 	problemNumber: string;
 	point: number;
 }

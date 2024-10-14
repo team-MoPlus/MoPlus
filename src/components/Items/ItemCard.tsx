@@ -12,9 +12,9 @@ const ItemCard = ({ mo, order, onClick }: ItemCardProps) => {
 	return (
 		<div
 			onClick={onClick}
-			className="flex gap-4 items-center w-full h-24 px-4 mb-2 rounded-lg border-2 cursor-pointer"
+			className="flex gap-4 items-center w-full h-24 px-2 mb-2 rounded-lg border-2 cursor-pointer"
 		>
-			<div className="text-2xl">{order}</div>
+			<div className="text-xl w-10 text-center">{order}</div>
 			<div>
 				<Image
 					src="/example_images/emptyMO.png"

@@ -1,5 +1,6 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
+import { IncorrectProblem } from "../../types/result";
 
 const sessionStorage =
 	typeof window !== "undefined" ? window.sessionStorage : undefined;
@@ -80,6 +81,12 @@ export const selectedChoicesState = atom<{ [key: number]: number }>({
 	default: {},
 });
 
+export const incorrectProblemState = atom<
+	{ problemNumber: string; incorrectAnswer: string }[]
+>({
+	key: "incorrectProblemState",
+	default: [],
+});
 
 // // 선택과목 -> 과목 변환
 // export const Subject2Select = atom({

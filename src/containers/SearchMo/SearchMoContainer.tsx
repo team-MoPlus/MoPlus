@@ -17,12 +17,14 @@ import { TestInfo } from "../../../types/Item";
 import { getAllTests } from "../../../apis/tests";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { IoChevronBackOutline } from "react-icons/io5";
 
 const SearchMoContainer = () => {
 	// 검색어 상태 관리
 	const [searchTerm, setSearchTerm] = useState<string>("");
 
+	const router = useRouter();
 
 	const { data, isPending, isError, error } = useQuery({
 		queryKey: ["tests"],
@@ -49,9 +51,16 @@ const SearchMoContainer = () => {
 
 	return (
 		<div className="w-full h-full flex-col p-4">
-			<Link href="/" className="inline-block">
-				<Banner />
-			</Link>
+			<div className="flex gap-2">
+				<IoChevronBackOutline
+					size={36}
+					className="cursor-pointer"
+					onClick={() => router.back()}
+				/>
+				<Link href="/" className="inline-block">
+					<Banner />
+				</Link>
+			</div>
 			<div className="flex my-2 gap-4">
 				<div className="h-20 flex items-center flex-1 text-xl bg-orange-300 rounded-xl text-white p-4 font-bold">
 					내가 풀고 싶은 모의고사를 검색해보세요
