@@ -25,7 +25,7 @@ export default function RootLayout({
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			</head>
 
-			<body className="h-screen max-w-xl mx-auto overscroll-none">
+			<body className="h-screen max-w-lg mx-auto overscroll-none">
 				<Providers>
 					<div className="flex h-full w-full">
 						{/* <SideTab /> */}
