@@ -65,7 +65,7 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 				<h1 className="text-xl mb-4">틀린 문제</h1>
 				<div className="grid grid-cols-4 items-center text-lg gap-2 text-gray-500">
 					{testResultInfo.incorrectProblems.map((problem, idx) => (
-						<div key={idx} className="flex items-center text-sm border">
+						<div key={idx} className="flex items-center text-sm">
 							{problem.problemNumber}번{" "}
 							<span className="inline-block ml-1 text-xs text-orange-500 border border-orange-500 rounded-md p-[2px]">
 								{problem.point}점
@@ -134,13 +134,13 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 
 			<div className="flex justify-between">
 				<button
-					className="w-60 h-12 mt-4 bg-orange-200 text-orange-500 rounded-lg"
+					className="w-56 h-12 mt-4 bg-orange-200 text-orange-500 rounded-lg text-sm"
 					onClick={() => router.replace("/searchmo")}
 				>
 					홈으로 돌아가기
 				</button>
 				<button
-					className="w-60 h-12 mt-4 bg-orange-500 text-white rounded-lg"
+					className="w-56 h-12 mt-4 bg-orange-500 text-white rounded-lg text-sm"
 					onClick={() => {
 						router.push("/application");
 					}}
