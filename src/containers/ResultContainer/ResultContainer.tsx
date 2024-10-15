@@ -29,13 +29,13 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 	);
 
 	useEffect(() => {
-		history.pushState(null, "", "");
-		window.addEventListener("popstate", notify);
-
-		return () => {
-			window.removeEventListener("popstate", notify);
+		// 히스토리의 마지막 항목을 덮어씁니다.
+		window.history.replaceState(null, "", location.href);
+		window.onpopstate = function (event) {
+			notify();
+			history.go(1);
 		};
-	}, []);
+	}, [router]);
 
 	return (
 		<div className="p-4">
@@ -63,9 +63,9 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 			{/* 틀린 문제 */}
 			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md my-2">
 				<h1 className="text-xl mb-4">틀린 문제</h1>
-				<div className="grid grid-cols-5 items-center text-lg gap-4 text-gray-500">
+				<div className="grid grid-cols-4 items-center text-lg gap-2 text-gray-500">
 					{testResultInfo.incorrectProblems.map((problem, idx) => (
-						<div key={idx} className="flex items-center text-sm">
+						<div key={idx} className="flex items-center text-sm border">
 							{problem.problemNumber}번{" "}
 							<span className="inline-block ml-1 text-xs text-orange-500 border border-orange-500 rounded-md p-[2px]">
 								{problem.point}점
@@ -134,13 +134,13 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 
 			<div className="flex justify-between">
 				<button
-					className="w-64 h-12 mt-4 bg-orange-200 text-orange-500 rounded-lg"
+					className="w-60 h-12 mt-4 bg-orange-200 text-orange-500 rounded-lg"
 					onClick={() => router.replace("/searchmo")}
 				>
 					홈으로 돌아가기
 				</button>
 				<button
-					className="w-64 h-12 mt-4 bg-orange-500 text-white rounded-lg"
+					className="w-60 h-12 mt-4 bg-orange-500 text-white rounded-lg"
 					onClick={() => {
 						router.push("/application");
 					}}
