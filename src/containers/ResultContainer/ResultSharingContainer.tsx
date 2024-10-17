@@ -61,6 +61,9 @@ const ResultSharingContainer = ({ testResultId }: { testResultId: number }) => {
 		return <p>Error: {TestDataerror.message}</p>;
 	}
 
+	console.log(testResult);
+	console.log(testInfo);
+
 	return (
 		<div className="p-4">
 			{/* 결과 */}

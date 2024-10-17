@@ -21,8 +21,8 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 	const testInfo = useRecoilValue<TestInfo>(testInfoState);
 
 	// 정규식을 사용하여 H와 M 사이의 숫자 추출
-	const matchTest = testResultInfo.solvingTime.match(/PT(\d+)H(\d+)M/);
-	const matchAvg = testResultInfo.averageSolvingTime.match(/PT(\d+)H(\d+)M/);
+	// const matchTest = testResultInfo.solvingTime.match(/PT(\d+)H(\d+)M/);
+	// const matchAvg = testResultInfo.averageSolvingTime.match(/PT(\d+)H(\d+)M/);
 
 	const timeArr = calculateTimeDifference(
 		testResultInfo.averageSolvingTime,
@@ -54,8 +54,14 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 						<span className="text-gray-500">점</span>
 					</div>
 					<div className="text-3xl text-gray-400">
-						<span className="text-orange-500">{matchTest?.[1] || "0"}</span>h{" "}
-						<span className="text-orange-500">{matchTest?.[2] || "0"}</span>m
+						<span className="text-orange-500">
+							{testResultInfo.solvingTime.match(/PT(\d+)H(\d+)M/)?.[1] || "0"}
+						</span>
+						h{" "}
+						<span className="text-orange-500">
+							{testResultInfo.solvingTime.match(/PT(\d+)H(\d+)M/)?.[2] || "0"}
+						</span>
+						m
 						<br />
 						<div className="text-sm flex justify-end">내 풀이 시간</div>
 					</div>
@@ -84,8 +90,16 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 						<span className="text-gray-500">등</span>
 					</div>
 					<div className="text-2xl text-gray-400">
-						<span className="text-orange-500">{matchAvg?.[1] || "0"}</span>h{" "}
-						<span className="text-orange-500">{matchAvg?.[2] || "0"}</span>m
+						<span className="text-orange-500">
+							{testResultInfo.averageSolvingTime.match(/PT(\d+)H(\d+)M/)?.[1] ||
+								"0"}
+						</span>
+						h{" "}
+						<span className="text-orange-500">
+							{testResultInfo.averageSolvingTime.match(/PT(\d+)H(\d+)M/)?.[2] ||
+								"0"}
+						</span>
+						m
 						<br />
 						<div className="text-sm flex justify-end">평균 풀이 시간</div>
 					</div>
