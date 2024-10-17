@@ -36,8 +36,8 @@ const KakaoShareButton = ({ showLink }: { showLink: string }) => {
 					description: "모의고사 풀이 결과를 입력하고 내 위치를 확인해 보세요!",
 					imageUrl: "https://ifh.cc/g/DOybBW.jpg",
 					link: {
-						mobileWebUrl: "https://www.mopl.kr",
-						webUrl: "https://www.mopl.kr",
+						mobileWebUrl: `${showLink}`,
+						webUrl: `${showLink}`,
 					},
 				},
 
