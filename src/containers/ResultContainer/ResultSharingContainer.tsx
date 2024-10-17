@@ -13,20 +13,39 @@ import toast, { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import { getTestResultInfoById } from "../../../apis/testResult";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { getTestById } from "../../../apis/tests";
 
 const notify = () => toast.error("브라우저 뒤로가기는 지원하지 않습니다.");
 
-const ResultSharingContainer = ({ testResultId }: { testResultId: number }) => {
+const ResultSharingContainer = ({
+	testResultId,
+	testId,
+}: {
+	testResultId: number;
+	testId: number;
+}) => {
 	const router = useRouter();
 	const [timeArr, setTimeArr] = useState<(number | boolean)[]>([]);
 	const [testResult, setTestResult] =
 		useRecoilState<TestResult>(testResultState);
 	const [testInfo, setTestInfo] = useRecoilState<TestInfo>(testInfoState);
 
-	const { data, isPending, isError, error } = useQuery({
+	const handleTestResult = (data: TestResult) => {
+		setTestResult(data);
+		setTimeArr(
+			calculateTimeDifference(data.averageSolvingTime, data.solvingTime)
+		);
+	};
+
+	const {
+		data: TestResultData,
+		isPending,
+		isError,
+		error,
+	} = useQuery({
 		queryKey: ["infobyid", testResultId],
 		queryFn: () => getTestResultInfoById(testResultId),
-		select: (data) => setTestResult(data),
+		select: React.useCallback((data: TestResult) => handleTestResult(data), []),
 	});
 
 	const {
@@ -35,9 +54,9 @@ const ResultSharingContainer = ({ testResultId }: { testResultId: number }) => {
 		isError: TestDataisError,
 		error: TestDataerror,
 	} = useQuery({
-		queryKey: ["infobyid", testResultId],
-		queryFn: () => getTestResultInfoById(testResultId),
-		select: (data) => setTestInfo(data),
+		queryKey: ["infobyid", testId],
+		queryFn: () => getTestById(testId),
+		select: React.useCallback((data: TestInfo) => setTestInfo(data), []),
 	});
 
 	// 정규식을 사용하여 H와 M 사이의 숫자 추출
@@ -60,9 +79,6 @@ const ResultSharingContainer = ({ testResultId }: { testResultId: number }) => {
 	} else if (TestDataisError) {
 		return <p>Error: {TestDataerror.message}</p>;
 	}
-
-	console.log(testResult);
-	console.log(testInfo);
 
 	return (
 		<div className="p-4">
@@ -179,7 +195,7 @@ const ResultSharingContainer = ({ testResultId }: { testResultId: number }) => {
 
 			<div className="flex justify-between">
 				<button
-					className="w-56 h-12 mt-4 bg-orange-200 text-orange-500 rounded-lg text-sm"
+					className="w-full h-12 mt-4 bg-orange-500 text-white rounded-lg text-sm"
 					onClick={() => router.replace("/searchmo")}
 				>
 					나도 분석해보기
