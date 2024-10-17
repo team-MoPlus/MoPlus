@@ -1,5 +1,4 @@
 function parseISO8601DurationToSeconds(duration: string): number {
-	console.log(duration);
 	const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
 	const match = duration.match(regex);
 

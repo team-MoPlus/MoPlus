@@ -49,7 +49,7 @@ const ResultSharingContainer = ({ testResultId }: { testResultId: number }) => {
 	// 	ResultData!.solvingTime
 	// );
 
-	if (isPending) {
+	if (isPending || testResult === undefined) {
 		return <LoadingSpinner />;
 	} else if (TestDataisPending) {
 		return <LoadingSpinner />;
