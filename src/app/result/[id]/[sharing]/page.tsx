@@ -3,7 +3,7 @@ import ResultSharingContainer from "@/containers/ResultContainer/ResultSharingCo
 import React from "react";
 
 const page = ({ params }: { params: { id: number; sharing: boolean } }) => {
-	if (params.sharing === true)
+	if (params.sharing == true)
 		return <ResultSharingContainer testResultId={params.id} />;
 	else return <ResultContainer testResultId={params.id} />;
 };
