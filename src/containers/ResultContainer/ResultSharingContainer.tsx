@@ -10,32 +10,50 @@ import { testInfoState, testResultState } from "@/recoil/atoms";
 import { TestResult } from "../../../types/result";
 import { calculateTimeDifference } from "../../../utils/parseTime";
 import toast, { Toaster } from "react-hot-toast";
+import { useQuery } from "@tanstack/react-query";
+import { getTestResultInfoById } from "../../../apis/testResult";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 const notify = () => toast.error("브라우저 뒤로가기는 지원하지 않습니다.");
 
 const ResultSharingContainer = ({ testResultId }: { testResultId: number }) => {
 	const router = useRouter();
-	const pathname = usePathname();
-	const testResultInfo = useRecoilValue<TestResult>(testResultState);
-	const testInfo = useRecoilValue<TestInfo>(testInfoState);
+	const {
+		data: ResultData,
+		isPending,
+		isError,
+		error,
+	} = useQuery<TestResult>({
+		queryKey: ["infobyid"],
+		queryFn: () => getTestResultInfoById(testResultId),
+	});
+
+	const {
+		data: TestData,
+		isPending: TestDataisPending,
+		isError: TestDataisError,
+		error: TestDataerror,
+	} = useQuery<TestInfo>({
+		queryKey: ["infobyid"],
+		queryFn: () => getTestResultInfoById(testResultId),
+	});
+
+	// const { data, isPending, isError, error } = useQuery<TestResult>({
+	// 	queryKey: ["infobyid"],
+	// 	queryFn: () => getTestResultInfoById(testResultId),
+	// });
 
 	// 정규식을 사용하여 H와 M 사이의 숫자 추출
-	const matchTest = testResultInfo.solvingTime.match(/PT(\d+)H(\d+)M/);
-	const matchAvg = testResultInfo.averageSolvingTime.match(/PT(\d+)H(\d+)M/);
+	const matchTest = ResultData!.solvingTime.match(/PT(\d+)H(\d+)M/);
+	const matchAvg = ResultData!.averageSolvingTime.match(/PT(\d+)H(\d+)M/);
 
 	const timeArr = calculateTimeDifference(
-		testResultInfo.averageSolvingTime,
-		testResultInfo.solvingTime
+		ResultData!.averageSolvingTime,
+		ResultData!.solvingTime
 	);
 
-	useEffect(() => {
-		// 히스토리의 마지막 항목을 덮어씁니다.
-		window.history.replaceState(null, "", location.href);
-		window.onpopstate = function (event) {
-			notify();
-			history.go(1);
-		};
-	}, [router]);
+	if (isPending || TestDataisPending) return <LoadingSpinner />;
+	if (isError || TestDataisError) return <p>Error!</p>;
 
 	return (
 		<div className="p-4">
@@ -45,11 +63,11 @@ const ResultSharingContainer = ({ testResultId }: { testResultId: number }) => {
 			</div>
 			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md">
 				<h1 className="text-xl">
-					[{testInfo.subject}] {testInfo.name}({testInfo.provider})
+					[{TestData.subject}] {TestData.name}({TestData.provider})
 				</h1>
 				<div className="py-8 flex w-full justify-around items-center">
 					<div className="text-5xl text-orange-500">
-						{testResultInfo.score}
+						{ResultData.score}
 						<span className="text-gray-500">점</span>
 					</div>
 					<div className="text-3xl text-gray-400">
@@ -64,7 +82,7 @@ const ResultSharingContainer = ({ testResultId }: { testResultId: number }) => {
 			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md my-2">
 				<h1 className="text-xl mb-4">틀린 문제</h1>
 				<div className="grid grid-cols-4 items-center text-lg gap-2 text-gray-500">
-					{testResultInfo.incorrectProblems.map((problem, idx) => (
+					{ResultData.incorrectProblems.map((problem, idx) => (
 						<div key={idx} className="flex items-center text-sm">
 							{problem.problemNumber}번{" "}
 							<span className="inline-block ml-1 text-xs text-orange-500 border border-orange-500 rounded-md p-[2px]">
@@ -79,7 +97,7 @@ const ResultSharingContainer = ({ testResultId }: { testResultId: number }) => {
 				<h1 className="text-xl mb-4">내 위치</h1>
 				<div className="w-full flex justify-between">
 					<div className="text-4xl text-orange-500">
-						{testResultInfo.rank}
+						{ResultData.rank}
 						<span className="text-gray-500">등</span>
 					</div>
 					<div className="text-2xl text-gray-400">
@@ -93,7 +111,7 @@ const ResultSharingContainer = ({ testResultId }: { testResultId: number }) => {
 					<div className="flex justify-start px-8 items-center border border-gray-400 rounded-xl h-16">
 						내 위로&nbsp;
 						<span className="text-orange-500 text-lg">
-							{testResultInfo.rank - 1}명
+							{ResultData.rank - 1}명
 						</span>
 						이 있어요
 					</div>
@@ -105,11 +123,11 @@ const ResultSharingContainer = ({ testResultId }: { testResultId: number }) => {
 					<div className="flex flex-col justify-center px-8 py-4 border border-gray-400 rounded-xl h-fit">
 						<p>
 							<span className="text-orange-500 text-lg">
-								{testResultInfo.rank}등
+								{ResultData.rank}등
 							</span>
 							이예요!
 						</p>
-						{testResultInfo.solvingCount === 0 ? (
+						{ResultData.solvingCount === 0 ? (
 							"첫 번째로 제출했어요! 👍🏼"
 						) : (
 							<p>
@@ -129,7 +147,7 @@ const ResultSharingContainer = ({ testResultId }: { testResultId: number }) => {
 					<div className="flex justify-start px-8 items-center border border-gray-400 rounded-xl h-16">
 						내 아래로&nbsp;
 						<span className="text-orange-500 text-lg">
-							{testResultInfo.solvingCount - testResultInfo.rank}명
+							{ResultData.solvingCount - ResultData.rank}명
 						</span>
 						이 있어요
 					</div>
@@ -141,7 +159,7 @@ const ResultSharingContainer = ({ testResultId }: { testResultId: number }) => {
 					className="w-56 h-12 mt-4 bg-orange-200 text-orange-500 rounded-lg text-sm"
 					onClick={() => router.replace("/searchmo")}
 				>
-				나도 분석해보기
+					나도 분석해보기
 				</button>
 			</div>
 		</div>

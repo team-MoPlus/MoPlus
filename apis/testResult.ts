@@ -31,3 +31,12 @@ export const countSolveCount = async (id: number) => {
 		})
 		.catch((err) => console.error(err));
 };
+
+export const getTestResultInfoById = async (id: number) => {
+	return await api
+		.get(`/testResult/${id}`)
+		.then((res) => {
+			return res.data;
+		})
+		.catch((err) => console.error(err));
+};
