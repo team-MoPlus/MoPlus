@@ -19,15 +19,21 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 	const pathname = usePathname();
 	const testResultInfo = useRecoilValue<TestResult>(testResultState);
 	const testInfo = useRecoilValue<TestInfo>(testInfoState);
+	const [timeArr, setTimeArr] = useState<(number | boolean)[]>([]);
 
-	// 정규식을 사용하여 H와 M 사이의 숫자 추출
-	// const matchTest = testResultInfo.solvingTime.match(/PT(\d+)H(\d+)M/);
-	// const matchAvg = testResultInfo.averageSolvingTime.match(/PT(\d+)H(\d+)M/);
+	const [url, setUrl] = useState<string>("");
 
-	const timeArr = calculateTimeDifference(
-		testResultInfo.averageSolvingTime,
-		testResultInfo.solvingTime
-	);
+	useEffect(() => {
+		// 브라우저 환경에서 전체 URL 가져오기
+		setUrl(window.location.href); // 전체 URL을 설정
+
+		setTimeArr(
+			calculateTimeDifference(
+				testResultInfo.averageSolvingTime,
+				testResultInfo.solvingTime
+			)
+		);
+	}, []);
 
 	useEffect(() => {
 		// 히스토리의 마지막 항목을 덮어씁니다.
@@ -154,7 +160,9 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md my-2">
 				<h1 className="text-xl mb-4">공유하기</h1>
 				<div className="flex items-center justify-center">
-					<KakaoShareButton showLink={`/${testResultInfo.id}/${true}`} />
+					<KakaoShareButton
+						showLink={`${url.split("/")[0]}/result/${testResultId}/${testInfo.id}`}
+					/>
 				</div>
 			</div>
 
