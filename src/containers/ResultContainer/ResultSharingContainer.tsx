@@ -10,11 +10,10 @@ import { testInfoState, testResultState } from "@/recoil/atoms";
 import { TestResult } from "../../../types/result";
 import { calculateTimeDifference } from "../../../utils/parseTime";
 import toast, { Toaster } from "react-hot-toast";
-import { KakaoShareButton } from "@/components/Buttons";
 
 const notify = () => toast.error("브라우저 뒤로가기는 지원하지 않습니다.");
 
-const ResultContainer = ({ testResultId }: { testResultId: number }) => {
+const ResultSharingContainer = ({ testResultId }: { testResultId: number }) => {
 	const router = useRouter();
 	const pathname = usePathname();
 	const testResultInfo = useRecoilValue<TestResult>(testResultState);
@@ -136,32 +135,17 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 					</div>
 				</div>
 			</div>
-			{/* 공유하기 */}
-			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md my-2">
-				<h1 className="text-xl mb-4">공유하기</h1>
-				<div className="flex items-center justify-center">
-					<KakaoShareButton showLink={`/${testResultInfo.id}/${true}`} />
-				</div>
-			</div>
 
 			<div className="flex justify-between">
 				<button
 					className="w-56 h-12 mt-4 bg-orange-200 text-orange-500 rounded-lg text-sm"
 					onClick={() => router.replace("/searchmo")}
 				>
-					홈으로 돌아가기
-				</button>
-				<button
-					className="w-56 h-12 mt-4 bg-orange-500 text-white rounded-lg text-sm"
-					onClick={() => {
-						router.push("/application");
-					}}
-				>
-					상세 분석 성적표 신청하기
+				나도 분석해보기
 				</button>
 			</div>
 		</div>
 	);
 };
 
-export default ResultContainer;
+export default ResultSharingContainer;
