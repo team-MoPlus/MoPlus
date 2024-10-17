@@ -45,8 +45,8 @@ const KakaoShareButton = ({ showLink }: { showLink: string }) => {
 					{
 						title: "웹으로 보기",
 						link: {
-							mobileWebUrl: `https://www.mopl.kr${showLink}`,
-							webUrl: `https://www.mopl.kr${showLink}`,
+							mobileWebUrl: `https://www.mopl.kr/result${showLink}`,
+							webUrl: `https://www.mopl.kr/result${showLink}`,
 						},
 					},
 				],
