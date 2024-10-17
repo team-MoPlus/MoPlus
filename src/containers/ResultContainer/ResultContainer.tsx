@@ -16,23 +16,19 @@ const notify = () => toast.error("브라우저 뒤로가기는 지원하지 않�
 
 const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 	const router = useRouter();
-	const pathname = usePathname();
 	const testResultInfo = useRecoilValue<TestResult>(testResultState);
 	const testInfo = useRecoilValue<TestInfo>(testInfoState);
 	const [timeArr, setTimeArr] = useState<(number | boolean)[]>([]);
 
-	const [url, setUrl] = useState<string>("");
-
 	useEffect(() => {
-		// 브라우저 환경에서 전체 URL 가져오기
-		setUrl(window.location.href); // 전체 URL을 설정
-
 		setTimeArr(
 			calculateTimeDifference(
 				testResultInfo.averageSolvingTime,
 				testResultInfo.solvingTime
 			)
 		);
+
+		console.log(window.location.href);
 	}, []);
 
 	useEffect(() => {
@@ -161,7 +157,7 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 				<h1 className="text-xl mb-4">공유하기</h1>
 				<div className="flex items-center justify-center">
 					<KakaoShareButton
-						showLink={`${url.split("/")[0]}/result/${testResultId}/${testInfo.id}`}
+						showLink={window.location.href.replace(/\/\d+$/, `/${testInfo.id}`)}
 					/>
 				</div>
 			</div>

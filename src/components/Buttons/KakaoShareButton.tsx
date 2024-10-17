@@ -1,9 +1,10 @@
 "use client";
 
-import Image from "next/image";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 const KakaoShareButton = ({ showLink }: { showLink: string }) => {
+	const [isKakaoReady, setIsKakaoReady] = useState(false);
+
 	useEffect(() => {
 		// 클라이언트 사이드에서만 실행
 		const loadKakaoSDK = () => {
@@ -20,6 +21,9 @@ const KakaoShareButton = ({ showLink }: { showLink: string }) => {
 					}
 				};
 				document.head.appendChild(script);
+			} else {
+				// Kakao SDK가 이미 로드된 경우
+				setIsKakaoReady(true);
 			}
 		};
 
@@ -28,6 +32,7 @@ const KakaoShareButton = ({ showLink }: { showLink: string }) => {
 
 	const createKakaoButton = () => {
 		if (window.Kakao) {
+			console.log(showLink);
 			window.Kakao.Share.createDefaultButton({
 				container: "#kakaotalk-sharing-btn",
 				objectType: "feed",
@@ -40,7 +45,6 @@ const KakaoShareButton = ({ showLink }: { showLink: string }) => {
 						webUrl: `${showLink}`,
 					},
 				},
-
 				buttons: [
 					{
 						title: "웹으로 보기",
@@ -55,18 +59,16 @@ const KakaoShareButton = ({ showLink }: { showLink: string }) => {
 	};
 
 	return (
-		<div className="w-10">
-			<a
-				id="kakaotalk-sharing-btn"
-				href="javascript:;"
-				onClick={createKakaoButton}
-			>
-				<img
-					src="https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png"
-					alt="카카오톡 공유 보내기 버튼"
-				/>
-			</a>
-		</div>
+		<a
+			id="kakaotalk-sharing-btn"
+			href="javascript:;"
+			onClick={createKakaoButton}
+		>
+			<img
+				src="https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png"
+				alt="카카오톡 공유 보내기 버튼"
+			/>
+		</a>
 	);
 };
 
