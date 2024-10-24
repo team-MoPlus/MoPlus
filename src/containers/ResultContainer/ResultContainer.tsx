@@ -71,7 +71,7 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 			</div>
 			{/* 틀린 문제 */}
 			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md my-2">
-				<h1 className="text-xl mb-4">틀린 문제</h1>
+				<h1 className="text-xl mb-4">틀린 문제 정답률</h1>
 				<div className="grid grid-cols-4 items-center text-lg gap-2 text-gray-500">
 					{testResultInfo.incorrectProblems.map((problem, idx) => (
 						<div key={idx} className="flex items-center text-sm">
@@ -85,13 +85,13 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 			</div>
 			{/* 내 위치 */}
 			<div className="w-full border border-dashed border-orange-200 rounded-md p-4">
-				<h1 className="text-xl mb-4">내 위치</h1>
+				<h1 className="text-xl mb-4">내 등급</h1>
 				<div className="w-full flex justify-between">
 					<div className="text-4xl text-orange-500">
 						{testResultInfo.rank}
-						<span className="text-gray-500">등</span>
+						<span className="text-gray-500">등급</span>
 					</div>
-					<div className="text-2xl text-gray-400">
+					{/* <div className="text-2xl text-gray-400">
 						<span className="text-orange-500">
 							{testResultInfo.averageSolvingTime.match(/PT(\d+)H(\d+)M/)?.[1] ||
 								"0"}
@@ -104,9 +104,9 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 						m
 						<br />
 						<div className="text-sm flex justify-end">평균 풀이 시간</div>
-					</div>
+					</div> */}
 				</div>
-				<div className="mt-4 mx-4 text-gray-700">
+				{/* <div className="mt-4 mx-4 text-gray-700">
 					<div className="flex justify-start px-8 items-center border border-gray-400 rounded-xl h-16">
 						내 위로&nbsp;
 						<span className="text-orange-500 text-lg">
@@ -148,9 +148,9 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 						<span className="text-orange-500 text-lg">
 							{testResultInfo.solvingCount - testResultInfo.rank}명
 						</span>
-						이 있어요
+						<br />이 있어요
 					</div>
-				</div>
+				</div> */}
 			</div>
 			{/* 공유하기 */}
 			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md my-2">
