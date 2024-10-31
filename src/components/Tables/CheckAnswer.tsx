@@ -161,6 +161,8 @@ const CheckAnswer = ({
 										<input
 											className="border pl-1 h-8 rounded-md focus:outline-none focus:border-none focus:ring-2 focus:ring-orange-300"
 											type="text"
+											inputMode="numeric"
+											pattern="\d*"
 											placeholder="단답형"
 											size={6}
 											onChange={(e) =>
