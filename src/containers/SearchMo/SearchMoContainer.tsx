@@ -55,7 +55,7 @@ const SearchMoContainer = () => {
 				<IoChevronBackOutline
 					size={36}
 					className="cursor-pointer"
-					onClick={() => router.back()}
+					onClick={() => router.push("/")}
 				/>
 				<Link href="/" className="inline-block">
 					<Banner />

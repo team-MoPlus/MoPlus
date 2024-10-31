@@ -83,7 +83,7 @@ const SolvetimeContainer = ({ testId }: { testId: number }) => {
 			console.log(variables.testResultId, variables.timeString);
 			console.log(data);
 			setTestResultInfo(data);
-			router.push(`/result/${data.id}/${0}`);
+			router.replace(`/result/${data.id}/${0}`);
 		},
 		// 에러 핸들링 (optional)
 		onError: (error) => {

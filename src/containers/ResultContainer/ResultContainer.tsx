@@ -31,14 +31,14 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 		console.log(window.location.href);
 	}, []);
 
-	useEffect(() => {
-		// 히스토리의 마지막 항목을 덮어씁니다.
-		window.history.replaceState(null, "", location.href);
-		window.onpopstate = function (event) {
-			notify();
-			history.go(1);
-		};
-	}, [router]);
+	// useEffect(() => {
+	// 	// 히스토리의 마지막 항목을 덮어씁니다.
+	// 	window.history.replaceState(null, "", location.href);
+	// 	window.onpopstate = function (event) {
+	// 		notify();
+	// 		history.go(1);
+	// 	};
+	// }, [router]);
 
 	return (
 		<div className="p-4">
