@@ -77,7 +77,7 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 						<div key={idx} className="flex items-center text-sm">
 							{problem.problemNumber}번{" "}
 							<span className="inline-block ml-1 text-xs text-orange-500 border border-orange-500 rounded-md p-[2px]">
-								{problem.point}점
+								정답률 {problem.correctRate}%
 							</span>
 						</div>
 					))}
