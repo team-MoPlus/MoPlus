@@ -47,7 +47,7 @@ const CircleNumberFilled = [
 ];
 
 const notify = (missingFromSelected: string[]) => {
-	toast.error(`${missingFromSelected}번 문제의 선지를 선택하세요.`);
+	toast.error(`${missingFromSelected}번 문제의 답을 입력하세요.`);
 };
 
 const CheckAnswer = ({
@@ -105,7 +105,7 @@ const CheckAnswer = ({
 		);
 		setIncorrectProblem(wrongProblemArray);
 
-		router.push(`/solvetime/${id}`);
+		router.replace(`/solvetime/${id}`);
 	};
 
 	const hasAnswerInput = Object.keys(selectedChoices).filter(
@@ -159,10 +159,10 @@ const CheckAnswer = ({
 								) : (
 									<div hidden={!selectedChoices.hasOwnProperty(qNum)}>
 										<input
-											className="border text-lg rounded-md focus:outline-none focus:ring-2 focus:ring-orange-200"
+											className="border pl-1 h-8 rounded-md focus:outline-none focus:border-none focus:ring-2 focus:ring-orange-300"
 											type="text"
 											placeholder="단답형"
-											size={8}
+											size={6}
 											onChange={(e) =>
 												handleChoiceSelect(qNum, parseInt(e.target.value))
 											}

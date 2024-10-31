@@ -35,6 +35,16 @@ const ApplicationContainer = () => {
 	const [name, setName] = useState("");
 	const [phoneNumber, setPhoneNumber] = useState("");
 	const testResult = useRecoilValue<TestResult>(testResultState);
+	const [reviewNote, setReviewNote] = useState<boolean>(false);
+
+	// 	toast.promise(
+	// ,
+	// 		{
+	// 			loading: "복습서 생성 중입니다...",
+	// 			success: <b>생성 완료되었습니다!</b>,
+	// 			error: <b>오류가 발생했습니다. 잠시 후 다시 시도해주세요.</b>,
+	// 		}
+	// 	);
 
 	// 입력 시 숫자만 허용
 	const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
@@ -93,6 +103,11 @@ const ApplicationContainer = () => {
 				placeholder=""
 				className="w-full mb-6 p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
 			/>
+
+			{/* 복습서 미리보기 */}
+			<label className="block text-orange-500 font-semibold mb-1">
+				복습서 미리보기
+			</label>
 
 			{/* Submit Button */}
 			<div className="flex justify-center">

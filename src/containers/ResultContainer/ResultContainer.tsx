@@ -31,14 +31,14 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 		console.log(window.location.href);
 	}, []);
 
-	useEffect(() => {
-		// 히스토리의 마지막 항목을 덮어씁니다.
-		window.history.replaceState(null, "", location.href);
-		window.onpopstate = function (event) {
-			notify();
-			history.go(1);
-		};
-	}, [router]);
+	// useEffect(() => {
+	// 	// 히스토리의 마지막 항목을 덮어씁니다.
+	// 	window.history.replaceState(null, "", location.href);
+	// 	window.onpopstate = function (event) {
+	// 		notify();
+	// 		history.go(1);
+	// 	};
+	// }, [router]);
 
 	return (
 		<div className="p-4">
@@ -71,13 +71,13 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 			</div>
 			{/* 틀린 문제 */}
 			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md my-2">
-				<h1 className="text-xl mb-4">틀린 문제</h1>
+				<h1 className="text-xl mb-4">틀린 문제 정답률</h1>
 				<div className="grid grid-cols-4 items-center text-lg gap-2 text-gray-500">
 					{testResultInfo.incorrectProblems.map((problem, idx) => (
 						<div key={idx} className="flex items-center text-sm">
 							{problem.problemNumber}번{" "}
 							<span className="inline-block ml-1 text-xs text-orange-500 border border-orange-500 rounded-md p-[2px]">
-								{problem.point}점
+								정답률 {problem.correctRate}%
 							</span>
 						</div>
 					))}
@@ -85,72 +85,35 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 			</div>
 			{/* 내 위치 */}
 			<div className="w-full border border-dashed border-orange-200 rounded-md p-4">
-				<h1 className="text-xl mb-4">내 위치</h1>
-				<div className="w-full flex justify-between">
+				<h1 className="text-xl mb-4">내 등급</h1>
+				<div className="w-full flex justify-between mb-4">
 					<div className="text-4xl text-orange-500">
 						{testResultInfo.rank}
-						<span className="text-gray-500">등</span>
-					</div>
-					<div className="text-2xl text-gray-400">
-						<span className="text-orange-500">
-							{testResultInfo.averageSolvingTime.match(/PT(\d+)H(\d+)M/)?.[1] ||
-								"0"}
-						</span>
-						h{" "}
-						<span className="text-orange-500">
-							{testResultInfo.averageSolvingTime.match(/PT(\d+)H(\d+)M/)?.[2] ||
-								"0"}
-						</span>
-						m
-						<br />
-						<div className="text-sm flex justify-end">평균 풀이 시간</div>
+						<span className="text-gray-500">등급</span>
 					</div>
 				</div>
-				<div className="mt-4 mx-4 text-gray-700">
-					<div className="flex justify-start px-8 items-center border border-gray-400 rounded-xl h-16">
-						내 위로&nbsp;
-						<span className="text-orange-500 text-lg">
-							{testResultInfo.rank - 1}명
-						</span>
-						이 있어요
-					</div>
-					<div className="w-full flex flex-col items-center gap-1 my-2">
-						<div className="rounded-full bg-orange-500 w-1 h-1"></div>
-						<div className="rounded-full bg-orange-500 w-1 h-1"></div>
-						<div className="rounded-full bg-orange-500 w-1 h-1"></div>
-					</div>
-					<div className="flex flex-col justify-center px-8 py-4 border border-gray-400 rounded-xl h-fit">
-						<p>
-							<span className="text-orange-500 text-lg">
-								{testResultInfo.rank}등
-							</span>
-							이예요!
-						</p>
-						{testResultInfo.solvingCount === 0 ? (
-							"첫 번째로 제출했어요! 👍🏼"
-						) : (
-							<p>
-								평균 풀이 시간보다&nbsp;
-								<span className="text-orange-500 text-lg">
-									{timeArr[1]}시간 {timeArr[2]}분
-								</span>
-								&nbsp;{timeArr[0] ? "빨리 풀었어요! 😍" : "늦게 풀었어요 😅"}
-							</p>
-						)}
-					</div>
-					<div className="w-full flex flex-col items-center gap-1 my-2">
-						<div className="rounded-full bg-orange-500 w-1 h-1"></div>
-						<div className="rounded-full bg-orange-500 w-1 h-1"></div>
-						<div className="rounded-full bg-orange-500 w-1 h-1"></div>
-					</div>
-					<div className="flex justify-start px-8 items-center border border-gray-400 rounded-xl h-16">
-						내 아래로&nbsp;
-						<span className="text-orange-500 text-lg">
-							{testResultInfo.solvingCount - testResultInfo.rank}명
-						</span>
-						이 있어요
-					</div>
-				</div>
+				<table className="border-separate border-spacing-0 w-full text-center">
+					<thead>
+						<tr>
+							<th className="border border-orange-400 p-2 rounded-tl-lg">
+								등급
+							</th>
+							<th className="border border-orange-400 p-2">원점수</th>
+							<th className="border border-orange-400 p-2 ">표준점수</th>
+							<th className="border border-orange-400 p-2  rounded-tr-lg">
+								백분위
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 			{/* 공유하기 */}
 			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md my-2">

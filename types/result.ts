@@ -6,7 +6,7 @@ export interface ApplicationForm {
 
 export interface IncorrectProblem {
 	problemNumber: string;
-	point: number;
+	correctRate: number;
 }
 
 export interface TestResult {

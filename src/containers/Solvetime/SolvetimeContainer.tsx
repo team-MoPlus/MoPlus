@@ -24,8 +24,8 @@ import SubmitModal from "@/components/Modal/SubmitModal";
 import { IoChevronBackOutline } from "react-icons/io5";
 
 const SolvetimeContainer = ({ testId }: { testId: number }) => {
-	const [hour, setHour] = useState<string>("");
-	const [minute, setMinute] = useState<string>("");
+	const [hour, setHour] = useState<string>("0");
+	const [minute, setMinute] = useState<string>("0");
 	const router = useRouter();
 	const setTestResultInfo = useSetRecoilState(testResultState);
 	const testInfo = useRecoilValue<TestInfo>(testInfoState);
@@ -71,9 +71,9 @@ const SolvetimeContainer = ({ testId }: { testId: number }) => {
 		},
 
 		// 요청이 완료되면 실행 (성공 또는 실패와 무관)
-		onSettled: () => {
-			console.log("Request has been processed.");
-		},
+		// onSettled: () => {
+		// 	console.log("Request has been processed.");
+		// },
 	});
 
 	const SolveTimeMutation = useMutation({
@@ -83,7 +83,7 @@ const SolvetimeContainer = ({ testId }: { testId: number }) => {
 			console.log(variables.testResultId, variables.timeString);
 			console.log(data);
 			setTestResultInfo(data);
-			router.push(`/result/${data.id}/${0}`);
+			router.replace(`/result/${data.id}/${0}`);
 		},
 		// 에러 핸들링 (optional)
 		onError: (error) => {
@@ -131,9 +131,15 @@ const SolvetimeContainer = ({ testId }: { testId: number }) => {
 				<div className="text-xl">분</div>
 				{/* <HourMinutePicker /> */}
 			</div>
-			<div className="flex justify-center">
+			<div className="flex w-full justify-around">
 				<button
-					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg disabled:bg-gray-200 disabled:text-gray-400"
+					className="w-2/5 h-12 text-orange-500 rounded-lg border-orange-500 border"
+					onClick={handleSubmit}
+				>
+					건너뛰기
+				</button>
+				<button
+					className="w-2/5 h-12 bg-orange-200 text-orange-500 rounded-lg disabled:bg-gray-200 disabled:text-gray-400"
 					disabled={hour.length === 0 || minute.length === 0}
 					onClick={() => setModalOpen(true)}
 				>
