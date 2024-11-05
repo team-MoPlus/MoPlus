@@ -4,8 +4,8 @@ import ResultContainer from "@/containers/ResultContainer/ResultContainer";
 import ResultSharingContainer from "@/containers/ResultContainer/ResultSharingContainer";
 import React, { useEffect } from "react";
 
-const page = ({ params }: { params: { id: number; testId: number } }) => {
-	if (params.testId > 0)
+const page = ({ params }: { params: { id: number; testId: number; shared: string } }) => {
+	if (params.shared === "shared")
 		return (
 			<ResultSharingContainer testResultId={params.id} testId={params.testId} />
 		);

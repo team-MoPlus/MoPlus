@@ -11,6 +11,7 @@ import { TestResult } from "../../../types/result";
 import { calculateTimeDifference } from "../../../utils/parseTime";
 import toast, { Toaster } from "react-hot-toast";
 import { KakaoShareButton } from "@/components/Buttons";
+import { sendResultData } from "../../../apis/testResult";
 
 const notify = () => toast.error("브라우저 뒤로가기는 지원하지 않습니다.");
 
@@ -18,27 +19,18 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 	const router = useRouter();
 	const testResultInfo = useRecoilValue<TestResult>(testResultState);
 	const testInfo = useRecoilValue<TestInfo>(testInfoState);
-	const [timeArr, setTimeArr] = useState<(number | boolean)[]>([]);
+	const [timeArr, setTimeArr] = useState<string[]>([]);
 
 	useEffect(() => {
-		setTimeArr(
-			calculateTimeDifference(
-				testResultInfo.averageSolvingTime,
-				testResultInfo.solvingTime
-			)
-		);
-
-		console.log(window.location.href);
+		setTimeArr([
+			testResultInfo.solvingTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)?.[1] || "0",
+			testResultInfo.solvingTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)?.[2] || "0",
+		]);
 	}, []);
 
 	// useEffect(() => {
-	// 	// 히스토리의 마지막 항목을 덮어씁니다.
-	// 	window.history.replaceState(null, "", location.href);
-	// 	window.onpopstate = function (event) {
-	// 		notify();
-	// 		history.go(1);
-	// 	};
-	// }, [router]);
+	// 	sendResultData(JSON.stringify(testResultInfo));
+	// }, []);
 
 	return (
 		<div className="p-4">
@@ -56,13 +48,8 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 						<span className="text-gray-500">점</span>
 					</div>
 					<div className="text-3xl text-gray-400">
-						<span className="text-orange-500">
-							{testResultInfo.solvingTime.match(/PT(\d+)H(\d+)M/)?.[1] || "0"}
-						</span>
-						h{" "}
-						<span className="text-orange-500">
-							{testResultInfo.solvingTime.match(/PT(\d+)H(\d+)M/)?.[2] || "0"}
-						</span>
+						<span className="text-orange-500">{timeArr[0]}</span>h{" "}
+						<span className="text-orange-500">{timeArr[1]}</span>
 						m
 						<br />
 						<div className="text-sm flex justify-end">내 풀이 시간</div>
@@ -119,9 +106,7 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md my-2">
 				<h1 className="text-xl mb-4">공유하기</h1>
 				<div className="flex items-center justify-center">
-					<KakaoShareButton
-						showLink={window.location.href.replace(/\/\d+$/, `/${testInfo.id}`)}
-					/>
+					<KakaoShareButton showLink={`${window.location.href}/shared`} />
 				</div>
 			</div>
 

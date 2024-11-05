@@ -1,4 +1,4 @@
-import { api } from "./axios";
+import { api, pdfServer } from "./axios";
 
 export const postAnswer = async (id: number, wrongProblemsArray: Object[]) => {
 	return await api
@@ -39,4 +39,17 @@ export const getTestResultInfoById = async (id: number) => {
 			return res.data;
 		})
 		.catch((err) => console.error(err));
+};
+
+export const sendResultData = async (data: Object) => {
+	return await pdfServer
+		.post(`/test/resultInfo`, data, {
+			headers: { "Content-Type": "application/json" },
+		})
+		.then((res) => {
+			return res.data;
+		})
+		.catch((error) => {
+			console.error("Error:", error.message);
+		});
 };
