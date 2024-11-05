@@ -114,50 +114,67 @@ const CheckAnswer = ({
 
 	return (
 		<div>
-			<table className="table-fixed border-collapse border-spacing-0 border-orange-500 w-full border-2">
-				<thead>
-					<tr>
-						<th className="w-16 border-2 border-orange-400 px-4 py-2">번호</th>
-						<th className="w-24 border-2 border-orange-400 px-4 py-2">
-							오답 체크
-						</th>
-						<th className="border-2 border-orange-400 px-4 py-2">선지 선택</th>
-					</tr>
-				</thead>
-				<tbody>
+			<div className="w-full">
+				{/* Table Header */}
+				<div className="flex border-b-2 border-orange-300">
+					<div className="w-24 px-4 py-2 text-center">오답 체크</div>
+					<div className="w-16 px-4 py-2 text-center">번호</div>
+
+					<div className="flex-1 px-4 py-2 text-center">선지 선택</div>
+				</div>
+
+				{/* Table Body */}
+				<div className="mt-4">
 					{questions.map((qNum, index) => (
-						<tr key={index}>
-							<td className="w-16 text-center border-2 border-orange-400 px-4 py-2">
-								{qNum}
-							</td>
-							<td
-								className="border-2 border-orange-400 py-2 cursor-pointer"
+						<div
+							key={index}
+							className={`flex my-3 bg-[#fffaf5] ${
+								selectedChoices.hasOwnProperty(qNum)
+									? "border-2 border-red-500 shadow-lg"
+									: ""
+							}`}
+						>
+							{/* 오답 체크 */}
+							<div
+								className="w-24 py-2 cursor-pointer flex justify-center"
 								onClick={() => handleCheckToggle(qNum)}
 							>
 								<FaCheck
 									size={30}
-									className={`mx-auto ${selectedChoices.hasOwnProperty(qNum) ? "text-orange-500" : "text-gray-300"}`}
+									className={`${
+										selectedChoices.hasOwnProperty(qNum)
+											? "text-red-500"
+											: "text-gray-300"
+									}`}
 								/>
-							</td>
-							<td className="border-2 border-orange-400 pl-4">
+							</div>
+							{/* 번호 */}
+							<div className="w-16 px-4 py-2 text-center">{qNum}</div>
+
+							{/* 선지 선택 */}
+							<div className="flex-1 py-2">
 								{subjectDict[testInfo.subject] !== "수학" ||
 								qNum < 16 ||
 								(22 < qNum && qNum < 29) ? (
-									Array(5)
-										.fill(null)
-										.map((v, i) => (
-											<button
-												key={i}
-												onClick={() => handleChoiceSelect(qNum, i + 1)}
-												hidden={!selectedChoices.hasOwnProperty(qNum)}
-											>
-												{selectedChoices[qNum] === i + 1
-													? CircleNumberFilled[i]
-													: CircleNumber[i]}
-											</button>
-										))
+									<div className="flex space-x-2 justify-center">
+										{Array(5)
+											.fill(null)
+											.map((v, i) => (
+												<button
+													key={i}
+													onClick={() => handleChoiceSelect(qNum, i + 1)}
+													hidden={!selectedChoices.hasOwnProperty(qNum)}
+												>
+													{selectedChoices[qNum] === i + 1
+														? CircleNumberFilled[i]
+														: CircleNumber[i]}
+												</button>
+											))}
+									</div>
 								) : (
-									<div hidden={!selectedChoices.hasOwnProperty(qNum)}>
+									<div
+										className={`flex justify-center ${!selectedChoices.hasOwnProperty(qNum) ? "hidden" : ""}`}
+									>
 										<input
 											className="border pl-1 h-8 rounded-md focus:outline-none focus:border-none focus:ring-2 focus:ring-orange-300"
 											type="text"
@@ -172,11 +189,12 @@ const CheckAnswer = ({
 										/>
 									</div>
 								)}
-							</td>
-						</tr>
+							</div>
+						</div>
 					))}
-				</tbody>
-			</table>
+				</div>
+			</div>
+
 			<div className="flex justify-center my-4">
 				<button
 					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg"
