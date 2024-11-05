@@ -10,6 +10,7 @@ import {
 	countSolveCount,
 	postAnswer,
 	postSolveTime,
+	sendResultData,
 } from "../../../apis/testResult";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
@@ -80,10 +81,10 @@ const SolvetimeContainer = ({ testId }: { testId: number }) => {
 		mutationFn: (params: { testResultId: number; timeString: string }) =>
 			postSolveTime(params.testResultId, params.timeString),
 		onSuccess: (data, variables) => {
-			console.log(variables.testResultId, variables.timeString);
-			console.log(data);
 			setTestResultInfo(data);
-			router.replace(`/result/${data.id}/${0}`);
+			console.log(data);
+			sendResultData(data);
+			router.replace(`/result/${testId}/${data.id}/show`);
 		},
 		// 에러 핸들링 (optional)
 		onError: (error) => {
@@ -93,7 +94,7 @@ const SolvetimeContainer = ({ testId }: { testId: number }) => {
 
 		// 요청이 완료되면 실행 (성공 또는 실패와 무관)
 		onSettled: () => {
-			console.log("Request has been processed.");
+			// console.log("Request has been processed.");
 		},
 	});
 

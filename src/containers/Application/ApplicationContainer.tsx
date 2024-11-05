@@ -9,6 +9,7 @@ import { postApplication } from "../../../apis/application";
 import { ApplicationForm, TestResult } from "../../../types/result";
 import { testResultState } from "@/recoil/atoms";
 import { useRecoilValue } from "recoil";
+import Image from "next/image";
 
 // 한글 완성 여부를 확인하는 함수
 const isKoreanComplete = (input: string): boolean => {
@@ -108,6 +109,14 @@ const ApplicationContainer = () => {
 			<label className="block text-orange-500 font-semibold mb-1">
 				복습서 미리보기
 			</label>
+			<div>
+				<Image
+					src="/example_images/reviewnote_preview.png"
+					alt="example"
+					width={500}
+					height={200}
+				/>
+			</div>
 
 			{/* Submit Button */}
 			<div className="flex justify-center">
