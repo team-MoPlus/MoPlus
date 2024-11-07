@@ -123,7 +123,7 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 						router.push("/application");
 					}}
 				>
-					상세 분석 성적표 신청하기
+					모플 복습서 생성하기
 				</button>
 			</div>
 		</div>

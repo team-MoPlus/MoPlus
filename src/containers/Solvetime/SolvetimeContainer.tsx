@@ -23,10 +23,11 @@ import ModalPortal from "../../../utils/Portal";
 import { Modal } from "@/components/Modal";
 import SubmitModal from "@/components/Modal/SubmitModal";
 import { IoChevronBackOutline } from "react-icons/io5";
+import toast from "react-hot-toast";
 
 const SolvetimeContainer = ({ testId }: { testId: number }) => {
-	const [hour, setHour] = useState<string>("0");
-	const [minute, setMinute] = useState<string>("0");
+	const [hour, setHour] = useState<string>("");
+	const [minute, setMinute] = useState<string>("");
 	const router = useRouter();
 	const setTestResultInfo = useSetRecoilState(testResultState);
 	const testInfo = useRecoilValue<TestInfo>(testInfoState);

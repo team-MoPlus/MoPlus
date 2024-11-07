@@ -43,7 +43,7 @@ const ResultSharingContainer = ({
 		isError,
 		error,
 	} = useQuery({
-		queryKey: ["infobyid"],
+		queryKey: ["infobyid", testResultId],
 		queryFn: () => getTestResultInfoById(testResultId),
 		select: React.useCallback((data: TestResult) => handleTestResult(data), []),
 	});
@@ -54,7 +54,7 @@ const ResultSharingContainer = ({
 		isError: TestDataisError,
 		error: TestDataerror,
 	} = useQuery({
-		queryKey: ["infobyid"],
+		queryKey: ["infobyid", testId],
 		queryFn: () => getTestById(testId),
 		select: React.useCallback((data: TestInfo) => setTestInfo(data), []),
 	});
