@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaCheck } from "react-icons/fa6";
 import toast, { Toaster } from "react-hot-toast";
 import {
@@ -67,18 +67,24 @@ const CheckAnswer = ({
 	const testInfo = useRecoilValue<TestInfo>(testInfoState);
 	const subjectDict = getSubjectDict();
 
+	// 각 질문에 대한 input ref 배열
+	const inputRefs = useRef<(HTMLInputElement | null)[]>(Array(30).fill(null));
+	const [focusIndex, setFocusIndex] = useState<number>(0);
+
 	const questions = Array.from({ length: problemCount }, (_, i) => i + 1);
 
 	// 오답 체크 상태 토글
-	const handleCheckToggle = (index: number) => {
+	const handleCheckToggle = (qNum: number) => {
 		setSelectedChoices((prev) =>
-			prev.hasOwnProperty(index)
+			prev.hasOwnProperty(qNum)
 				? (() => {
-						const { [index]: _, ...rest } = prev;
+						const { [qNum]: _, ...rest } = prev;
 						return rest;
 					})()
-				: { ...prev, [index]: -1 }
+				: { ...prev, [qNum]: -1 }
 		);
+
+		setFocusIndex(qNum - 1);
 	};
 
 	// 선지 선택 상태 설정
@@ -90,6 +96,10 @@ const CheckAnswer = ({
 			}));
 		}
 	};
+
+	useEffect(() => {
+		inputRefs.current[focusIndex]?.focus();
+	}, [focusIndex]);
 
 	const handleSubmit = (
 		id: number,
@@ -173,14 +183,19 @@ const CheckAnswer = ({
 									</div>
 								) : (
 									<div
-										className={`flex justify-center ${!selectedChoices.hasOwnProperty(qNum) ? "hidden" : ""}`}
+										className={`flex justify-center ${
+											!selectedChoices.hasOwnProperty(qNum) ? "hidden" : ""
+										}`}
 									>
 										<input
 											className="border pl-1 h-8 rounded-md focus:outline-none focus:border-none focus:ring-2 focus:ring-orange-300"
+											ref={(el) => {
+												inputRefs.current[index] = el;
+											}}
 											type="text"
 											inputMode="numeric"
 											pattern="\d*"
-											placeholder="단답형"
+											placeholder=""
 											size={6}
 											onChange={(e) =>
 												handleChoiceSelect(qNum, parseInt(e.target.value))
