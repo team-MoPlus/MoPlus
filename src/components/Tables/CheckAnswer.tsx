@@ -159,7 +159,7 @@ const CheckAnswer = ({
 								/>
 							</div>
 							{/* 번호 */}
-							<div className="w-16 px-4 py-2 text-center">{qNum}</div>
+							<div className="w-16 px-4 py-3 text-center">{qNum}</div>
 
 							{/* 선지 선택 */}
 							<div className="flex-1 py-2">
