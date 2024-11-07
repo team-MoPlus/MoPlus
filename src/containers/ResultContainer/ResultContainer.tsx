@@ -11,7 +11,7 @@ import { TestResult } from "../../../types/result";
 import { calculateTimeDifference } from "../../../utils/parseTime";
 import toast, { Toaster } from "react-hot-toast";
 import { KakaoShareButton } from "@/components/Buttons";
-import { sendResultData } from "../../../apis/testResult";
+import { getReviewNote, sendResultData } from "../../../apis/testResult";
 
 const notify = () => toast.error("브라우저 뒤로가기는 지원하지 않습니다.");
 
@@ -110,7 +110,11 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 				</div>
 			</div>
 
-			<div className="flex w-full justify-around">
+			<form
+				className="flex w-full justify-around"
+				action={"http://localhost:8000/download-review"}
+				method="get"
+			>
 				<button
 					className="w-2/5 h-12 mt-4 bg-orange-200 text-orange-500 rounded-lg text-sm"
 					onClick={() => router.replace("/searchmo")}
@@ -125,7 +129,7 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 				>
 					모플 복습서 생성하기
 				</button>
-			</div>
+			</form>
 		</div>
 	);
 };

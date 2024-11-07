@@ -15,8 +15,6 @@ import { getTestResultInfoById } from "../../../apis/testResult";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { getTestById } from "../../../apis/tests";
 
-const notify = () => toast.error("브라우저 뒤로가기는 지원하지 않습니다.");
-
 const ResultSharingContainer = ({
 	testResultId,
 	testId,
