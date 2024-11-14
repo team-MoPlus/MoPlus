@@ -54,6 +54,17 @@ export const sendResultData = async (data: Object) => {
 		});
 };
 
+export const requestReviewNote = async () => {
+	return await pdfServer
+		.post("/request-review")
+		.then((res) => {
+			return res.data;
+		})
+		.catch((error) => {
+			console.error("Error:", error.message);
+		});
+};
+
 export const getReviewNote = async () => {
 	return await pdfServer
 		.get(`/download-review`)

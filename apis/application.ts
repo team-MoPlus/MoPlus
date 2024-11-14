@@ -25,24 +25,25 @@ export const postApplication = async (
 			return res.data;
 		})
 		.catch((err: AxiosError) => {
-			if (err.response && err.response.status === 503) {
-				if (retryCount < MAX_RETRIES) {
-					notify503(retryCount);
+			console.error(err);
+			// if (err.response && err.response.status === 503) {
+			// 	if (retryCount < MAX_RETRIES) {
+			// 		notify503(retryCount);
 
-					return new Promise(
-						(resolve) =>
-							setTimeout(() => {
-								resolve(
-									postApplication(
-										{ testResultId, name, phoneNumber },
-										retryCount + 1
-									)
-								);
-							}, 2000) // 2초 후 다시 시도
-					);
-				}
-			} else {
-				notifyError();
-			}
+			// 		return new Promise(
+			// 			(resolve) =>
+			// 				setTimeout(() => {
+			// 					resolve(
+			// 						postApplication(
+			// 							{ testResultId, name, phoneNumber },
+			// 							retryCount + 1
+			// 						)
+			// 					);
+			// 				}, 2000) // 2초 후 다시 시도
+			// 		);
+			// 	}
+			// } else {
+			// 	notifyError();
+			// }
 		});
 };

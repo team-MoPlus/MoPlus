@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
-import { IncorrectProblem } from "../../types/result";
+import { IncorrectProblem, IRatingRow } from "../../types/result";
 
 const sessionStorage =
 	typeof window !== "undefined" ? window.sessionStorage : undefined;
@@ -86,6 +86,11 @@ export const incorrectProblemState = atom<
 >({
 	key: "incorrectProblemState",
 	default: [],
+});
+
+export const ratingTablesState = atom<{ [key: string]: IRatingRow[] }>({
+	key: "ratingTablesState",
+	default: {},
 });
 
 // // 선택과목 -> 과목 변환

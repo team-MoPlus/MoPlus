@@ -9,12 +9,31 @@ export interface IncorrectProblem {
 	correctRate: number;
 }
 
-export interface TestResult {
+export interface IEstimatedRank {
+	ratingProvider: string;
+	estimatedRating: number;
+}
+
+export interface IRatingRow {
+	rating: number;
+	rawScores: string;
+	standardScores: number;
+	percentiles: number;
+}
+
+export interface IRatingTable {
 	id: number;
+	practiceId: number;
+	ratingProvider: string;
+	ratingRows: IRatingRow[];
+}
+
+export interface TestResult {
+	testResultId: number;
 	score: number;
 	solvingTime: string;
-	rank: number;
 	averageSolvingTime: string;
-	solvingCount: number;
+	estimatedRatingGetResponses: IEstimatedRank[];
 	incorrectProblems: IncorrectProblem[];
+	ratingTables: IRatingTable[];
 }

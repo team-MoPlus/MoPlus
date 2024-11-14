@@ -119,7 +119,11 @@ const ApplicationContainer = () => {
 			</div>
 
 			{/* Submit Button */}
-			<div className="flex justify-center">
+			<form
+				className="flex justify-center"
+				action={"http://localhost:8000/download-review"}
+				method="get"
+			>
 				<button
 					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg"
 					onClick={() => {
@@ -127,7 +131,7 @@ const ApplicationContainer = () => {
 							? phoneNumber.length < 10
 								? notifyPhoneNumberError()
 								: sendApplication({
-										testResultId: testResult.id,
+										testResultId: testResult.testResultId,
 										name,
 										phoneNumber,
 									})
@@ -136,7 +140,7 @@ const ApplicationContainer = () => {
 				>
 					신청
 				</button>
-			</div>
+			</form>
 			<Toaster />
 		</div>
 	);

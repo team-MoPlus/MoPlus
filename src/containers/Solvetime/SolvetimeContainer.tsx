@@ -63,7 +63,8 @@ const SolvetimeContainer = ({ testId }: { testId: number }) => {
 		onSuccess: (data, variables) => {
 			SolveTimeMutation.mutate({
 				testResultId: data,
-				timeString: `PT${hour}H${minute}M`,
+				timeString:
+					hour == "" && minute == "" ? "PT0S" : `PT${hour}H${minute}M`,
 			});
 		},
 		// 에러 핸들링 (optional)
@@ -85,7 +86,7 @@ const SolvetimeContainer = ({ testId }: { testId: number }) => {
 			setTestResultInfo(data);
 			console.log(data);
 			sendResultData(data);
-			router.replace(`/result/${testId}/${data.id}/show`);
+			router.replace(`/result/${testId}/${data.testResultId}/show`);
 		},
 		// 에러 핸들링 (optional)
 		onError: (error) => {
