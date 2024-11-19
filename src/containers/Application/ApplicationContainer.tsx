@@ -121,7 +121,7 @@ const ApplicationContainer = () => {
 			{/* Submit Button */}
 			<form
 				className="flex justify-center"
-				action={"http://localhost:8000/download-review"}
+				action={`${process.env.PDF_SERVER_API_URL}/download-review`}
 				method="get"
 			>
 				<button
