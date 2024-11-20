@@ -151,7 +151,7 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 				<button
 					className="w-2/5 h-12 mt-4 bg-orange-500 text-white rounded-lg text-sm"
 					onClick={() => {
-						requestReviewNote();
+						// requestReviewNote();
 						router.push("/application");
 					}}
 				>

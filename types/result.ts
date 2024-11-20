@@ -1,7 +1,7 @@
 export interface ApplicationForm {
 	testResultId: number;
-	name: string | null;
-	phoneNumber: string | null;
+	name: string;
+	phoneNumber: string;
 }
 
 export interface IncorrectProblem {
