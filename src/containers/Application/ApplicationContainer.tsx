@@ -10,6 +10,8 @@ import { ApplicationForm, TestResult } from "../../../types/result";
 import { testResultState } from "@/recoil/atoms";
 import { useRecoilValue } from "recoil";
 import Image from "next/image";
+import { useMutation } from "@tanstack/react-query";
+import { sendDetailResultApplication } from "../../../apis/application";
 
 // 한글 완성 여부를 확인하는 함수
 const isKoreanComplete = (input: string): boolean => {
@@ -61,14 +63,28 @@ const ApplicationContainer = () => {
 		setName(value);
 	};
 
-	const sendApplication = ({
-		testResultId,
-		name,
-		phoneNumber,
-	}: ApplicationForm) => {
-		postApplication({ testResultId, name, phoneNumber });
-		router.replace("/searchmo");
-	};
+	const DetailResultMutation = useMutation({
+		mutationFn: (params: {
+			testResultId: number;
+			name: string;
+			phoneNumber: string;
+		}) => postApplication(params),
+		onSuccess: async (data, variables) => {
+			await sendDetailResultApplication(data);
+			// console.log(data);
+			router.replace("/searchmo");
+		},
+		// 에러 핸들링 (optional)
+		onError: (error) => {
+			console.error("Error posting data:", error);
+			alert("There was an error submitting your solved time.");
+		},
+
+		// 요청이 완료되면 실행 (성공 또는 실패와 무관)
+		onSettled: () => {
+			// console.log("Request has been processed.");
+		},
+	});
 
 	return (
 		<div className="p-4">
@@ -119,7 +135,7 @@ const ApplicationContainer = () => {
 			</div>
 
 			{/* Submit Button */}
-			<form
+			{/* <form
 				className="flex justify-center"
 				action={`${process.env.PDF_SERVER_API_URL}/download-review`}
 				method="get"
@@ -136,6 +152,35 @@ const ApplicationContainer = () => {
 										phoneNumber,
 									})
 							: notifyNameError();
+					}}
+				>
+					신청
+				</button>
+			</form> */}
+			<form
+				className="flex justify-center"
+				action={`${process.env.NEXT_PUBLIC_PDF_SERVER_API_URL}/download-review`}
+				method="get"
+				onSubmit={(e) => e.preventDefault()}
+			>
+				<button
+					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg"
+					onClick={async () => {
+						if (isKoreanComplete(name)) {
+							if (phoneNumber.length < 10) {
+								notifyPhoneNumberError();
+							} else {
+								await DetailResultMutation.mutateAsync({
+									testResultId: testResult.testResultId,
+									name,
+									phoneNumber,
+								});
+
+								document.querySelector("form")!.submit(); // 폼 강제 제출
+							}
+						} else {
+							notifyNameError();
+						}
 					}}
 				>
 					신청

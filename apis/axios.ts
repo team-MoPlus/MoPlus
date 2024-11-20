@@ -11,7 +11,7 @@ export const api = axios.create({
 });
 
 export const pdfServer = axios.create({
-	baseURL: `${process.env.PDF_SERVER_API_URL}`,
+	baseURL: `${process.env.NEXT_PUBLIC_PDF_SERVER_API_URL}`,
 	headers: {
 		"Cache-Control": "no-store",
 		"Content-type": "application/json",
