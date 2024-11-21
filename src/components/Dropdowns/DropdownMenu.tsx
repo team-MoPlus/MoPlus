@@ -6,9 +6,15 @@ interface DropdownProps {
 	defaultText: string;
 	ItemObj: { [key: string]: string[] }; // ItemObj는 문자열 배열을 가지는 객체 타입
 	buttonWidth: string;
+	setData: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const DropdownMenu = ({ defaultText, ItemObj, buttonWidth }: DropdownProps) => {
+const DropdownMenu = ({
+	defaultText,
+	ItemObj,
+	buttonWidth,
+	setData,
+}: DropdownProps) => {
 	const [width, setWidth] = useState(0);
 	const [isOpen, setIsOpen] = useState(false);
 	const [text, setText] = useState(defaultText);
@@ -18,6 +24,7 @@ const DropdownMenu = ({ defaultText, ItemObj, buttonWidth }: DropdownProps) => {
 	const clickMenu = (e: React.MouseEvent<HTMLElement>) => {
 		setIsOpen(false);
 		setText((e.target as HTMLDivElement).innerText);
+		setData((e.target as HTMLDivElement).innerText);
 	};
 
 	// 외부 클릭 감지
@@ -52,9 +59,7 @@ const DropdownMenu = ({ defaultText, ItemObj, buttonWidth }: DropdownProps) => {
 			<button
 				ref={referenceDivRef}
 				onClick={() => setIsOpen(!isOpen)}
-				className={`text-white px-4 py-2 flex items-center justify-between ${buttonWidth} ${
-					isOpen ? "rounded-t-2xl" : "rounded-3xl"
-				} ${text === defaultText ? "bg-black" : "bg-orange-500"}`}
+				className={`text-orange-500 border border-orange-600 px-1 bg-white flex items-center text-sm justify-between rounded-md ${buttonWidth} ${isOpen ? "rounded-b-none border-b-0" : ""}`}
 			>
 				{text}
 				<span className="ml-2">
@@ -96,10 +101,10 @@ const DropdownMenu = ({ defaultText, ItemObj, buttonWidth }: DropdownProps) => {
 
 			{isOpen && (
 				<div
-					className={`absolute left-0 bg-black text-white z-10 rounded-b-2xl`}
+					className={`absolute left-0 bg-white text-orange-500 z-10 rounded-b-md border border-orange-500`}
 					style={{ width: `${width}px` }}
 				>
-					<ul className="flex flex-col text-sm">
+					<ul className="flex flex-col text-xs">
 						{Object.keys(ItemObj).map((subject, index) => {
 							const listSize = Object.keys(ItemObj).length;
 
@@ -107,8 +112,8 @@ const DropdownMenu = ({ defaultText, ItemObj, buttonWidth }: DropdownProps) => {
 								<li key={subject} className="relative group">
 									<div
 										onClick={clickMenu}
-										className={`px-3 py-2 hover:bg-orange-400 ${
-											index === listSize - 1 ? "rounded-b-2xl" : ""
+										className={`pl-2 py-2 ${
+											index === listSize - 1 ? "rounded-b-md" : ""
 										}`}
 									>
 										{subject}

@@ -4,25 +4,52 @@ import { Banner } from "@/components/Banner";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { TestInfo } from "../../../types/Item";
-import { useRouter } from "next/navigation";
-import { useRecoilValue } from "recoil";
-import { testInfoState, testResultState } from "@/recoil/atoms";
+import { usePathname, useRouter } from "next/navigation";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+	ratingTablesState,
+	testInfoState,
+	testResultState,
+} from "@/recoil/atoms";
 import { TestResult } from "../../../types/result";
+import { calculateTimeDifference } from "../../../utils/parseTime";
+import toast, { Toaster } from "react-hot-toast";
+import { KakaoShareButton } from "@/components/Buttons";
+import { requestReviewNote } from "../../../apis/testResult";
+import { DropdownMenu } from "@/components/Dropdowns";
+
+const notify = () => toast.error("브라우저 뒤로가기는 지원하지 않습니다.");
 
 const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 	const router = useRouter();
 	const testResultInfo = useRecoilValue<TestResult>(testResultState);
 	const testInfo = useRecoilValue<TestInfo>(testInfoState);
+	const [timeArr, setTimeArr] = useState<string[]>([]);
+	const [rankProvider, setRankProvider] = useState("대성마이맥");
+	const [ratingTables, setRatingTables] = useRecoilState(ratingTablesState);
 
-	// 정규식을 사용하여 H와 M 사이의 숫자 추출
-	const matchTest = testResultInfo.solvingTime.match(/PT(\d+)H(\d+)M/);
-	const matchAvg = testResultInfo.averageSolvingTime.match(/PT(\d+)H(\d+)M/);
+	useEffect(() => {
+		setTimeArr([
+			testResultInfo.solvingTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)?.[1] || "0",
+			testResultInfo.solvingTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)?.[2] || "0",
+		]);
+		setRatingTables({
+			대성마이맥: testResultInfo.ratingTables.find(
+				(obj) => obj.ratingProvider === "대성마이맥"
+			)!.ratingRows,
+			이투스: testResultInfo.ratingTables.find(
+				(obj) => obj.ratingProvider === "이투스"
+			)!.ratingRows,
+		});
+	}, []);
+
+	// useEffect(() => {
+	// 	sendResultData(JSON.stringify(testResultInfo));
+	// }, []);
 
 	return (
 		<div className="p-4">
-			<Link href="/" className="inline-block">
-				<Banner />
-			</Link>
+			{/* 결과 */}
 			<div className="h-16 text-white px-6 my-2 text-xl font-bold bg-orange-600 rounded-lg flex items-center">
 				결과
 			</div>
@@ -36,53 +63,99 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 						<span className="text-gray-500">점</span>
 					</div>
 					<div className="text-3xl text-gray-400">
-						<span className="text-orange-500">{matchTest?.[1] || "0"}</span>h{" "}
-						<span className="text-orange-500">{matchTest?.[2] || "0"}</span>m
+						<span className="text-orange-500">{timeArr[0]}</span>h{" "}
+						<span className="text-orange-500">{timeArr[1]}</span>
+						m
 						<br />
 						<div className="text-sm flex justify-end">내 풀이 시간</div>
 					</div>
 				</div>
 			</div>
-			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md">
-				<h1 className="text-xl mb-4">틀린 문제</h1>
-				<div className="flex items-center text-lg gap-5 text-gray-500">
+			{/* 틀린 문제 */}
+			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md my-2">
+				<h1 className="text-xl mb-4">틀린 문제 정답률</h1>
+				<div className="grid grid-cols-4 items-center gap-2 text-gray-600">
 					{testResultInfo.incorrectProblems.map((problem, idx) => (
-						<div key={idx} className="flex items-center">
+						<div key={idx} className="flex items-center text-sm">
 							{problem.problemNumber}번{" "}
-							<span className="inline-block ml-1 text-xs text-orange-500 border border-orange-500 rounded-md p-[2px]">
-								{problem.point}점
+							<span className="inline-block ml-1 text-xs text-orange-500 border border-orange-500 rounded-md px-[2px]">
+								{problem.correctRate}%
 							</span>
 						</div>
 					))}
 				</div>
 			</div>
+			{/* 예상 등급 */}
 			<div className="w-full border border-dashed border-orange-200 rounded-md p-4">
-				<h1 className="text-xl">내 위치</h1>
-				<div className="w-full flex justify-between">
+				<div className="flex gap-4 items-center mb-4">
+					<h1 className="text-xl">예상 등급</h1>
+					<DropdownMenu
+						defaultText={"대성마이맥"}
+						ItemObj={{ 대성마이맥: [], 이투스: [] }}
+						buttonWidth={"w-30"}
+						setData={setRankProvider}
+					/>
+				</div>
+				<div className="w-full flex justify-between mb-4">
 					<div className="text-4xl text-orange-500">
-						{testResultInfo.rank}
-						<span className="text-gray-500">등</span>
-					</div>
-					<div className="text-2xl text-gray-400">
-						<span className="text-orange-500">{matchAvg?.[1] || "0"}</span>h{" "}
-						<span className="text-orange-500">{matchAvg?.[2] || "0"}</span>m
-						<br />
-						<div className="text-sm flex justify-end">평균 풀이 시간</div>
+						{
+							testResultInfo.estimatedRatingGetResponses.find(
+								(obj) => obj.ratingProvider === rankProvider
+							)?.estimatedRating
+						}
+						<span className="text-gray-500">등급</span>
 					</div>
 				</div>
-				<div className="mt-4 mx-4">
-					<div className="border border-gray-400 rounded-xl h-16"></div>
-					<div className="border border-gray-400 rounded-xl h-16"></div>
-					<div className="border border-gray-400 rounded-xl h-16"></div>
+				<div className="w-full">
+					<div className="w-full flex text-center py-1 h-10 items-center text-md bg-orange-500 text-white">
+						<div className="w-2/12 border-r-2 border-white">등급</div>
+						<div className="w-4/12 border-r-2 border-white">원점수</div>
+						<div className="w-3/12 border-r-2 border-white">표준점수</div>
+						<div className="w-3/12">백분위</div>
+					</div>
+					{ratingTables[rankProvider]?.slice(0, 8).map((v, i) => (
+						<div
+							key={i}
+							className={`h-12 flex text-center items-center py-1 border-b-2 border-gray-200 ${
+								i + 1 ==
+								testResultInfo.estimatedRatingGetResponses.find(
+									(obj) => obj.ratingProvider === rankProvider
+								)?.estimatedRating
+									? "bg-orange-200 text-lg"
+									: "text-md text-gray-500"
+							}`}
+						>
+							<div className="w-2/12">{v["rating"]}</div>
+							<div className="w-4/12">{v["rawScores"]}</div>
+							<div className="w-3/12">{v["standardScores"]}</div>
+							<div className="w-3/12">{v["percentiles"]}</div>
+						</div>
+					))}
+				</div>
+			</div>
+			{/* 공유하기 */}
+			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md my-2">
+				<h1 className="text-xl mb-4">공유하기</h1>
+				<div className="flex items-center justify-center">
+					<KakaoShareButton showLink={`${window.location.href}/shared`} />
 				</div>
 			</div>
 
-			<div className="flex justify-center">
+			<div className="flex w-full justify-around">
 				<button
-					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg"
-					onClick={() => router.push("/application")}
+					className="w-2/5 h-12 mt-4 bg-orange-200 text-orange-500 rounded-lg text-sm"
+					onClick={() => router.replace("/searchmo")}
 				>
-					상세 분석표 신청하기
+					홈으로 돌아가기
+				</button>
+				<button
+					className="w-2/5 h-12 mt-4 bg-orange-500 text-white rounded-lg text-sm"
+					onClick={() => {
+						// requestReviewNote();
+						router.push("/application");
+					}}
+				>
+					모플 복습서 생성하기
 				</button>
 			</div>
 		</div>

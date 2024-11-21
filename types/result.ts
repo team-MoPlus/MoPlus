@@ -1,19 +1,39 @@
 export interface ApplicationForm {
 	testResultId: number;
-	name: string | null;
-	phoneNumber: string | null;
+	name: string;
+	phoneNumber: string;
 }
 
-interface IncorrectProblem {
+export interface IncorrectProblem {
 	problemNumber: string;
-	point: number;
+	correctRate: number;
+}
+
+export interface IEstimatedRank {
+	ratingProvider: string;
+	estimatedRating: number;
+}
+
+export interface IRatingRow {
+	rating: number;
+	rawScores: string;
+	standardScores: number;
+	percentiles: number;
+}
+
+export interface IRatingTable {
+	id: number;
+	practiceId: number;
+	ratingProvider: string;
+	ratingRows: IRatingRow[];
 }
 
 export interface TestResult {
-	id: number;
+	testResultId: number;
 	score: number;
 	solvingTime: string;
-	rank: number;
 	averageSolvingTime: string;
+	estimatedRatingGetResponses: IEstimatedRank[];
 	incorrectProblems: IncorrectProblem[];
+	ratingTables: IRatingTable[];
 }

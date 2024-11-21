@@ -7,10 +7,14 @@ import { getTestById } from "../../../apis/tests";
 import { useQuery } from "@tanstack/react-query";
 import { useRecoilState } from "recoil";
 import { testInfoState } from "@/recoil/atoms";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { IoChevronBackOutline } from "react-icons/io5";
+import { useRouter } from "next/navigation";
 
 const MoDetailContainer = ({ id }: { id: number }) => {
 	const [testInfo, setTestInfo] = useRecoilState(testInfoState);
 	const subjectDict = getSubjectDict();
+	const router = useRouter();
 
 	const { data, isPending, isError, error } = useQuery({
 		queryKey: ["tests", id],
@@ -19,7 +23,7 @@ const MoDetailContainer = ({ id }: { id: number }) => {
 	});
 
 	if (isPending) {
-		return <p>Loading...</p>;
+		return <LoadingSpinner />;
 	}
 
 	// 에러가 발생했을 때 표시할 UI
@@ -29,26 +33,34 @@ const MoDetailContainer = ({ id }: { id: number }) => {
 
 	return (
 		<div className="w-full h-full items-center flex-col p-4">
-			<Link href="/" className="inline-block">
-				<Banner />
-			</Link>
+			<div className="flex gap-2">
+				<IoChevronBackOutline
+					size={36}
+					className="cursor-pointer"
+					onClick={() => router.back()}
+				/>
+				<Link href="/" className="inline-block">
+					<Banner />
+				</Link>
+			</div>
+
 			<div className="h-16 text-white px-6 text-xl font-bold bg-orange-300 rounded-lg flex items-center my-2">
 				선택하신 모의고사가 맞나요?
 			</div>
 			<div className="mt-8">
 				<p className="text-xl text-orange-500">선택한 모의고사</p>
-				<p className="text-xl">{testInfo.name}</p>
+				<p className="text-md">{testInfo.name}</p>
 			</div>
 
 			{Object.keys(subjectDict).includes(testInfo.subject) ? (
 				<>
 					<div>
 						<p className="text-xl text-orange-500 mt-8">과목</p>
-						<p className="text-xl">{subjectDict[testInfo.subject]}</p>
+						<p className="text-lg">{subjectDict[testInfo.subject]}</p>
 					</div>
 					<div>
 						<p className="text-xl text-orange-500 mt-8">선택 과목</p>
-						<div className="grid grid-cols-3 gap-x-10 gap-y-4 mt-2 px-4">
+						<div className="grid grid-cols-3 gap-x-6 gap-y-4 mt-2 px-4">
 							{Object.entries(subjectDict)
 								.filter(
 									([key, value]) => value === subjectDict[testInfo.subject]

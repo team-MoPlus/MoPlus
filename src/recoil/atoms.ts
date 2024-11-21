@@ -1,5 +1,6 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
+import { IncorrectProblem, IRatingRow } from "../../types/result";
 
 const sessionStorage =
 	typeof window !== "undefined" ? window.sessionStorage : undefined;
@@ -72,6 +73,24 @@ export const testResultState = atom({
 		phoneNumber: "",
 	},
 	effects_UNSTABLE: [persistAtom],
+});
+
+// 선택된 선지를 관리하는 atom
+export const selectedChoicesState = atom<{ [key: number]: number }>({
+	key: "selectedChoicesState",
+	default: {},
+});
+
+export const incorrectProblemState = atom<
+	{ problemNumber: string; incorrectAnswer: string }[]
+>({
+	key: "incorrectProblemState",
+	default: [],
+});
+
+export const ratingTablesState = atom<{ [key: string]: IRatingRow[] }>({
+	key: "ratingTablesState",
+	default: {},
 });
 
 // // 선택과목 -> 과목 변환

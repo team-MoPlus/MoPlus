@@ -9,6 +9,9 @@ import { postApplication } from "../../../apis/application";
 import { ApplicationForm, TestResult } from "../../../types/result";
 import { testResultState } from "@/recoil/atoms";
 import { useRecoilValue } from "recoil";
+import Image from "next/image";
+import { useMutation } from "@tanstack/react-query";
+import { sendDetailResultApplication } from "../../../apis/application";
 
 // 한글 완성 여부를 확인하는 함수
 const isKoreanComplete = (input: string): boolean => {
@@ -35,6 +38,7 @@ const ApplicationContainer = () => {
 	const [name, setName] = useState("");
 	const [phoneNumber, setPhoneNumber] = useState("");
 	const testResult = useRecoilValue<TestResult>(testResultState);
+	const [reviewNote, setReviewNote] = useState<boolean>(false);
 
 	// 입력 시 숫자만 허용
 	const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
@@ -58,6 +62,28 @@ const ApplicationContainer = () => {
 		postApplication({ testResultId, name, phoneNumber });
 		router.replace("/searchmo");
 	};
+	const DetailResultMutation = useMutation({
+		mutationFn: (params: {
+			testResultId: number;
+			name: string;
+			phoneNumber: string;
+		}) => postApplication(params),
+		onSuccess: async (data, variables) => {
+			await sendDetailResultApplication(data);
+			// console.log(data);
+			router.replace("/searchmo");
+		},
+		// 에러 핸들링 (optional)
+		onError: (error) => {
+			console.error("Error posting data:", error);
+			alert("There was an error submitting your solved time.");
+		},
+
+		// 요청이 완료되면 실행 (성공 또는 실패와 무관)
+		onSettled: () => {
+			// console.log("Request has been processed.");
+		},
+	});
 
 	return (
 		<div className="p-4">
@@ -94,26 +120,48 @@ const ApplicationContainer = () => {
 				className="w-full mb-6 p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
 			/>
 
+			{/* 복습서 미리보기 */}
+			<label className="block text-orange-500 font-semibold mb-1">
+				복습서 미리보기
+			</label>
+			<div>
+				<Image
+					src="/example_images/reviewnote_preview.png"
+					alt="example"
+					width={500}
+					height={200}
+				/>
+			</div>
+
 			{/* Submit Button */}
-			<div className="flex justify-center">
+			<form
+				className="flex justify-center"
+				action={`${process.env.NEXT_PUBLIC_PDF_SERVER_API_URL}/download-review`}
+				method="get"
+				onSubmit={(e) => e.preventDefault()}
+			>
 				<button
 					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg"
-					onClick={() => {
-						isKoreanComplete(name)
-							? phoneNumber.length < 10
-								? notifyPhoneNumberError()
-								: sendApplication({
-										testResultId: testResult.id,
-										name,
-										phoneNumber,
-									})
-							: notifyNameError();
+					onClick={async () => {
+						if (isKoreanComplete(name)) {
+							if (phoneNumber.length < 10) {
+								notifyPhoneNumberError();
+							} else {
+								await DetailResultMutation.mutateAsync({
+									testResultId: testResult.testResultId,
+									name,
+									phoneNumber,
+								});
+								document.querySelector("form")!.submit(); // 폼 강제 제출
+							}
+						} else {
+							notifyNameError();
+						}
 					}}
 				>
 					신청
 				</button>
-			</div>
-			<Toaster />
+			</form>
 		</div>
 	);
 };
