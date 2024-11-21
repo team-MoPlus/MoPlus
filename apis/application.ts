@@ -30,11 +30,18 @@ export const postApplication = async ({
 		});
 };
 
-export const sendDetailResultApplication = async (data: Object) => {
+export const sendDetailResultApplication = async (
+	data: Object,
+	fileName: string
+) => {
 	return await pdfServer
-		.post(`/detailResultApplication`, data, {
-			headers: { "Content-Type": "application/json" },
-		})
+		.post(
+			`/detailResultApplication`,
+			{ data, fileName },
+			{
+				headers: { "Content-Type": "application/json" },
+			}
+		)
 		.then((res) => {
 			return res.data;
 		})
