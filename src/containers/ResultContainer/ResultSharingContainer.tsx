@@ -44,7 +44,7 @@ const ResultSharingContainer = ({
 	} = useQuery({
 		queryKey: ["resultinfobyid", testResultId],
 		queryFn: () => getTestResultInfoById(testResultId),
-		select: React.useCallback((data: TestResult) => setTestResult(data), []),
+		select: React.useCallback((data: TestResult) => handleTestResult(data), []),
 	});
 
 	const {
@@ -58,12 +58,20 @@ const ResultSharingContainer = ({
 		select: React.useCallback((data: TestInfo) => setTestInfo(data), []),
 	});
 
-	const handleTestResult = (data: TestResult) => {
-		setTestResult(data);
-		// setTimeArr([
-		// 	data.solvingTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)?.[1] || "0",
-		// 	data.solvingTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)?.[2] || "0",
-		// ]);
+	const handleTestResult = async (data: TestResult) => {
+		await setTestResult(data);
+		setTimeArr([
+			data.solvingTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)?.[1] || "0",
+			data.solvingTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)?.[2] || "0",
+		]);
+
+		setRatingTables({
+			대성마이맥: data.ratingTables.find(
+				(obj) => obj.ratingProvider === "대성마이맥"
+			)!.ratingRows,
+			이투스: data.ratingTables.find((obj) => obj.ratingProvider === "이투스")!
+				.ratingRows,
+		});
 	};
 
 	if (isPending || testResult === undefined) {
