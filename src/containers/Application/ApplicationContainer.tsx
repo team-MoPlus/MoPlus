@@ -40,15 +40,6 @@ const ApplicationContainer = () => {
 	const testResult = useRecoilValue<TestResult>(testResultState);
 	const [reviewNote, setReviewNote] = useState<boolean>(false);
 
-	// 	toast.promise(
-	// ,
-	// 		{
-	// 			loading: "복습서 생성 중입니다...",
-	// 			success: <b>생성 완료되었습니다!</b>,
-	// 			error: <b>오류가 발생했습니다. 잠시 후 다시 시도해주세요.</b>,
-	// 		}
-	// 	);
-
 	// 입력 시 숫자만 허용
 	const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
 		const inputValue = e.currentTarget.value;
@@ -135,28 +126,6 @@ const ApplicationContainer = () => {
 			</div>
 
 			{/* Submit Button */}
-			{/* <form
-				className="flex justify-center"
-				action={`${process.env.PDF_SERVER_API_URL}/download-review`}
-				method="get"
-			>
-				<button
-					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg"
-					onClick={() => {
-						isKoreanComplete(name)
-							? phoneNumber.length < 10
-								? notifyPhoneNumberError()
-								: sendApplication({
-										testResultId: testResult.testResultId,
-										name,
-										phoneNumber,
-									})
-							: notifyNameError();
-					}}
-				>
-					신청
-				</button>
-			</form> */}
 			<form
 				className="flex justify-center"
 				action={`${process.env.NEXT_PUBLIC_PDF_SERVER_API_URL}/download-review`}
@@ -175,7 +144,6 @@ const ApplicationContainer = () => {
 									name,
 									phoneNumber,
 								});
-
 								document.querySelector("form")!.submit(); // 폼 강제 제출
 							}
 						} else {
@@ -186,7 +154,6 @@ const ApplicationContainer = () => {
 					신청
 				</button>
 			</form>
-			<Toaster />
 		</div>
 	);
 };
