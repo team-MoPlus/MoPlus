@@ -137,7 +137,9 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md my-2">
 				<h1 className="text-xl mb-4">공유하기</h1>
 				<div className="flex items-center justify-center">
-					<KakaoShareButton showLink={`${window.location.href}/shared`} />
+					<KakaoShareButton
+						showLink={`${window.location.href.split("/").slice(0, -1).join("/")}/shared`}
+					/>
 				</div>
 			</div>
 

@@ -4,9 +4,13 @@ import { Banner } from "@/components/Banner";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { TestInfo } from "../../../types/Item";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { testInfoState, testResultState } from "@/recoil/atoms";
+import {
+	ratingTablesState,
+	testInfoState,
+	testResultState,
+} from "@/recoil/atoms";
 import { TestResult } from "../../../types/result";
 import { calculateTimeDifference } from "../../../utils/parseTime";
 import toast, { Toaster } from "react-hot-toast";
@@ -14,6 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getTestResultInfoById } from "../../../apis/testResult";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { getTestById } from "../../../apis/tests";
+import { DropdownMenu } from "@/components/Dropdowns";
 
 const ResultSharingContainer = ({
 	testResultId,
@@ -23,17 +28,13 @@ const ResultSharingContainer = ({
 	testId: number;
 }) => {
 	const router = useRouter();
-	const [timeArr, setTimeArr] = useState<(number | boolean)[]>([]);
+	const [timeArr, setTimeArr] = useState<string[]>([]);
 	const [testResult, setTestResult] =
 		useRecoilState<TestResult>(testResultState);
 	const [testInfo, setTestInfo] = useRecoilState<TestInfo>(testInfoState);
-
-	const handleTestResult = (data: TestResult) => {
-		setTestResult(data);
-		setTimeArr(
-			calculateTimeDifference(data.averageSolvingTime, data.solvingTime)
-		);
-	};
+	const [rankProvider, setRankProvider] = useState("대성마이맥");
+	const [ratingTables, setRatingTables] = useRecoilState(ratingTablesState);
+	const queryParams = useSearchParams();
 
 	const {
 		data: TestResultData,
@@ -41,9 +42,9 @@ const ResultSharingContainer = ({
 		isError,
 		error,
 	} = useQuery({
-		queryKey: ["infobyid", testResultId],
+		queryKey: ["resultinfobyid", testResultId],
 		queryFn: () => getTestResultInfoById(testResultId),
-		select: React.useCallback((data: TestResult) => handleTestResult(data), []),
+		select: React.useCallback((data: TestResult) => setTestResult(data), []),
 	});
 
 	const {
@@ -52,19 +53,18 @@ const ResultSharingContainer = ({
 		isError: TestDataisError,
 		error: TestDataerror,
 	} = useQuery({
-		queryKey: ["infobyid", testId],
+		queryKey: ["testinfobyid", testId],
 		queryFn: () => getTestById(testId),
 		select: React.useCallback((data: TestInfo) => setTestInfo(data), []),
 	});
 
-	// 정규식을 사용하여 H와 M 사이의 숫자 추출
-	// const matchTest = ResultData!.solvingTime.match(/PT(\d+)H(\d+)M/);
-	// const matchAvg = ResultData!.averageSolvingTime.match(/PT(\d+)H(\d+)M/);
-
-	// const timeArr = calculateTimeDifference(
-	// 	ResultData.averageSolvingTime,
-	// 	ResultData!.solvingTime
-	// );
+	const handleTestResult = (data: TestResult) => {
+		setTestResult(data);
+		// setTimeArr([
+		// 	data.solvingTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)?.[1] || "0",
+		// 	data.solvingTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)?.[2] || "0",
+		// ]);
+	};
 
 	if (isPending || testResult === undefined) {
 		return <LoadingSpinner />;
@@ -90,17 +90,12 @@ const ResultSharingContainer = ({
 				</h1>
 				<div className="py-8 flex w-full justify-around items-center">
 					<div className="text-5xl text-orange-500">
-						{testResult?.score}
+						{testResult.score}
 						<span className="text-gray-500">점</span>
 					</div>
 					<div className="text-3xl text-gray-400">
-						<span className="text-orange-500">
-							{testResult.solvingTime.match(/PT(\d+)H(\d+)M/)?.[1] || "0"}
-						</span>
-						h{" "}
-						<span className="text-orange-500">
-							{testResult.solvingTime.match(/PT(\d+)H(\d+)M/)?.[2] || "0"}
-						</span>
+						<span className="text-orange-500">{timeArr[0]}</span>h{" "}
+						<span className="text-orange-500">{timeArr[1]}</span>
 						m
 						<br />
 						<div className="text-sm flex justify-end">내 풀이 시간</div>
@@ -109,85 +104,64 @@ const ResultSharingContainer = ({
 			</div>
 			{/* 틀린 문제 */}
 			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md my-2">
-				<h1 className="text-xl mb-4">틀린 문제</h1>
-				<div className="grid grid-cols-4 items-center text-lg gap-2 text-gray-500">
-					{testResult?.incorrectProblems.map((problem, idx) => (
+				<h1 className="text-xl mb-4">틀린 문제 정답률</h1>
+				<div className="grid grid-cols-4 items-center gap-2 text-gray-600">
+					{testResult.incorrectProblems.map((problem, idx) => (
 						<div key={idx} className="flex items-center text-sm">
 							{problem.problemNumber}번{" "}
-							<span className="inline-block ml-1 text-xs text-orange-500 border border-orange-500 rounded-md p-[2px]">
+							<span className="inline-block ml-1 text-xs text-orange-500 border border-orange-500 rounded-md px-[2px]">
 								{problem.correctRate}%
 							</span>
 						</div>
 					))}
 				</div>
 			</div>
-			{/* 내 위치 */}
+			{/* 예상 등급 */}
 			<div className="w-full border border-dashed border-orange-200 rounded-md p-4">
-				<h1 className="text-xl mb-4">내 위치</h1>
-				<div className="w-full flex justify-between">
+				<div className="flex gap-4 items-center mb-4">
+					<h1 className="text-xl">예상 등급</h1>
+					<DropdownMenu
+						defaultText={"대성마이맥"}
+						ItemObj={{ 대성마이맥: [], 이투스: [] }}
+						buttonWidth={"w-30"}
+						setData={setRankProvider}
+					/>
+				</div>
+				<div className="w-full flex justify-between mb-4">
 					<div className="text-4xl text-orange-500">
-						{testResult?.rank}
-						<span className="text-gray-500">등</span>
-					</div>
-					<div className="text-2xl text-gray-400">
-						<span className="text-orange-500">
-							{testResult.averageSolvingTime.match(/PT(\d+)H(\d+)M/)?.[1] ||
-								"0"}
-						</span>
-						h{" "}
-						<span className="text-orange-500">
-							{testResult.averageSolvingTime.match(/PT(\d+)H(\d+)M/)?.[2] ||
-								"0"}
-						</span>
-						m
-						<br />
-						<div className="text-sm flex justify-end">평균 풀이 시간</div>
+						{
+							testResult.estimatedRatingGetResponses.find(
+								(obj) => obj.ratingProvider === rankProvider
+							)?.estimatedRating
+						}
+						<span className="text-gray-500">등급</span>
 					</div>
 				</div>
-				<div className="mt-4 mx-4 text-gray-700">
-					<div className="flex justify-start px-8 items-center border border-gray-400 rounded-xl h-16">
-						내 위로&nbsp;
-						<span className="text-orange-500 text-lg">
-							{testResult?.rank - 1}명
-						</span>
-						이 있어요
+				<div className="w-full">
+					<div className="w-full flex text-center py-1 h-10 items-center text-md bg-orange-500 text-white">
+						<div className="w-2/12 border-r-2 border-white">등급</div>
+						<div className="w-4/12 border-r-2 border-white">원점수</div>
+						<div className="w-3/12 border-r-2 border-white">표준점수</div>
+						<div className="w-3/12">백분위</div>
 					</div>
-					<div className="w-full flex flex-col items-center gap-1 my-2">
-						<div className="rounded-full bg-orange-500 w-1 h-1"></div>
-						<div className="rounded-full bg-orange-500 w-1 h-1"></div>
-						<div className="rounded-full bg-orange-500 w-1 h-1"></div>
-					</div>
-					<div className="flex flex-col justify-center px-8 py-4 border border-gray-400 rounded-xl h-fit">
-						<p>
-							<span className="text-orange-500 text-lg">
-								{testResult?.rank}등
-							</span>
-							이예요!
-						</p>
-						{testResult?.solvingCount === 0 ? (
-							"첫 번째로 제출했어요! 👍🏼"
-						) : (
-							<p>
-								평균 풀이 시간보다&nbsp;
-								<span className="text-orange-500 text-lg">
-									{timeArr[1]}시간 {timeArr[2]}분
-								</span>
-								&nbsp;{timeArr[0] ? "빨리 풀었어요! 😍" : "늦게 풀었어요 😅"}
-							</p>
-						)}
-					</div>
-					<div className="w-full flex flex-col items-center gap-1 my-2">
-						<div className="rounded-full bg-orange-500 w-1 h-1"></div>
-						<div className="rounded-full bg-orange-500 w-1 h-1"></div>
-						<div className="rounded-full bg-orange-500 w-1 h-1"></div>
-					</div>
-					<div className="flex justify-start px-8 items-center border border-gray-400 rounded-xl h-16">
-						내 아래로&nbsp;
-						<span className="text-orange-500 text-lg">
-							{testResult?.solvingCount - testResult?.rank}명
-						</span>
-						이 있어요
-					</div>
+					{ratingTables[rankProvider]?.slice(0, 8).map((v, i) => (
+						<div
+							key={i}
+							className={`h-12 flex text-center items-center py-1 border-b-2 border-gray-200 ${
+								i + 1 ==
+								testResult.estimatedRatingGetResponses.find(
+									(obj) => obj.ratingProvider === rankProvider
+								)?.estimatedRating
+									? "bg-orange-200 text-lg"
+									: "text-md text-gray-500"
+							}`}
+						>
+							<div className="w-2/12">{v["rating"]}</div>
+							<div className="w-4/12">{v["rawScores"]}</div>
+							<div className="w-3/12">{v["standardScores"]}</div>
+							<div className="w-3/12">{v["percentiles"]}</div>
+						</div>
+					))}
 				</div>
 			</div>
 
