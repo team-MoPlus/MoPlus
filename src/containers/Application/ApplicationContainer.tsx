@@ -87,7 +87,7 @@ const ApplicationContainer = () => {
 			phoneNumber: string;
 		}) => postApplication(params),
 		onSuccess: async (data, variables) => {
-			await sendDetailResultApplication(data);
+			await sendDetailResultApplication(data, variables.name);
 			// console.log(data);
 			router.replace("/searchmo");
 		},
@@ -165,7 +165,7 @@ const ApplicationContainer = () => {
 									name,
 									phoneNumber,
 								});
-								handleDownload(name);
+								// handleDownload(name);
 							}
 						} else {
 							notifyNameError();
