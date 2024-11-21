@@ -67,7 +67,9 @@ export const requestReviewNote = async () => {
 
 export const getReviewNote = async () => {
 	return await pdfServer
-		.get(`/download-review`)
+		.get(`/download-review`, {
+			responseType: "blob", // PDF를 Blob 형식으로 처리
+		})
 		.then((res) => {
 			return res.data;
 		})
@@ -75,5 +77,3 @@ export const getReviewNote = async () => {
 			console.error("Error:", error.message);
 		});
 };
-
-

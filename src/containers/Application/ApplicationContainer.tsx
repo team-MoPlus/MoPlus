@@ -12,6 +12,7 @@ import { useRecoilValue } from "recoil";
 import Image from "next/image";
 import { useMutation } from "@tanstack/react-query";
 import { sendDetailResultApplication } from "../../../apis/application";
+import { getReviewNote } from "../../../apis/testResult";
 
 // 한글 완성 여부를 확인하는 함수
 const isKoreanComplete = (input: string): boolean => {
@@ -54,14 +55,31 @@ const ApplicationContainer = () => {
 		setName(value);
 	};
 
-	const sendApplication = ({
-		testResultId,
-		name,
-		phoneNumber,
-	}: ApplicationForm) => {
-		postApplication({ testResultId, name, phoneNumber });
-		router.replace("/searchmo");
+	const handleDownload = async (name: string) => {
+		try {
+			// 서버에서 PDF 요청
+			const response = await getReviewNote();
+
+			// Blob을 URL로 변환
+			const blob = new Blob([response], { type: "application/pdf" });
+			const url = window.URL.createObjectURL(blob);
+
+			// 링크 생성 및 다운로드 실행
+			const link = document.createElement("a");
+			link.href = url;
+			link.download = `복습서_${name}`; // 다운로드될 파일 이름
+			document.body.appendChild(link); // 링크를 문서에 추가
+			link.click(); // 링크 클릭
+			document.body.removeChild(link); // 링크 제거
+
+			// URL 해제 (메모리 누수 방지)
+			window.URL.revokeObjectURL(url);
+		} catch (error) {
+			console.error("Error downloading PDF:", error);
+			alert("PDF 다운로드 중 오류가 발생했습니다.");
+		}
 	};
+
 	const DetailResultMutation = useMutation({
 		mutationFn: (params: {
 			testResultId: number;
@@ -134,12 +152,7 @@ const ApplicationContainer = () => {
 			</div>
 
 			{/* Submit Button */}
-			<form
-				className="flex justify-center"
-				action={`${process.env.NEXT_PUBLIC_PDF_SERVER_API_URL}/download-review`}
-				method="get"
-				onSubmit={(e) => e.preventDefault()}
-			>
+			<div className="flex justify-center">
 				<button
 					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg"
 					onClick={async () => {
@@ -152,7 +165,7 @@ const ApplicationContainer = () => {
 									name,
 									phoneNumber,
 								});
-								document.querySelector("form")!.submit(); // 폼 강제 제출
+								handleDownload(name);
 							}
 						} else {
 							notifyNameError();
@@ -161,7 +174,7 @@ const ApplicationContainer = () => {
 				>
 					신청
 				</button>
-			</form>
+			</div>
 		</div>
 	);
 };
