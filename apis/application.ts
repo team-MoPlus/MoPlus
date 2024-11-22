@@ -37,7 +37,7 @@ export const sendDetailResultApplication = async (
 	return await pdfServer
 		.post(
 			`/detailResultApplication`,
-			{ data, fileName },
+			{ test_result: data, file_name: fileName },
 			{
 				headers: { "Content-Type": "application/json" },
 			}
