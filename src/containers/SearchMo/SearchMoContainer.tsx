@@ -62,7 +62,7 @@ const SearchMoContainer = () => {
 				</Link>
 			</div>
 			<div className="flex my-2 gap-4">
-				<div className="h-20 flex justify-center items-center flex-1 bg-orange-300 rounded-xl text-white p-4 font-bold">
+				<div className="h-20 flex justify-center items-center flex-1 bg-orange-500 rounded-xl text-white p-4 font-bold">
 					제출할 모의고사를 검색
 				</div>
 				<RequestMo />

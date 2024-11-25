@@ -50,7 +50,7 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 	return (
 		<div className="p-4">
 			{/* 결과 */}
-			<div className="h-16 text-white px-6 my-2 text-xl font-bold bg-orange-600 rounded-lg flex items-center">
+			<div className="h-16 text-white px-6 my-2 text-xl font-bold bg-orange-500 rounded-lg flex items-center">
 				결과
 			</div>
 			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md">
