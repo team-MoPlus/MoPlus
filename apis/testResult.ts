@@ -1,4 +1,4 @@
-import { TestResult } from "./../types/result";
+import { DetailResultApplication, TestResult } from "./../types/result";
 import { api, pdfServer } from "./axios";
 
 export const postAnswer = async (id: number, wrongProblemsArray: Object[]) => {
@@ -66,7 +66,10 @@ export const requestReviewNote = async () => {
 		});
 };
 
-export const getReviewNote = async (data: TestResult, fileName: string) => {
+export const getReviewNote = async (
+	data: DetailResultApplication,
+	fileName: string
+) => {
 	return await pdfServer
 		.post(
 			`/download-review`,

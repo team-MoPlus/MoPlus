@@ -37,3 +37,23 @@ export interface TestResult {
 	incorrectProblems: IncorrectProblem[];
 	ratingTables: IRatingTable[];
 }
+
+export interface IRecommendedProblem {
+	problemNumber: string;
+	difficultLevel: string;
+	correctRate: number;
+	rating: string;
+	imageUrl: string;
+}
+
+export interface DetailResultApplication {
+	testResultId: number;
+	score: number;
+	solvingTime: string;
+	averageSolvingTime: string;
+	estimatedRatingGetResponses: IEstimatedRank[];
+	incorrectProblems: IncorrectProblem[];
+	forCurrentRating: IRecommendedProblem[];
+	forNextRating: IRecommendedProblem[];
+	forBeforeRating: IRecommendedProblem[];
+}
