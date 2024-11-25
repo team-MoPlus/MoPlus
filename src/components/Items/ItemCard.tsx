@@ -18,8 +18,8 @@ const ItemCard = ({ mo, order, onClick }: ItemCardProps) => {
 			<div>
 				<Image
 					src="/example_images/emptyMO.png"
-					width={40}
-					height={40}
+					width={30}
+					height={30}
 					alt="모의고사"
 				/>
 			</div>
