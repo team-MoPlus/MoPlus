@@ -126,7 +126,7 @@ const ApplicationContainer = () => {
 			</Link>
 
 			{/* Title Section */}
-			<div className="h-16 text-white px-6 mt-2 mb-4 text-xl font-bold bg-orange-600 rounded-lg flex items-center">
+			<div className="h-16 text-white px-6 mt-2 mb-4 text-xl font-bold bg-orange-500 rounded-lg flex items-center">
 				상세 분석 분석표 신청
 			</div>
 

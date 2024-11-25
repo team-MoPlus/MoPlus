@@ -27,7 +27,7 @@ const AnswerContainer = ({ id }: { id: number }) => {
 					<Banner />
 				</Link>
 			</div>
-			<div className="h-16 text-white px-6 my-2 text-xl font-bold bg-orange-400 rounded-lg flex items-center">
+			<div className="h-16 text-white px-6 my-2 text-xl font-bold bg-orange-500 rounded-lg flex items-center">
 				오답을 체크하고 답을 입력하세요!
 			</div>
 			<CheckAnswer problemCount={ProblemCount[testInfo.subject]} id={id} />

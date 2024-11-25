@@ -44,7 +44,7 @@ const MoDetailContainer = ({ id }: { id: number }) => {
 				</Link>
 			</div>
 
-			<div className="h-16 text-white px-6 text-xl font-bold bg-orange-300 rounded-lg flex items-center my-2">
+			<div className="h-16 text-white px-6 text-xl font-bold bg-orange-500 rounded-lg flex items-center my-2">
 				선택하신 모의고사가 맞나요?
 			</div>
 			<div className="mt-8">
