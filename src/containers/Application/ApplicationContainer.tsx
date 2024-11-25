@@ -55,30 +55,30 @@ const ApplicationContainer = () => {
 		setName(value);
 	};
 
-	const handleDownload = async (name: string) => {
-		try {
-			// 서버에서 PDF 요청
-			const response = await getReviewNote();
+	// const handleDownload = async (name: string) => {
+	// 	try {
+	// 		// 서버에서 PDF 요청
+	// 		const response = await getReviewNote(name);
 
-			// Blob을 URL로 변환
-			const blob = new Blob([response], { type: "application/pdf" });
-			const url = window.URL.createObjectURL(blob);
+	// 		// Blob을 URL로 변환
+	// 		const blob = new Blob([response], { type: "application/pdf" });
+	// 		const url = window.URL.createObjectURL(blob);
 
-			// 링크 생성 및 다운로드 실행
-			const link = document.createElement("a");
-			link.href = url;
-			link.download = `복습서_${name}`; // 다운로드될 파일 이름
-			document.body.appendChild(link); // 링크를 문서에 추가
-			link.click(); // 링크 클릭
-			document.body.removeChild(link); // 링크 제거
+	// 		// 링크 생성 및 다운로드 실행
+	// 		const link = document.createElement("a");
+	// 		link.href = url;
+	// 		link.download = `복습서_${name}`; // 다운로드될 파일 이름
+	// 		document.body.appendChild(link); // 링크를 문서에 추가
+	// 		link.click(); // 링크 클릭
+	// 		document.body.removeChild(link); // 링크 제거
 
-			// URL 해제 (메모리 누수 방지)
-			window.URL.revokeObjectURL(url);
-		} catch (error) {
-			console.error("Error downloading PDF:", error);
-			alert("PDF 다운로드 중 오류가 발생했습니다.");
-		}
-	};
+	// 		// URL 해제 (메모리 누수 방지)
+	// 		window.URL.revokeObjectURL(url);
+	// 	} catch (error) {
+	// 		console.error("Error downloading PDF:", error);
+	// 		alert("PDF 다운로드 중 오류가 발생했습니다.");
+	// 	}
+	// };
 
 	const DetailResultMutation = useMutation({
 		mutationFn: (params: {
@@ -87,8 +87,30 @@ const ApplicationContainer = () => {
 			phoneNumber: string;
 		}) => postApplication(params),
 		onSuccess: async (data, variables) => {
-			await sendDetailResultApplication(data, variables.name);
-			// console.log(data);
+			console.log(data);
+			try {
+				// 서버에서 PDF 요청
+				const response = await getReviewNote(data, variables.name);
+
+				// Blob을 URL로 변환
+				const blob = new Blob([response], { type: "application/pdf" });
+				const url = window.URL.createObjectURL(blob);
+
+				// 링크 생성 및 다운로드 실행
+				const link = document.createElement("a");
+				link.href = url;
+				link.download = `복습서_${name}`; // 다운로드될 파일 이름
+				document.body.appendChild(link); // 링크를 문서에 추가
+				link.click(); // 링크 클릭
+				document.body.removeChild(link); // 링크 제거
+
+				// URL 해제 (메모리 누수 방지)
+				window.URL.revokeObjectURL(url);
+			} catch (error) {
+				console.error("Error downloading PDF:", error);
+				alert("PDF 다운로드 중 오류가 발생했습니다.");
+			}
+
 			router.replace("/searchmo");
 		},
 		// 에러 핸들링 (optional)

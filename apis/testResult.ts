@@ -1,3 +1,4 @@
+import { TestResult } from "./../types/result";
 import { api, pdfServer } from "./axios";
 
 export const postAnswer = async (id: number, wrongProblemsArray: Object[]) => {
@@ -65,11 +66,18 @@ export const requestReviewNote = async () => {
 		});
 };
 
-export const getReviewNote = async () => {
+export const getReviewNote = async (data: TestResult, fileName: string) => {
 	return await pdfServer
-		.get(`/download-review`, {
-			responseType: "blob", // PDF를 Blob 형식으로 처리
-		})
+		.post(
+			`/download-review`,
+			{ test_result: data, file_name: fileName },
+			{
+				responseType: "blob", // PDF를 Blob 형식으로 처리
+				headers: {
+					"Content-Type": "application/json", // JSON 형식 명시
+				},
+			}
+		)
 		.then((res) => {
 			return res.data;
 		})
