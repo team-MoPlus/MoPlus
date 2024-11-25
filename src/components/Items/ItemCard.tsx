@@ -12,10 +12,10 @@ const ItemCard = ({ mo, order, onClick }: ItemCardProps) => {
 	return (
 		<div
 			onClick={onClick}
-			className="flex gap-3 items-center w-full h-24 px-2 mb-2 rounded-lg border-2 cursor-pointer"
+			className="flex gap-3 justify-start items-center w-full h-24 px-2 mb-2 rounded-lg border-2 cursor-pointer"
 		>
 			<div className="text-xl w-6 text-center">{order}</div>
-			<div className="flex w-8">
+			<div className="w-8">
 				<Image
 					src="/example_images/emptyMO.png"
 					width={30}
@@ -23,7 +23,7 @@ const ItemCard = ({ mo, order, onClick }: ItemCardProps) => {
 					alt="모의고사"
 				/>
 			</div>
-			<div className="grid grid-rows-3">
+			<div className="w-96 grid grid-rows-3">
 				<div className="text-md overflow-hidden whitespace-nowrap text-ellipsis max-w-[420px]">
 					[{mo.subject}] {mo.name}
 				</div>
