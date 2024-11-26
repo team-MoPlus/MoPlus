@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { TestInfo } from "../../../types/Item";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
 	ratingTablesState,
@@ -30,7 +30,6 @@ const ResultSharingContainer = ({
 	const [testInfo, setTestInfo] = useRecoilState<TestInfo>(testInfoState);
 	const [rankProvider, setRankProvider] = useState("대성마이맥");
 	const [ratingTables, setRatingTables] = useRecoilState(ratingTablesState);
-	const queryParams = useSearchParams();
 
 	useEffect(() => {
 		const userAgent = navigator.userAgent.toLowerCase();

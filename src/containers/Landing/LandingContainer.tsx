@@ -18,7 +18,7 @@ const LandingContainer = () => {
 
 			<button
 				onClick={() => router.push("/searchmo")}
-				className="fixed w-64 bottom-5 left-1/2 transform -translate-x-1/2 bg-[#FC6C02] text-white font-bold border-b py-3 px-6 rounded-full shadow-xl text-xl"
+				className="fixed w-64 bottom-5 left-1/2 transform -translate-x-1/2 bg-[#FC6C02] text-white font-bold py-3 px-6 rounded-full shadow-xl text-xl"
 			>
 				모플 써보러 가기
 			</button>
