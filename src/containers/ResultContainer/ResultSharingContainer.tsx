@@ -86,6 +86,17 @@ const ResultSharingContainer = ({
 		return <p>Error: {TestDataerror.message}</p>;
 	}
 
+	useEffect(() => {
+		const userAgent = navigator.userAgent.toLowerCase();
+		const currentUrl = window.location.href;
+
+		if (userAgent.includes("kakaotalk")) {
+			// 카카오톡 인앱 브라우저 감지 시 리디렉션
+			window.location.href =
+				"kakaotalk://web/openExternal?url=" + encodeURIComponent(currentUrl);
+		}
+	}, []);
+
 	return (
 		<div className="p-4">
 			{/* 결과 */}
