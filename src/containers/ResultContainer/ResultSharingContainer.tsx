@@ -1,7 +1,5 @@
 "use client";
 
-import { Banner } from "@/components/Banner";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { TestInfo } from "../../../types/Item";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -12,8 +10,6 @@ import {
 	testResultState,
 } from "@/recoil/atoms";
 import { TestResult } from "../../../types/result";
-import { calculateTimeDifference } from "../../../utils/parseTime";
-import toast, { Toaster } from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import { getTestResultInfoById } from "../../../apis/testResult";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
@@ -35,6 +31,34 @@ const ResultSharingContainer = ({
 	const [rankProvider, setRankProvider] = useState("대성마이맥");
 	const [ratingTables, setRatingTables] = useRecoilState(ratingTablesState);
 	const queryParams = useSearchParams();
+
+	useEffect(() => {
+		const userAgent = navigator.userAgent.toLowerCase();
+		const currentUrl = window.location.href;
+		console.log(userAgent);
+
+		if (userAgent.includes("kakaotalk")) {
+			// 카카오톡 인앱 브라우저 감지 시 리디렉션
+			window.location.href =
+				"kakaotalk://web/openExternal?url=" + encodeURIComponent(currentUrl);
+		}
+	}, []);
+
+	const handleTestResult = async (data: TestResult) => {
+		await setTestResult(data);
+		setTimeArr([
+			data.solvingTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)?.[1] || "0",
+			data.solvingTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)?.[2] || "0",
+		]);
+
+		setRatingTables({
+			대성마이맥: data.ratingTables.find(
+				(obj) => obj.ratingProvider === "대성마이맥"
+			)!.ratingRows,
+			이투스: data.ratingTables.find((obj) => obj.ratingProvider === "이투스")!
+				.ratingRows,
+		});
+	};
 
 	const {
 		data: TestResultData,
@@ -58,22 +82,6 @@ const ResultSharingContainer = ({
 		select: React.useCallback((data: TestInfo) => setTestInfo(data), []),
 	});
 
-	const handleTestResult = async (data: TestResult) => {
-		await setTestResult(data);
-		setTimeArr([
-			data.solvingTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)?.[1] || "0",
-			data.solvingTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)?.[2] || "0",
-		]);
-
-		setRatingTables({
-			대성마이맥: data.ratingTables.find(
-				(obj) => obj.ratingProvider === "대성마이맥"
-			)!.ratingRows,
-			이투스: data.ratingTables.find((obj) => obj.ratingProvider === "이투스")!
-				.ratingRows,
-		});
-	};
-
 	if (isPending || testResult === undefined) {
 		return <LoadingSpinner />;
 	} else if (TestDataisPending) {
@@ -85,17 +93,6 @@ const ResultSharingContainer = ({
 	} else if (TestDataisError) {
 		return <p>Error: {TestDataerror.message}</p>;
 	}
-
-	useEffect(() => {
-		const userAgent = navigator.userAgent.toLowerCase();
-		const currentUrl = window.location.href;
-
-		if (userAgent.includes("kakaotalk")) {
-			// 카카오톡 인앱 브라우저 감지 시 리디렉션
-			window.location.href =
-				"kakaotalk://web/openExternal?url=" + encodeURIComponent(currentUrl);
-		}
-	}, []);
 
 	return (
 		<div className="p-4">
