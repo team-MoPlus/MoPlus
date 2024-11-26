@@ -33,19 +33,14 @@ const MoDetailContainer = ({ id }: { id: number }) => {
 
 	return (
 		<div className="w-full h-full items-center flex-col p-4">
-			<div className="flex gap-2">
+			<div className="h-16 text-white text-xl font-bold bg-orange-500 rounded-lg flex justify-between items-center my-2">
 				<IoChevronBackOutline
 					size={36}
-					className="cursor-pointer"
+					className="cursor-pointer flex items-center relative left-2"
 					onClick={() => router.back()}
 				/>
-				<Link href="/" className="inline-block">
-					<Banner />
-				</Link>
-			</div>
-
-			<div className="h-16 text-white px-6 text-xl font-bold bg-orange-500 rounded-lg flex items-center my-2">
-				선택하신 모의고사가 맞나요?
+				<h1 className="text-center flex-1">선택하신 모의고사가 맞나요?</h1>
+				<div className="w-6"></div>
 			</div>
 			<div className="mt-8">
 				<p className="text-xl text-orange-500">선택한 모의고사</p>

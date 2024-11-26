@@ -50,8 +50,14 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 	return (
 		<div className="p-4">
 			{/* 결과 */}
-			<div className="h-16 text-white px-6 my-2 text-xl font-bold bg-orange-500 rounded-lg flex items-center">
+			<div className="h-16 text-white px-6 my-2 text-xl font-bold bg-orange-500 rounded-lg flex items-center justify-between">
 				결과
+				<div className="text-xs flex-col">
+					<KakaoShareButton
+						showLink={`${window.location.href.split("/").slice(0, -1).join("/")}/shared`}
+					/>
+					
+				</div>
 			</div>
 			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md">
 				<h1 className="text-xl">
@@ -134,14 +140,14 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 				</div>
 			</div>
 			{/* 공유하기 */}
-			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md my-2">
+			{/* <div className="p-4 w-full border border-dashed border-orange-200 rounded-md my-2">
 				<h1 className="text-xl mb-4">공유하기</h1>
 				<div className="flex items-center justify-center">
 					<KakaoShareButton
 						showLink={`${window.location.href.split("/").slice(0, -1).join("/")}/shared`}
 					/>
 				</div>
-			</div>
+			</div> */}
 
 			<div className="flex w-full justify-around">
 				<button

@@ -214,7 +214,6 @@ const CheckAnswer = ({
 				<button
 					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg"
 					onClick={() => {
-						console.log(selectedChoices);
 						Object.values(selectedChoices).includes(-1)
 							? notify(hasAnswerInput)
 							: handleSubmit(id, selectedChoices);

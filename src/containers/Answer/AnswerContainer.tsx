@@ -17,18 +17,14 @@ const AnswerContainer = ({ id }: { id: number }) => {
 
 	return (
 		<div className="p-4">
-			<div className="flex gap-2">
+			<div className="h-16 text-white my-2 text-xl font-bold bg-orange-500 rounded-lg flex items-center">
 				<IoChevronBackOutline
 					size={36}
-					className="cursor-pointer"
+					className="cursor-pointer relative left-2"
 					onClick={() => router.back()}
 				/>
-				<Link href="/" className="inline-block">
-					<Banner />
-				</Link>
-			</div>
-			<div className="h-16 text-white px-6 my-2 text-xl font-bold bg-orange-500 rounded-lg flex items-center">
-				오답을 체크하고 답을 입력하세요!
+				<h1 className="text-center flex-1">오답을 체크하고 답을 입력하세요!</h1>
+				<div className="w-6"></div>
 			</div>
 			<CheckAnswer problemCount={ProblemCount[testInfo.subject]} id={id} />
 		</div>

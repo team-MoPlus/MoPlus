@@ -11,8 +11,8 @@ import { testResultState } from "@/recoil/atoms";
 import { useRecoilValue } from "recoil";
 import Image from "next/image";
 import { useMutation } from "@tanstack/react-query";
-import { sendDetailResultApplication } from "../../../apis/application";
 import { getReviewNote } from "../../../apis/testResult";
+import { IoChevronBackOutline } from "react-icons/io5";
 
 // 한글 완성 여부를 확인하는 함수
 const isKoreanComplete = (input: string): boolean => {
@@ -39,7 +39,6 @@ const ApplicationContainer = () => {
 	const [name, setName] = useState("");
 	const [phoneNumber, setPhoneNumber] = useState("");
 	const testResult = useRecoilValue<TestResult>(testResultState);
-	const [reviewNote, setReviewNote] = useState<boolean>(false);
 
 	// 입력 시 숫자만 허용
 	const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
@@ -55,31 +54,6 @@ const ApplicationContainer = () => {
 		setName(value);
 	};
 
-	// const handleDownload = async (name: string) => {
-	// 	try {
-	// 		// 서버에서 PDF 요청
-	// 		const response = await getReviewNote(name);
-
-	// 		// Blob을 URL로 변환
-	// 		const blob = new Blob([response], { type: "application/pdf" });
-	// 		const url = window.URL.createObjectURL(blob);
-
-	// 		// 링크 생성 및 다운로드 실행
-	// 		const link = document.createElement("a");
-	// 		link.href = url;
-	// 		link.download = `복습서_${name}`; // 다운로드될 파일 이름
-	// 		document.body.appendChild(link); // 링크를 문서에 추가
-	// 		link.click(); // 링크 클릭
-	// 		document.body.removeChild(link); // 링크 제거
-
-	// 		// URL 해제 (메모리 누수 방지)
-	// 		window.URL.revokeObjectURL(url);
-	// 	} catch (error) {
-	// 		console.error("Error downloading PDF:", error);
-	// 		alert("PDF 다운로드 중 오류가 발생했습니다.");
-	// 	}
-	// };
-
 	const DetailResultMutation = useMutation({
 		mutationFn: (params: {
 			testResultId: number;
@@ -90,18 +64,28 @@ const ApplicationContainer = () => {
 			try {
 				// 서버에서 PDF 요청
 				const response = await getReviewNote(data, variables.name);
+
+				const reader = new FileReader();
+
 				// Blob을 URL로 변환
 				const blob = new Blob([response], { type: "application/pdf" });
-				const url = window.URL.createObjectURL(blob);
-				// 링크 생성 및 다운로드 실행
-				const link = document.createElement("a");
-				link.href = url;
-				link.download = `복습서_${name}`; // 다운로드될 파일 이름
-				document.body.appendChild(link); // 링크를 문서에 추가
-				link.click(); // 링크 클릭
-				document.body.removeChild(link); // 링크 제거
-				// URL 해제 (메모리 누수 방지)
-				window.URL.revokeObjectURL(url);
+
+				reader.onload = (e) => {
+					const url = window.URL.createObjectURL(blob);
+
+					// 링크 생성 및 다운로드 실행
+					const link = document.createElement("a");
+					link.href = url;
+					link.download = `복습서_${variables.name}`; // 다운로드될 파일 이름
+					document.body.appendChild(link); // 링크를 문서에 추가
+					link.click(); // 링크 클릭
+					document.body.removeChild(link); // 링크 제거
+
+					// URL 해제 (메모리 누수 방지)
+					window.URL.revokeObjectURL(url);
+				};
+
+				reader.readAsDataURL(blob);
 			} catch (error) {
 				console.error("Error downloading PDF:", error);
 				alert("PDF 다운로드 중 오류가 발생했습니다.");
@@ -121,9 +105,16 @@ const ApplicationContainer = () => {
 
 	return (
 		<div className="p-4">
-			<Link href="/" className="inline-block">
-				<Banner />
-			</Link>
+			<div className="flex gap-2">
+				<IoChevronBackOutline
+					size={36}
+					className="cursor-pointer"
+					onClick={() => router.back()}
+				/>
+				<Link href="/" className="inline-block">
+					<Banner />
+				</Link>
+			</div>
 
 			{/* Title Section */}
 			<div className="h-16 text-white px-6 mt-2 mb-4 text-xl font-bold bg-orange-500 rounded-lg flex items-center">
@@ -168,9 +159,15 @@ const ApplicationContainer = () => {
 			</div>
 
 			{/* Submit Button */}
-			<div className="flex justify-center">
+			<div className="flex w-full justify-around">
 				<button
-					className="w-64 h-12 bg-orange-200 text-orange-500 rounded-lg"
+					className="w-2/5 h-12 mt-4 bg-orange-200 text-orange-500 rounded-lg text-sm"
+					onClick={() => router.replace("/searchmo")}
+				>
+					홈으로 돌아가기
+				</button>
+				<button
+					className="w-2/5 h-12 mt-4 bg-orange-500 text-white rounded-lg text-sm"
 					onClick={async () => {
 						if (isKoreanComplete(name)) {
 							if (phoneNumber.length < 10) {
