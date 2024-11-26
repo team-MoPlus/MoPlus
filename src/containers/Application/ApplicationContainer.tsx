@@ -118,7 +118,7 @@ const ApplicationContainer = () => {
 
 			{/* Title Section */}
 			<div className="h-16 text-white px-6 mt-2 mb-4 text-xl font-bold bg-orange-500 rounded-lg flex items-center">
-				상세 분석 분석표 신청
+				모플 복습서 생성
 			</div>
 
 			{/* Form Section */}
@@ -185,7 +185,7 @@ const ApplicationContainer = () => {
 						}
 					}}
 				>
-					신청
+					생성
 				</button>
 			</div>
 		</div>
