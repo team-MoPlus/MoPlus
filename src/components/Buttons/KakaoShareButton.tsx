@@ -37,24 +37,16 @@ const KakaoShareButton = ({ showLink }: { showLink: string }) => {
 					description: "모의고사 풀이 결과를 입력하고 내 위치를 확인해 보세요!",
 					imageUrl: "https://ifh.cc/g/DOybBW.jpg",
 					link: {
-						mobileWebUrl:
-							"kakaotalk://web/openExternal?url=" +
-							encodeURIComponent(showLink),
-						webUrl:
-							"kakaotalk://web/openExternal?url=" +
-							encodeURIComponent(showLink),
+						mobileWebUrl: showLink,
+						webUrl: showLink,
 					},
 				},
 				buttons: [
 					{
 						title: "웹으로 보기",
 						link: {
-							mobileWebUrl:
-								"kakaotalk://web/openExternal?url=" +
-								encodeURIComponent(showLink),
-							webUrl:
-								"kakaotalk://web/openExternal?url=" +
-								encodeURIComponent(showLink),
+							mobileWebUrl: showLink,
+							webUrl: showLink,
 						},
 					},
 				],
