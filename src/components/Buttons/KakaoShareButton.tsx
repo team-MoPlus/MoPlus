@@ -63,7 +63,7 @@ const KakaoShareButton = ({ showLink }: { showLink: string }) => {
 			<img
 				src="https://developers.kakao.com/assets/img/about/logos/kakaotalksharing/kakaotalk_sharing_btn_medium.png"
 				alt="카카오톡 공유 보내기 버튼"
-				style={{ width: "40px", height: "40px" }}
+				style={{ width: "28px", height: "28px" }}
 			/>
 		</a>
 	);

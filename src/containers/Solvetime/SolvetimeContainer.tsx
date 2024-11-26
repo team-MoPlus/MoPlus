@@ -84,7 +84,6 @@ const SolvetimeContainer = ({ testId }: { testId: number }) => {
 			postSolveTime(params.testResultId, params.timeString),
 		onSuccess: (data, variables) => {
 			setTestResultInfo(data);
-			console.log(data);
 			sendResultData(data);
 			router.replace(`/result/${testId}/${data.testResultId}/personal`);
 		},
@@ -102,18 +101,14 @@ const SolvetimeContainer = ({ testId }: { testId: number }) => {
 
 	return (
 		<div className="p-4">
-			<div className="flex gap-2">
+			<div className="h-16 text-white my-2 text-xl font-bold bg-orange-500 rounded-lg flex items-center">
 				<IoChevronBackOutline
 					size={36}
-					className="cursor-pointer"
+					className="cursor-pointer relative left-2"
 					onClick={() => router.back()}
 				/>
-				<Link href="/" className="inline-block">
-					<Banner />
-				</Link>
-			</div>
-			<div className="h-16 text-white px-6 my-2 text-xl font-bold bg-orange-500 rounded-lg flex items-center">
-				풀이 시간을 입력해주세요!
+				<h1 className="text-center flex-1">풀이 시간을 입력해주세요!</h1>
+				<div className="w-6"></div>
 			</div>
 			<div className="w-full h-96 flex gap-2 justify-center items-center">
 				<input
