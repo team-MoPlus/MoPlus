@@ -9,7 +9,7 @@ const LandingContainer = () => {
 	const router = useRouter();
 
 	return (
-		<div className="flex-col justify-center items-center h-[2800px] bg-gradient-to-b from-[#ffffff] to-[#FC6C02]">
+		<div className="flex-col justify-center items-center h-[3000px] bg-gradient-to-b from-[#ffffff] to-[#FC6C02]">
 			<Image
 				src="/example_images/landing.png"
 				width={550}
