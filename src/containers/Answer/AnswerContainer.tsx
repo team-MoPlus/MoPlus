@@ -20,7 +20,7 @@ const AnswerContainer = ({ id }: { id: number }) => {
 			<div className="h-16 text-white my-2 text-xl font-bold bg-orange-500 rounded-lg flex items-center">
 				<IoChevronBackOutline
 					size={36}
-					className="cursor-pointer relative left-2"
+					className="cursor-pointer relative"
 					onClick={() => router.back()}
 				/>
 				<h1 className="text-center flex-1">오답을 체크하고 답을 입력하세요!</h1>
