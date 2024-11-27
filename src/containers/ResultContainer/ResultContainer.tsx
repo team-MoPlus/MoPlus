@@ -39,7 +39,7 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 			const documentHeight = document.documentElement.scrollHeight;
 
 			// 스크롤이 페이지 하단에 도달했는지 확인
-			if (scrollTop + windowHeight >= documentHeight - 48) {
+			if (scrollTop + windowHeight >= documentHeight - 60) {
 				setIsVisible(false); // 버튼 숨기기
 			} else {
 				setIsVisible(true); // 버튼 보이기
@@ -177,7 +177,7 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 			<div className="flex justify-center">
 				{/* Fixed 상태 버튼 */}
 				{isVisible && (
-					<button className="fixed w-1/5 bottom-4 bg-orange-500 text-white p-4 text-sm rounded-lg shadow-lg">
+					<button className="fixed w-2/5 bottom-4 bg-orange-500 text-white p-4 text-sm rounded-lg shadow-lg">
 						모플 복습서 생성하기
 					</button>
 				)}
