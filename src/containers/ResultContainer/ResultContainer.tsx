@@ -27,6 +27,33 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 	const [timeArr, setTimeArr] = useState<string[]>([]);
 	const [rankProvider, setRankProvider] = useState("대성마이맥");
 	const [ratingTables, setRatingTables] = useRecoilState(ratingTablesState);
+	const [isVisible, setIsVisible] = useState(true);
+
+	useEffect(() => {
+		const handleScroll = () => {
+			// 현재 스크롤 위치
+			const scrollTop = window.scrollY;
+
+			// 화면 높이와 문서 전체 높이
+			const windowHeight = window.innerHeight;
+			const documentHeight = document.documentElement.scrollHeight;
+
+			// 스크롤이 페이지 하단에 도달했는지 확인
+			if (scrollTop + windowHeight >= documentHeight - 48) {
+				setIsVisible(false); // 버튼 숨기기
+			} else {
+				setIsVisible(true); // 버튼 보이기
+			}
+		};
+
+		// 스크롤 이벤트 등록
+		window.addEventListener("scroll", handleScroll);
+
+		// 이벤트 정리
+		return () => {
+			window.removeEventListener("scroll", handleScroll);
+		};
+	}, []);
 
 	useEffect(() => {
 		setTimeArr([
@@ -56,7 +83,6 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 					<KakaoShareButton
 						showLink={`${window.location.href.split("/").slice(0, -1).join("/")}/shared`}
 					/>
-					
 				</div>
 			</div>
 			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md">
@@ -148,6 +174,14 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 					/>
 				</div>
 			</div> */}
+			<div className="flex justify-center">
+				{/* Fixed 상태 버튼 */}
+				{isVisible && (
+					<button className="fixed w-1/5 bottom-4 bg-orange-500 text-white p-4 text-sm rounded-lg shadow-lg">
+						모플 복습서 생성하기
+					</button>
+				)}
+			</div>
 
 			<div className="flex w-full justify-around">
 				<button

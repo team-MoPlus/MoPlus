@@ -4,7 +4,7 @@ import React from "react";
 
 const RequestMo = () => {
 	return (
-		<Link href="https://forms.gle/pdqEDTP4ynPqwx9K6">
+		<Link href="https://forms.gle/gp4jfAeqs5FYZd9b6">
 			<div className="w-20 h-20 flex-col items-center justify-center text-orange-500 border-orange-300 border rounded-xl pt-2">
 				<Image
 					src="/icons/request.svg"
@@ -14,7 +14,7 @@ const RequestMo = () => {
 					className="mx-auto block"
 				/>
 				<div className="text-xs text-center">
-					모의고사 <br /> 추가 요청
+					불편사항 <br /> 접수
 				</div>
 			</div>
 		</Link>
