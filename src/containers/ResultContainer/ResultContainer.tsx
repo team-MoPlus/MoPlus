@@ -177,7 +177,12 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 			<div className="flex justify-center">
 				{/* Fixed 상태 버튼 */}
 				{isVisible && (
-					<button className="fixed w-2/5 bottom-4 bg-orange-500 text-white p-4 text-sm rounded-lg shadow-lg">
+					<button
+						className="fixed w-7/12 bottom-4 bg-orange-500 text-white p-4 text-sm rounded-lg shadow-lg"
+						onClick={() => {
+							router.push("/application");
+						}}
+					>
 						모플 복습서 생성하기
 					</button>
 				)}
@@ -193,7 +198,6 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 				<button
 					className="w-2/5 h-12 mt-4 bg-orange-500 text-white rounded-lg text-sm"
 					onClick={() => {
-						// requestReviewNote();
 						router.push("/application");
 					}}
 				>
