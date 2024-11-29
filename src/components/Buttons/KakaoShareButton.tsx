@@ -35,7 +35,7 @@ const KakaoShareButton = ({ showLink }: { showLink: string }) => {
 				content: {
 					title: "모플, 쉽고 빠른 모의고사 분석",
 					description: "모의고사 풀이 결과를 입력하고 내 위치를 확인해 보세요!",
-					imageUrl: "https://ifh.cc/v-TKZoDG.jpg",
+					imageUrl: "https://ifh.cc/g/jT2Gcd.jpg",
 					link: {
 						mobileWebUrl: showLink,
 						webUrl: showLink,
