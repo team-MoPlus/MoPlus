@@ -84,7 +84,6 @@ const SolvetimeContainer = ({ testId }: { testId: number }) => {
 			postSolveTime(params.testResultId, params.timeString),
 		onSuccess: (data, variables) => {
 			setTestResultInfo(data);
-			sendResultData(data);
 			router.replace(`/result/${testId}/${data.testResultId}/personal`);
 		},
 		// 에러 핸들링 (optional)
