@@ -20,7 +20,9 @@ export default function RootLayout({
 	return (
 		<html lang="ko" className={pretendard.className}>
 			<head>
-				<GoogleAnalytics />
+				{process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS ? (
+					<GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
+				) : null}
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			</head>
 
@@ -30,14 +32,8 @@ export default function RootLayout({
 						src="https://www.googletagmanager.com/ns.html?id=GTM-MT5SX4T7"
 						height="0"
 						width="0"
-					>
-						<style jsx>{`
-							style= {
-								display: none;
-								visibility: hidden;
-							}
-						`}</style>
-					</iframe>
+						className="hidden invisible"
+					></iframe>
 				</noscript>
 				<Providers>
 					<div className="flex h-full w-full">
