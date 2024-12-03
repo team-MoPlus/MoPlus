@@ -65,7 +65,7 @@ const SearchMoContainer = () => {
 			</div>
 			<div className="w-full h-16 rounded-lg border border-red-400 my-2 px-4 flex items-center">
 				<TfiAnnouncement className="mr-4 w-6 h-6 text-red-600" />
-				2025학년도 수능은 아직 제공되지 않습니다.
+				2025학년도 수능은 준비 중입니다.
 			</div>
 
 			{/* 검색바에 onSearchTermChange 핸들러 전달 */}
