@@ -42,30 +42,6 @@ export const getTestResultInfoById = async (id: number) => {
 		.catch((err) => console.error(err));
 };
 
-export const sendResultData = async (data: Object) => {
-	return await pdfServer
-		.post(`/test/resultInfo`, data, {
-			headers: { "Content-Type": "application/json" },
-		})
-		.then((res) => {
-			return res.data;
-		})
-		.catch((error) => {
-			console.error("Error:", error.message);
-		});
-};
-
-export const requestReviewNote = async () => {
-	return await pdfServer
-		.post("/request-review")
-		.then((res) => {
-			return res.data;
-		})
-		.catch((error) => {
-			console.error("Error:", error.message);
-		});
-};
-
 export const getReviewNote = async (
 	data: DetailResultApplication,
 	fileName: string

@@ -1,8 +1,5 @@
 "use client";
 
-import { Banner } from "@/components/Banner";
-import { HourMinutePicker } from "@/components/Tables";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
@@ -10,7 +7,6 @@ import {
 	countSolveCount,
 	postAnswer,
 	postSolveTime,
-	sendResultData,
 } from "../../../apis/testResult";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
@@ -20,10 +16,8 @@ import {
 } from "@/recoil/atoms";
 import { TestInfo } from "../../../types/Item";
 import ModalPortal from "../../../utils/Portal";
-import { Modal } from "@/components/Modal";
 import SubmitModal from "@/components/Modal/SubmitModal";
 import { IoChevronBackOutline } from "react-icons/io5";
-import toast from "react-hot-toast";
 
 const SolvetimeContainer = ({ testId }: { testId: number }) => {
 	const [hour, setHour] = useState<string>("");
@@ -50,6 +44,7 @@ const SolvetimeContainer = ({ testId }: { testId: number }) => {
 		}
 	};
 
+	// 제출 -> answer를 post -> solvetime을 post -> 제출 수 1 올리고 -> 모달 닫기
 	const handleSubmit = () => {
 		AnswerMutation.mutate({ incorrectProblem });
 		countSolveCount(testInfo.id);
@@ -67,7 +62,6 @@ const SolvetimeContainer = ({ testId }: { testId: number }) => {
 					hour == "" && minute == "" ? "PT0S" : `PT${hour}H${minute}M`,
 			});
 		},
-		// 에러 핸들링 (optional)
 		onError: (error) => {
 			console.error("Error posting data:", error);
 			alert("There was an error submitting your answers.");
@@ -86,16 +80,15 @@ const SolvetimeContainer = ({ testId }: { testId: number }) => {
 			setTestResultInfo(data);
 			router.replace(`/result/${testId}/${data.testResultId}/personal`);
 		},
-		// 에러 핸들링 (optional)
 		onError: (error) => {
 			console.error("Error posting data:", error);
 			alert("There was an error submitting your solved time.");
 		},
 
 		// 요청이 완료되면 실행 (성공 또는 실패와 무관)
-		onSettled: () => {
-			// console.log("Request has been processed.");
-		},
+		// onSettled: () => {
+		// 	console.log("Request has been processed.");
+		// },
 	});
 
 	return (
@@ -126,7 +119,6 @@ const SolvetimeContainer = ({ testId }: { testId: number }) => {
 					className="rounded-lg w-12 h-12 border border-orange-500 text-orange-500 text-2xl text-center focus:outline-none"
 				/>
 				<div className="text-xl">분</div>
-				{/* <HourMinutePicker /> */}
 			</div>
 			<div className="flex w-full justify-around">
 				<button
