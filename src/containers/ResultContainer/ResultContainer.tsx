@@ -1,7 +1,5 @@
 "use client";
 
-import { Banner } from "@/components/Banner";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { TestInfo } from "../../../types/Item";
 import { usePathname, useRouter } from "next/navigation";
@@ -12,10 +10,8 @@ import {
 	testResultState,
 } from "@/recoil/atoms";
 import { TestResult } from "../../../types/result";
-import { calculateTimeDifference } from "../../../utils/parseTime";
 import toast, { Toaster } from "react-hot-toast";
 import { KakaoShareButton } from "@/components/Buttons";
-import { requestReviewNote } from "../../../apis/testResult";
 import { DropdownMenu } from "@/components/Dropdowns";
 
 const notify = () => toast.error("브라우저 뒤로가기는 지원하지 않습니다.");
@@ -69,10 +65,6 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 			)!.ratingRows,
 		});
 	}, []);
-
-	// useEffect(() => {
-	// 	sendResultData(JSON.stringify(testResultInfo));
-	// }, []);
 
 	return (
 		<div className="p-4">
