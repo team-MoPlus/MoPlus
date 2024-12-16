@@ -81,7 +81,6 @@ const CheckAnswer = ({
 					})()
 				: { ...prev, [qNum]: -1 }
 		);
-
 		setFocusIndex(qNum - 1);
 	};
 
