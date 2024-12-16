@@ -10,6 +10,13 @@ import { api, pdfServer } from "./axios";
 // const notifyError = () =>
 // 	toast.error("서버가 과부하 상태입니다. 다시 시도해 주세요.");
 
+/**
+ *
+ * @param testResultId 테스트 결과 Id
+ * @param name 사용자가 입력한 이름
+ * @param phoneNumber 사용자가 입력한 전화번호
+ * @returns post 요청 성공 여부를 리턴합니다.
+ */
 export const postApplication = async ({
 	testResultId,
 	name,
