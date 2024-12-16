@@ -51,6 +51,7 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 		};
 	}, []);
 
+
 	useEffect(() => {
 		setTimeArr([
 			testResultInfo.solvingTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)?.[1] || "0",

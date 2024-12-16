@@ -19,8 +19,6 @@ import {
 	TbCircleNumber5Filled,
 } from "react-icons/tb";
 import { useRouter } from "next/navigation";
-import { postAnswer } from "../../../apis/testResult";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
 	incorrectProblemState,
