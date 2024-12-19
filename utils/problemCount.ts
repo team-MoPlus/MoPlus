@@ -7,6 +7,8 @@ export const ProblemCount: { [key: string]: number } = {
 	[Subject.미적분]: 30,
 	[Subject.확률과통계]: 30,
 	[Subject.기하]: 30,
+	[Subject.고1]: 30,
+	[Subject.고2]: 30,
 	[Subject.영어]: 45,
 	[Subject.물리I]: 20,
 	[Subject.화학I]: 20,

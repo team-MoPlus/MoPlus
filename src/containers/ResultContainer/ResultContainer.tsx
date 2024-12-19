@@ -9,7 +9,7 @@ import {
 	testInfoState,
 	testResultState,
 } from "@/recoil/atoms";
-import { TestResult } from "../../../types/result";
+import { IRatingTable, TestResult } from "../../../types/result";
 import toast, { Toaster } from "react-hot-toast";
 import { KakaoShareButton } from "@/components/Buttons";
 import { DropdownMenu } from "@/components/Dropdowns";
@@ -21,11 +21,17 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 	const testResultInfo = useRecoilValue<TestResult>(testResultState);
 	const testInfo = useRecoilValue<TestInfo>(testInfoState);
 	const [timeArr, setTimeArr] = useState<string[]>([]);
-	const [rankProvider, setRankProvider] = useState("대성마이맥");
-	const [ratingTables, setRatingTables] = useRecoilState(ratingTablesState);
+	const [curRankProvider, setCurRankProvider] = useState<string>("");
 	const [isVisible, setIsVisible] = useState(true);
 
 	useEffect(() => {
+		setTimeArr([
+			testResultInfo.solvingTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)?.[1] || "0",
+			testResultInfo.solvingTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)?.[2] || "0",
+		]);
+
+		setCurRankProvider(testResultInfo.ratingTables[0].ratingProvider);
+
 		const handleScroll = () => {
 			// 현재 스크롤 위치
 			const scrollTop = window.scrollY;
@@ -51,22 +57,6 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 		};
 	}, []);
 
-
-	useEffect(() => {
-		setTimeArr([
-			testResultInfo.solvingTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)?.[1] || "0",
-			testResultInfo.solvingTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)?.[2] || "0",
-		]);
-		setRatingTables({
-			대성마이맥: testResultInfo.ratingTables.find(
-				(obj) => obj.ratingProvider === "대성마이맥"
-			)!.ratingRows,
-			이투스: testResultInfo.ratingTables.find(
-				(obj) => obj.ratingProvider === "이투스"
-			)!.ratingRows,
-		});
-	}, []);
-
 	return (
 		<div className="p-4">
 			{/* 결과 */}
@@ -74,7 +64,11 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 				결과
 				<div className="text-xs flex-col">
 					<KakaoShareButton
-						showLink={`${window.location.href.split("/").slice(0, -1).join("/")}/shared`}
+						showLink={
+							typeof window !== "undefined"
+								? `${window.location.href.split("/").slice(0, -1).join("/")}/shared`
+								: ""
+						}
 					/>
 				</div>
 			</div>
@@ -100,7 +94,7 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md my-2">
 				<h1 className="text-xl mb-4">틀린 문제 정답률</h1>
 				<div className="grid grid-cols-4 items-center gap-2 text-gray-600">
-					{testResultInfo.incorrectProblems.map((problem, idx) => (
+					{testResultInfo.incorrectProblems?.map((problem, idx) => (
 						<div key={idx} className="flex items-center text-sm">
 							{problem.problemNumber}번{" "}
 							<span className="inline-block ml-1 text-xs text-orange-500 border border-orange-500 rounded-md px-[2px]">
@@ -115,17 +109,22 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 				<div className="flex gap-4 items-center mb-4">
 					<h1 className="text-xl">예상 등급</h1>
 					<DropdownMenu
-						defaultText={"대성마이맥"}
-						ItemObj={{ 대성마이맥: [], 이투스: [] }}
+						defaultText={testResultInfo.ratingTables[0].ratingProvider}
+						ItemObj={Object.fromEntries(
+							(testResultInfo.ratingTables || []).map((table) => [
+								table.ratingProvider,
+								[],
+							])
+						)}
 						buttonWidth={"w-30"}
-						setData={setRankProvider}
+						setData={setCurRankProvider}
 					/>
 				</div>
 				<div className="w-full flex justify-between mb-4">
 					<div className="text-4xl text-orange-500">
 						{
 							testResultInfo.estimatedRatingGetResponses.find(
-								(obj) => obj.ratingProvider === rankProvider
+								(obj) => obj.ratingProvider === curRankProvider
 							)?.estimatedRating
 						}
 						<span className="text-gray-500">등급</span>
@@ -138,35 +137,33 @@ const ResultContainer = ({ testResultId }: { testResultId: number }) => {
 						<div className="w-3/12 border-r-2 border-white">표준점수</div>
 						<div className="w-3/12">백분위</div>
 					</div>
-					{ratingTables[rankProvider]?.slice(0, 8).map((v, i) => (
-						<div
-							key={i}
-							className={`h-12 flex text-center items-center py-1 border-b-2 border-gray-200 ${
-								i + 1 ==
-								testResultInfo.estimatedRatingGetResponses.find(
-									(obj) => obj.ratingProvider === rankProvider
-								)?.estimatedRating
-									? "bg-orange-200 text-lg"
-									: "text-md text-gray-500"
-							}`}
-						>
-							<div className="w-2/12">{v["rating"]}</div>
-							<div className="w-4/12">{v["rawScores"]}</div>
-							<div className="w-3/12">{v["standardScores"]}</div>
-							<div className="w-3/12">{v["percentiles"]}</div>
-						</div>
-					))}
+					{(
+						testResultInfo.ratingTables.find(
+							(table) => table.ratingProvider === curRankProvider
+						)?.ratingRows || []
+					)
+						?.slice(0, 8)
+						.map((v, i) => (
+							<div
+								key={i}
+								className={`h-12 flex text-center items-center py-1 border-b-2 border-gray-200 ${
+									i + 1 ==
+									testResultInfo.estimatedRatingGetResponses.find(
+										(obj) => obj.ratingProvider === curRankProvider
+									)?.estimatedRating
+										? "bg-orange-200 text-lg"
+										: "text-md text-gray-500"
+								}`}
+							>
+								<div className="w-2/12">{v["rating"]}</div>
+								<div className="w-4/12">{v["rawScores"]}</div>
+								<div className="w-3/12">{v["standardScores"]}</div>
+								<div className="w-3/12">{v["percentiles"]}</div>
+							</div>
+						))}
 				</div>
 			</div>
-			{/* 공유하기 */}
-			{/* <div className="p-4 w-full border border-dashed border-orange-200 rounded-md my-2">
-				<h1 className="text-xl mb-4">공유하기</h1>
-				<div className="flex items-center justify-center">
-					<KakaoShareButton
-						showLink={`${window.location.href.split("/").slice(0, -1).join("/")}/shared`}
-					/>
-				</div>
-			</div> */}
+
 			<div className="flex justify-center">
 				{/* Fixed 상태 버튼 */}
 				{isVisible && (

@@ -10,6 +10,7 @@ import { testInfoState } from "@/recoil/atoms";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const MoDetailContainer = ({ id }: { id: number }) => {
 	const [testInfo, setTestInfo] = useRecoilState(testInfoState);
@@ -19,8 +20,14 @@ const MoDetailContainer = ({ id }: { id: number }) => {
 	const { data, isPending, isError, error } = useQuery({
 		queryKey: ["tests", id],
 		queryFn: () => getTestById(id),
-		select: (data) => setTestInfo(data),
 	});
+
+	useEffect(() => {
+		if (data) {
+			setTestInfo(data);
+		}
+	}, [data, setTestInfo]);
+	
 
 	if (isPending) {
 		return <LoadingSpinner />;

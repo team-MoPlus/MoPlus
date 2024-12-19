@@ -25,16 +25,15 @@ const ResultSharingContainer = ({
 }) => {
 	const router = useRouter();
 	const [timeArr, setTimeArr] = useState<string[]>([]);
-	const [testResult, setTestResult] =
+	const [testResultInfo, setTestResultInfo] =
 		useRecoilState<TestResult>(testResultState);
 	const [testInfo, setTestInfo] = useRecoilState<TestInfo>(testInfoState);
-	const [rankProvider, setRankProvider] = useState("대성마이맥");
+	const [curRankProvider, setCurRankProvider] = useState("");
 	const [ratingTables, setRatingTables] = useRecoilState(ratingTablesState);
 
 	useEffect(() => {
 		const userAgent = navigator.userAgent.toLowerCase();
 		const currentUrl = window.location.href;
-		console.log(userAgent);
 
 		if (userAgent.includes("kakaotalk")) {
 			// 카카오톡 인앱 브라우저 감지 시 리디렉션
@@ -44,19 +43,13 @@ const ResultSharingContainer = ({
 	}, []);
 
 	const handleTestResult = async (data: TestResult) => {
-		await setTestResult(data);
+		await setTestResultInfo(data);
 		setTimeArr([
 			data.solvingTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)?.[1] || "0",
 			data.solvingTime.match(/PT(?:(\d+)H)?(?:(\d+)M)?/)?.[2] || "0",
 		]);
 
-		setRatingTables({
-			대성마이맥: data.ratingTables.find(
-				(obj) => obj.ratingProvider === "대성마이맥"
-			)!.ratingRows,
-			이투스: data.ratingTables.find((obj) => obj.ratingProvider === "이투스")!
-				.ratingRows,
-		});
+		setCurRankProvider(testResultInfo.ratingTables[0].ratingProvider);
 	};
 
 	const {
@@ -81,7 +74,7 @@ const ResultSharingContainer = ({
 		select: React.useCallback((data: TestInfo) => setTestInfo(data), []),
 	});
 
-	if (isPending || testResult === undefined) {
+	if (isPending || testResultInfo === undefined) {
 		return <LoadingSpinner />;
 	} else if (TestDataisPending) {
 		return <LoadingSpinner />;
@@ -105,7 +98,7 @@ const ResultSharingContainer = ({
 				</h1>
 				<div className="py-8 flex w-full justify-around items-center">
 					<div className="text-5xl text-orange-500">
-						{testResult.score}
+						{testResultInfo.score}
 						<span className="text-gray-500">점</span>
 					</div>
 					<div className="text-3xl text-gray-400">
@@ -121,7 +114,7 @@ const ResultSharingContainer = ({
 			<div className="p-4 w-full border border-dashed border-orange-200 rounded-md my-2">
 				<h1 className="text-xl mb-4">틀린 문제 정답률</h1>
 				<div className="grid grid-cols-4 items-center gap-2 text-gray-600">
-					{testResult.incorrectProblems.map((problem, idx) => (
+					{testResultInfo.incorrectProblems.map((problem, idx) => (
 						<div key={idx} className="flex items-center text-sm">
 							{problem.problemNumber}번{" "}
 							<span className="inline-block ml-1 text-xs text-orange-500 border border-orange-500 rounded-md px-[2px]">
@@ -137,16 +130,21 @@ const ResultSharingContainer = ({
 					<h1 className="text-xl">예상 등급</h1>
 					<DropdownMenu
 						defaultText={"대성마이맥"}
-						ItemObj={{ 대성마이맥: [], 이투스: [] }}
+						ItemObj={Object.fromEntries(
+							(testResultInfo.ratingTables || []).map((table) => [
+								table.ratingProvider,
+								[],
+							])
+						)}
 						buttonWidth={"w-30"}
-						setData={setRankProvider}
+						setData={setCurRankProvider}
 					/>
 				</div>
 				<div className="w-full flex justify-between mb-4">
 					<div className="text-4xl text-orange-500">
 						{
-							testResult.estimatedRatingGetResponses.find(
-								(obj) => obj.ratingProvider === rankProvider
+							testResultInfo.estimatedRatingGetResponses.find(
+								(obj) => obj.ratingProvider === curRankProvider
 							)?.estimatedRating
 						}
 						<span className="text-gray-500">등급</span>
@@ -159,24 +157,30 @@ const ResultSharingContainer = ({
 						<div className="w-3/12 border-r-2 border-white">표준점수</div>
 						<div className="w-3/12">백분위</div>
 					</div>
-					{ratingTables[rankProvider]?.slice(0, 8).map((v, i) => (
-						<div
-							key={i}
-							className={`h-12 flex text-center items-center py-1 border-b-2 border-gray-200 ${
-								i + 1 ==
-								testResult.estimatedRatingGetResponses.find(
-									(obj) => obj.ratingProvider === rankProvider
-								)?.estimatedRating
-									? "bg-orange-200 text-lg"
-									: "text-md text-gray-500"
-							}`}
-						>
-							<div className="w-2/12">{v["rating"]}</div>
-							<div className="w-4/12">{v["rawScores"]}</div>
-							<div className="w-3/12">{v["standardScores"]}</div>
-							<div className="w-3/12">{v["percentiles"]}</div>
-						</div>
-					))}
+					{(
+						testResultInfo.ratingTables.find(
+							(table) => table.ratingProvider === curRankProvider
+						)?.ratingRows || []
+					)
+						?.slice(0, 8)
+						.map((v, i) => (
+							<div
+								key={i}
+								className={`h-12 flex text-center items-center py-1 border-b-2 border-gray-200 ${
+									i + 1 ==
+									testResultInfo.estimatedRatingGetResponses.find(
+										(obj) => obj.ratingProvider === curRankProvider
+									)?.estimatedRating
+										? "bg-orange-200 text-lg"
+										: "text-md text-gray-500"
+								}`}
+							>
+								<div className="w-2/12">{v["rating"]}</div>
+								<div className="w-4/12">{v["rawScores"]}</div>
+								<div className="w-3/12">{v["standardScores"]}</div>
+								<div className="w-3/12">{v["percentiles"]}</div>
+							</div>
+						))}
 				</div>
 			</div>
 
