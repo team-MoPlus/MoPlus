@@ -56,6 +56,7 @@ const SolvetimeContainer = ({ testId }: { testId: number }) => {
 			incorrectProblem: { problemNumber: string; incorrectAnswer: string }[];
 		}) => postAnswer(testId, params.incorrectProblem),
 		onSuccess: (data, variables) => {
+			// console.log(data);
 			SolveTimeMutation.mutate({
 				testResultId: data,
 				timeString:

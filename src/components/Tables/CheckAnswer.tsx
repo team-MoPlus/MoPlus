@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { FaCheck } from "react-icons/fa6";
 import toast, { Toaster } from "react-hot-toast";
 import {
@@ -69,7 +69,10 @@ const CheckAnswer = ({
 	const inputRefs = useRef<(HTMLInputElement | null)[]>(Array(30).fill(null));
 	const [focusIndex, setFocusIndex] = useState<number>(0);
 
-	const questions = Array.from({ length: problemCount }, (_, i) => i + 1);
+	const questions = useMemo(
+		() => Array.from({ length: problemCount }, (_, i) => i + 1),
+		[problemCount]
+	);
 
 	// 오답 체크 상태 토글
 	const handleCheckToggle = (qNum: number) => {
@@ -160,9 +163,88 @@ const CheckAnswer = ({
 
 							{/* 선지 선택 */}
 							<div className="flex-1 py-2">
-								{subjectDict[testInfo.subject] !== "수학" ||
-								qNum < 16 ||
-								(22 < qNum && qNum < 29) ? (
+								{subjectDict[testInfo.subject] === "수학" ? (
+									qNum < 16 || (22 < qNum && qNum < 29) ? (
+										<div className="flex space-x-2 justify-center">
+											{Array(5)
+												.fill(null)
+												.map((v, i) => (
+													<button
+														key={i}
+														onClick={() => handleChoiceSelect(qNum, i + 1)}
+														hidden={!selectedChoices.hasOwnProperty(qNum)}
+													>
+														{selectedChoices[qNum] === i + 1
+															? CircleNumberFilled[i]
+															: CircleNumber[i]}
+													</button>
+												))}
+										</div>
+									) : (
+										<div
+											className={`flex justify-center ${
+												!selectedChoices.hasOwnProperty(qNum) ? "hidden" : ""
+											}`}
+										>
+											<input
+												className="border pl-1 h-8 rounded-md focus:outline-none focus:border-none focus:ring-2 focus:ring-orange-300"
+												ref={(el) => {
+													inputRefs.current[index] = el;
+												}}
+												type="text"
+												inputMode="numeric"
+												pattern="\d*"
+												placeholder=""
+												size={6}
+												onChange={(e) =>
+													handleChoiceSelect(qNum, parseInt(e.target.value))
+												}
+												maxLength={10}
+											/>
+										</div>
+									)
+								) : subjectDict[testInfo.subject] === "고1" ||
+								  subjectDict[testInfo.subject] === "고2" ? (
+									qNum > 21 ? (
+										<div
+											className={`flex justify-center ${
+												!selectedChoices.hasOwnProperty(qNum) ? "hidden" : ""
+											}`}
+										>
+											<input
+												className="border pl-1 h-8 rounded-md focus:outline-none focus:border-none focus:ring-2 focus:ring-orange-300"
+												ref={(el) => {
+													inputRefs.current[index] = el;
+												}}
+												type="text"
+												inputMode="numeric"
+												pattern="\d*"
+												placeholder=""
+												size={6}
+												onChange={(e) =>
+													handleChoiceSelect(qNum, parseInt(e.target.value))
+												}
+												maxLength={10}
+											/>
+										</div>
+									) : (
+										<div className="flex space-x-2 justify-center">
+											{Array(5)
+												.fill(null)
+												.map((v, i) => (
+													<button
+														key={i}
+														onClick={() => handleChoiceSelect(qNum, i + 1)}
+														hidden={!selectedChoices.hasOwnProperty(qNum)}
+													>
+														{selectedChoices[qNum] === i + 1
+															? CircleNumberFilled[i]
+															: CircleNumber[i]}
+													</button>
+												))}
+										</div>
+									)
+								) : (
 									<div className="flex space-x-2 justify-center">
 										{Array(5)
 											.fill(null)
@@ -177,28 +259,6 @@ const CheckAnswer = ({
 														: CircleNumber[i]}
 												</button>
 											))}
-									</div>
-								) : (
-									<div
-										className={`flex justify-center ${
-											!selectedChoices.hasOwnProperty(qNum) ? "hidden" : ""
-										}`}
-									>
-										<input
-											className="border pl-1 h-8 rounded-md focus:outline-none focus:border-none focus:ring-2 focus:ring-orange-300"
-											ref={(el) => {
-												inputRefs.current[index] = el;
-											}}
-											type="text"
-											inputMode="numeric"
-											pattern="\d*"
-											placeholder=""
-											size={6}
-											onChange={(e) =>
-												handleChoiceSelect(qNum, parseInt(e.target.value))
-											}
-											maxLength={10}
-										/>
 									</div>
 								)}
 							</div>

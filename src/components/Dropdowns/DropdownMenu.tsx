@@ -51,6 +51,7 @@ const DropdownMenu = ({
 		}
 	}, [isOpen]);
 
+
 	return (
 		<div
 			className="relative inline-block cursor-pointer mr-2"
@@ -98,7 +99,6 @@ const DropdownMenu = ({
 					)}
 				</span>
 			</button>
-
 			{isOpen && (
 				<div
 					className={`absolute left-0 bg-white text-orange-500 z-10 rounded-b-md border border-orange-500`}
@@ -118,27 +118,7 @@ const DropdownMenu = ({
 									>
 										{subject}
 									</div>
-									{ItemObj[subject].length > 0 && (
-										<div className="absolute left-full w-48 top-0 bg-black text-white rounded-b-2xl rounded-tr-2xl hidden group-hover:block">
-											<ul>
-												{ItemObj[subject].map((sub, index) => (
-													<li
-														key={sub}
-														onClick={clickMenu}
-														className={`px-4 py-2 hover:bg-orange-400 ${
-															index === ItemObj[subject].length - 1
-																? "rounded-b-2xl"
-																: index === 0
-																	? "rounded-tr-2xl"
-																	: ""
-														}`}
-													>
-														{sub}
-													</li>
-												))}
-											</ul>
-										</div>
-									)}
+									
 								</li>
 							);
 						})}

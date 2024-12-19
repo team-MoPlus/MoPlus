@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
-import { IncorrectProblem, IRatingRow } from "../../types/result";
+import { IRatingTable } from "../../types/result";
 
 const sessionStorage =
 	typeof window !== "undefined" ? window.sessionStorage : undefined;
@@ -58,7 +58,7 @@ export const incorrectProblemState = atom<
 	default: [],
 });
 
-export const ratingTablesState = atom<{ [key: string]: IRatingRow[] }>({
+export const ratingTablesState = atom<IRatingTable[]>({
 	key: "ratingTablesState",
-	default: {},
+	default: [],
 });

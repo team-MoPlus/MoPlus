@@ -26,6 +26,7 @@ export const postSolveTime = async (
 	testResultId: number,
 	timeString: string
 ) => {
+	// console.log(timeString);
 	return await api
 		.post(`/testResult/${testResultId}/uploadingMinute`, {
 			solvingTime: timeString,
